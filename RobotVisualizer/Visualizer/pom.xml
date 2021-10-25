@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>RobotVisualizer</artifactId>
+        <groupId>org.example</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>Visualizer</artifactId>
+
+    <dependencies>
+        <!-- PeasyCam -->
+        <dependency>
+            <groupId>processing.libs</groupId>
+            <artifactId>PeasyCam</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/peasycam.jar</systemPath>
+        </dependency>
+
+        <!-- WPILib -->
+        <dependency>
+            <groupId>edu.wpi.first.ntcore</groupId>
+            <artifactId>ntcore-java</artifactId>
+            <version>${wpi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.wpi.first.wpiutil</groupId>
+            <artifactId>wpiutil-java</artifactId>
+            <version>${wpi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.wpi.first.ntcore</groupId>
+            <artifactId>ntcore-jni</artifactId>
+            <version>${wpi.version}</version>
+            <classifier>windowsx86</classifier>
+        </dependency>
+        <dependency>
+            <groupId>edu.wpi.first.ntcore</groupId>
+            <artifactId>ntcore-jni</artifactId>
+            <version>${wpi.version}</version>
+            <classifier>windowsx86-64</classifier>
+        </dependency>
+        <dependency>
+            <groupId>edu.wpi.first.ntcore</groupId>
+            <artifactId>ntcore-jni</artifactId>
+            <version>${wpi.version}</version>
+            <classifier>linuxx86-64</classifier>
+        </dependency>
+        <dependency>
+            <groupId>edu.wpi.first.ntcore</groupId>
+            <artifactId>ntcore-jni</artifactId>
+            <version>${wpi.version}</version>
+            <classifier>linuxraspbian</classifier>
+        </dependency>
+        <dependency>
+            <groupId>edu.wpi.first.ntcore</groupId>
+            <artifactId>ntcore-jni</artifactId>
+            <version>${wpi.version}</version>
+            <classifier>osxx86-64</classifier>
+        </dependency>
+    </dependencies>
+</project>
