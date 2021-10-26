@@ -1,5 +1,7 @@
 package frc.taskmanager.controller;
 
+import frc.taskmanager.client.Coprocessor;
+
 import javax.swing.*;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
@@ -8,13 +10,37 @@ public class CoprocessorController {
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
 
+    // Main method of this class.
     public void run() {
         createWindow();
-        CoprocessorConnectionParams params = showConnectionPopup();
 
-        System.out.println(params);
+        // Connect to the coprocessor
+        Coprocessor cp = null;
+        while (cp == null) {
+            CoprocessorConnectionParams params = showConnectionPopup();
+            String host = params.getHost();
+            int port = params.getPort();
+
+            Coprocessor attempt = new Coprocessor(host, port);
+            try {
+                attempt.connect();
+                cp = attempt;
+            } catch (Throwable e) {
+                System.err.println("Connection error:");
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null,
+                        "Failed to connect to the coprocessor at " + host + ":" + port +
+                            ".\nMake sure it is turned on, that you are connected to the correct network, \n" +
+                            "and that the TaskManager server is running on the correct port. \n" +
+                            "You can check the controller log for a more detailed error report.",
+                        "Error Connecting", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        System.out.println("Connected to coprocessor");
     }
 
+    // Creates the window that the controller will run in.
     private void createWindow() {
         // Create window
         JFrame frame = new JFrame("Coprocessor Controller");
@@ -47,7 +73,7 @@ public class CoprocessorController {
 
         // Read the output
         String host = hostField.getText();
-        int port = Integer.parseInt(portField.getText());
+        int port = portField.getText().length() > 0 ? Integer.parseInt(portField.getText()) : 0;
 
         // Return the output
         return new CoprocessorConnectionParams(host, port);
