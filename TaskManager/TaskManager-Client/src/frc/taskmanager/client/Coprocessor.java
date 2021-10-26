@@ -3,6 +3,7 @@ package frc.taskmanager.client;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -75,7 +76,13 @@ public class Coprocessor {
     }
 
     public CompletableFuture<Set<Task>> getAllTasks() {
-        return null; // TODO
+        CompletableFuture<Set<Task>> future = new CompletableFuture<>();
+        Set<Task> set = new HashSet<>();
+        set.add(new Task(this, "Foo"));
+        set.add(new Task(this, "BAR"));
+        set.add(new Task(this, "BaZ"));
+        future.complete(set);
+        return future;
     }
 
     void sendMessage(String destination, String type, byte[] data) throws IOException {

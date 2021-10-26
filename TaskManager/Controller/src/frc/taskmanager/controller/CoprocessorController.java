@@ -12,7 +12,7 @@ public class CoprocessorController {
 
     // Main method of this class.
     public void run() {
-        createWindow();
+        JFrame frame = createWindow();
 
         // Connect to the coprocessor
         Coprocessor cp = null;
@@ -38,10 +38,19 @@ public class CoprocessorController {
         }
 
         System.out.println("Connected to coprocessor");
+
+        // Create view panel
+        TaskViewPanel panel = new TaskViewPanel(cp);
+
+        // Add view panel to frame
+        frame.getContentPane().add(panel);
+        //frame.pack();
+        frame.revalidate();
+        frame.repaint();
     }
 
     // Creates the window that the controller will run in.
-    private void createWindow() {
+    private JFrame createWindow() {
         // Create window
         JFrame frame = new JFrame("Coprocessor Controller");
         frame.setSize(WIDTH, HEIGHT);
@@ -49,6 +58,7 @@ public class CoprocessorController {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
+        return frame;
     }
 
     // Shows a popup window that asks for the coprocessor connection parameters.
