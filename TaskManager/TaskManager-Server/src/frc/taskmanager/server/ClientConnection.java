@@ -1,6 +1,12 @@
 package frc.taskmanager.server;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.zip.ZipEntry;
@@ -63,7 +69,7 @@ public class ClientConnection {
     private void handleDeleteTask(byte[] data) throws IOException {
         Task task = manager.getTask(getString(data));
         if (task == null) {
-            System.out.println("Warning: Cannot delete nonexistent task '" + task + "'");
+            System.out.println("Warning: Cannot delete nonexistent task");
             return;
         }
         task.delete();

@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * Allows interfacing with a task running on a coprocessor.
