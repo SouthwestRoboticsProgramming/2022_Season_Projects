@@ -151,10 +151,21 @@ public class Task {
         return future;
     }
 
+    /**
+     * Deletes this task from the coprocessor.
+     */
     public void delete() {
         sendNamedMessage(Coprocessor.DELETE_TASK);
     }
 
+    /**
+     * Uploads a byte array as task data to execute. This data
+     * should be a ZIP archive, containing all of the task files
+     * at the root. A task must contain a "task.sh" file to be
+     * able to run it.
+     *
+     * @param data byte array of ZIP archive data
+     */
     public void upload(byte[] data) {
         try {
             ByteArrayOutputStream b = new ByteArrayOutputStream();

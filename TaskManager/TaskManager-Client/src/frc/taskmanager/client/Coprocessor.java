@@ -12,7 +12,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Represents a connection to an external coprocessor.
+ * This class handles connections and communication
+ * with the coprocessor, as well as access to the
+ * tasks that run on it. The {@code flushNetwork()}
+ * method must be called at least once every 10 seconds,
+ * or the connection will time out and no messages
+ * will be received.
+ *
+ * @author rmheuer
+ */
 public class Coprocessor {
+    // TODO: Do these need to be public?
     public static final String DEST = "TaskManager";
     public static final String START_TASK = "StartTask";
     public static final String STOP_TASK = "StopTask";
@@ -36,6 +48,15 @@ public class Coprocessor {
     private DataInputStream in;
     private DataOutputStream out;
 
+    /**
+     * Creates a new instance of this class with a given
+     * host and port to connect to. No actual connection is
+     * performed in this constructor, and is instead
+     * performed in {@code connect()}.
+     *
+     * @param host host to connect to
+     * @param port port on the host to connect to
+     */
     public Coprocessor(String host, int port) {
         this.host = host;
         this.port = port;
@@ -43,6 +64,12 @@ public class Coprocessor {
         getTasksFutures = new HashSet<>();
     }
 
+    /**
+     * Attempts to connect to the remote coprocessor at
+     * the address provided in the constructor.
+     *
+     * @throws RuntimeException if the connection failed
+     */
     public void connect() {
         try {
             socket = new Socket(host, port);
@@ -53,8 +80,11 @@ public class Coprocessor {
         }
     }
 
-    // This method must be called in order to receive anything from the
-    // coprocessor!
+    /**
+     * Flushes the network queues. This method must be
+     * called at least once every 10 seconds, or the
+     * coprocessor may time out.
+     */
     public void flushNetwork() {
         try {
             while (in.available() > 0) {
@@ -67,6 +97,13 @@ public class Coprocessor {
         }
     }
 
+    /**
+     * Disconnects from the remote coprocessor. Do not
+     * call any other methods on this class after
+     * disconnecting, as it may throw an exception,
+     * and will not actually perform any operations on
+     * the remote coprocessor.
+     */
     public void disconnect() {
         try {
             socket.close();
@@ -79,10 +116,28 @@ public class Coprocessor {
         return new Task(this, name);
     }
 
+    /**
+     * Gets a task by name. It does not matter if the
+     * task actually exists on the coprocessor. You can
+     * check if it exists using {@link Task#exists()}.
+     * This method will always return the same instance
+     * for each unique name.
+     *
+     * @param name task name
+     * @return the task with the given name
+     */
     public Task getTask(String name) {
         return taskCache.computeIfAbsent(name, this::createTask);
     }
 
+    /**
+     * Gets a set of the tasks that exist on the remote
+     * coprocessor. This operation requires a response
+     * from the coprocessor, and thus returns a future
+     * for the result.
+     *
+     * @return a future for the set of existent tasks
+     */
     public CompletableFuture<Set<Task>> getAllTasks() {
         CompletableFuture<Set<Task>> future = new CompletableFuture<>();
         getTasksFutures.add(future);
