@@ -18,13 +18,24 @@ import java.util.function.Consumer;
  * @author rmheuer
  */
 public class Task {
+    private static BiConsumer<Task, String> defaultStdOutCallback = (task, line) -> System.out.println("[" + task.name + "/OUT]: " + line);
+    private static BiConsumer<Task, String> defaultStdErrCallback = (task, line) -> System.err.println("[" + task.name + "/ERR]: " + line);
+
+    public static void setDefaultStdOutCallback(BiConsumer<Task, String> defaultStdOutCallback) {
+        Task.defaultStdOutCallback = defaultStdOutCallback;
+    }
+
+    public static void setDefaultStdErrCallback(BiConsumer<Task, String> defaultStdErrCallback) {
+        Task.defaultStdErrCallback = defaultStdErrCallback;
+    }
+
     private final Coprocessor cp;
     private final String name;
     private BiConsumer<String, byte[]> messageCallback;
-    private Consumer<String> stdOutCallback;
-    private Consumer<String> stdErrCallback;
-    private Set<CompletableFuture<Boolean>> existsFutures;
-    private Set<CompletableFuture<Boolean>> runningFutures;
+    private BiConsumer<Task, String> stdOutCallback;
+    private BiConsumer<Task, String> stdErrCallback;
+    private final Set<CompletableFuture<Boolean>> existsFutures;
+    private final Set<CompletableFuture<Boolean>> runningFutures;
 
     /**
      * Do not call. For internal use only.
@@ -36,8 +47,6 @@ public class Task {
         this.cp = cp;
         this.name = name;
         messageCallback = (n, d) -> {};
-        stdOutCallback = (line) -> System.out.println("[" + name + "/OUT]: " + line);
-        stdErrCallback = (line) -> System.err.println("[" + name + "/ERR]: " + line);
         existsFutures = new HashSet<>();
         runningFutures = new HashSet<>();
     }
@@ -114,7 +123,7 @@ public class Task {
      *
      * @param callback Function to call when a line is received.
      */
-    public void setStdOutCallback(Consumer<String> callback) {
+    public void setStdOutCallback(BiConsumer<Task, String> callback) {
         stdOutCallback = callback;
     }
 
@@ -124,7 +133,7 @@ public class Task {
      *
      * @param callback Function to call when a line is received.
      */
-    public void setStdErrCallback(Consumer<String> callback) {
+    public void setStdErrCallback(BiConsumer<Task, String> callback) {
         stdErrCallback = callback;
     }
 
@@ -167,11 +176,19 @@ public class Task {
     }
 
     void onStdOut(String line) {
-        stdOutCallback.accept(line);
+        if (stdOutCallback == null) {
+            defaultStdOutCallback.accept(this, line);
+        } else {
+            stdOutCallback.accept(this, line);
+        }
     }
 
     void onStdErr(String line) {
-        stdErrCallback.accept(line);
+        if(stdErrCallback == null) {
+            defaultStdErrCallback.accept(this, line);
+        } else {
+            stdErrCallback.accept(this, line);
+        }
     }
 
     void onExistsResponse(boolean exists) {

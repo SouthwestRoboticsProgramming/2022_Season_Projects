@@ -17,14 +17,17 @@ public class Coprocessor {
     public static final String TASK_EXISTS = "TaskExists";
     public static final String TASK_RUNNING = "TaskRunning";
     public static final String HEARTBEAT = "Heartbeat";
+    public static final String GET_TASKS = "GetTasks";
 
     public static final String ORIGIN = "TaskManager";
     public static final String TASK_EXISTS_RESPONSE = "TaskExistsResponse";
     public static final String TASK_RUNNING_RESPONSE = "TaskRunningResponse";
+    public static final String GET_TASKS_RESPONSE = "GetTasksResponse";
 
     private final String host;
     private final int port;
     private final Map<String, Task> taskCache;
+    private final Set<CompletableFuture<Set<Task>>> getTasksFutures;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -33,6 +36,7 @@ public class Coprocessor {
         this.host = host;
         this.port = port;
         taskCache = new HashMap<>();
+        getTasksFutures = new HashSet<>();
     }
 
     public void connect() {
@@ -77,11 +81,12 @@ public class Coprocessor {
 
     public CompletableFuture<Set<Task>> getAllTasks() {
         CompletableFuture<Set<Task>> future = new CompletableFuture<>();
-        Set<Task> set = new HashSet<>();
-        set.add(new Task(this, "Foo"));
-        set.add(new Task(this, "BAR"));
-        set.add(new Task(this, "BaZ"));
-        future.complete(set);
+        getTasksFutures.add(future);
+        try {
+            sendMessage(DEST, GET_TASKS, new byte[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return future;
     }
 
@@ -114,6 +119,21 @@ public class Coprocessor {
         task.onRunningResponse(running);
     }
 
+    private void readGetTasksResponse(byte[] data) throws IOException {
+        DataInputStream in = createInputStream(data);
+
+        Set<Task> tasks = new HashSet<>();
+        int count = in.readInt();
+        for (int i = 0; i < count; i++) {
+            tasks.add(getTask(in.readUTF()));
+        }
+
+        for (CompletableFuture<Set<Task>> future : getTasksFutures) {
+            future.complete(new HashSet<>(tasks));
+        }
+        getTasksFutures.clear();;
+    }
+
     private void readPacket() throws IOException {
         int length = in.readInt();
         byte[] packetData = new byte[length];
@@ -134,6 +154,9 @@ public class Coprocessor {
                     break;
                 case TASK_RUNNING_RESPONSE:
                     readTaskRunningResponse(data);
+                    break;
+                case GET_TASKS_RESPONSE:
+                    readGetTasksResponse(data);
                     break;
             }
         } else {

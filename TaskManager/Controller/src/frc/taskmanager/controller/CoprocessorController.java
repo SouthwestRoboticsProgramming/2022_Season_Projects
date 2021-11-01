@@ -1,17 +1,39 @@
 package frc.taskmanager.controller;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import frc.taskmanager.client.Coprocessor;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.text.PlainDocument;
-import java.awt.*;
+import java.awt.GridLayout;
 
 public class CoprocessorController {
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
 
-    // Main method of this class.
+    public void run(String host, int port) {
+        JFrame frame = createWindow();
+
+        Coprocessor cp = new Coprocessor(host, port);
+        cp.connect();
+
+        run_(frame, cp);
+    }
+
     public void run() {
+        try {
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         JFrame frame = createWindow();
 
         // Connect to the coprocessor
@@ -37,6 +59,11 @@ public class CoprocessorController {
             }
         }
 
+        run_(frame, cp);
+    }
+
+    // Main method
+    private void run_(JFrame frame, Coprocessor cp) {
         System.out.println("Connected to coprocessor");
 
         // Create view panel
@@ -47,6 +74,9 @@ public class CoprocessorController {
         //frame.pack();
         frame.revalidate();
         frame.repaint();
+
+        // Schedule a refresh every 50 milliseconds
+        new Timer(100, (evt) -> panel.refresh()).start();
     }
 
     // Creates the window that the controller will run in.
@@ -56,7 +86,7 @@ public class CoprocessorController {
         frame.setSize(WIDTH, HEIGHT);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setVisible(true);
         return frame;
     }

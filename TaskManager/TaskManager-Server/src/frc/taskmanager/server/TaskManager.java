@@ -1,6 +1,7 @@
 package frc.taskmanager.server;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -37,7 +38,7 @@ public class TaskManager {
         return tasks.get(name);
     }
 
-    public Iterable<Task> getTasks() {
+    public Collection<Task> getTasks() {
         return tasks.values();
     }
 

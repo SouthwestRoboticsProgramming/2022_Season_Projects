@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class MessageServerClientConnection extends Thread {
-    private static final int HEARTBEAT_TIMEOUT = 100;
+    private static final int HEARTBEAT_TIMEOUT = 1000;
 
     private final Socket socket;
     private final TaskManager manager;
@@ -78,7 +78,7 @@ public class MessageServerClientConnection extends Thread {
                     e.printStackTrace();
                 }
             }
-            System.out.println("Message server client disconnected due to heartbeat timeout");
+            System.out.println("Message server client '" + (origin == null ? "unknown" : origin.getName()) + "' disconnected due to heartbeat timeout");
         } catch (IOException e) {
             System.err.println("Exception while handling client connection:");
             e.printStackTrace();

@@ -2,6 +2,7 @@ package frc.taskmanager.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -14,12 +15,14 @@ public class ClientConnection {
     public static final String TASK_EXISTS = "TaskExists";
     public static final String TASK_RUNNING = "TaskRunning";
     public static final String HEARTBEAT = "Heartbeat";
+    public static final String GET_TASKS = "GetTasks";
 
     public static final String ORIGIN = "TaskManager";
     public static final String TASK_EXISTS_RESPONSE = "TaskExistsResponse";
     public static final String TASK_RUNNING_RESPONSE = "TaskRunningResponse";
+    public static final String GET_TASKS_RESPONSE = "GetTasksResponse";
 
-    private final int HEARTBEAT_TIMEOUT = 100;
+    private final int HEARTBEAT_TIMEOUT = 1000;
 
     private final Socket socket;
     private final TaskManager manager;
@@ -155,6 +158,19 @@ public class ClientConnection {
         writeTaskBooleanPacket(TASK_RUNNING_RESPONSE, name, running);
     }
 
+    private void handleGetTasks() throws IOException {
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream d = new DataOutputStream(b);
+
+        Collection<Task> tasks = manager.getTasks();
+        d.writeInt(tasks.size());
+        for (Task task : tasks) {
+            d.writeUTF(task.getName());
+        }
+
+        writePacket(ORIGIN, GET_TASKS_RESPONSE, b.toByteArray());
+    }
+
     private void writeTaskBooleanPacket(String type, String task, boolean bool) throws IOException {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream d = new DataOutputStream(b);
@@ -201,6 +217,10 @@ public class ClientConnection {
                     break;
                 case TASK_RUNNING:
                     handleTaskRunning(data);
+                    break;
+                case GET_TASKS:
+                    handleGetTasks();
+                    break;
             }
         } else {
             Task task = manager.getTask(dest);
@@ -261,6 +281,6 @@ public class ClientConnection {
             }
         }
 
-        System.out.println("No heartbeat received in the past second, assuming the connection is dropped");
+        System.out.println("No heartbeat received in the past " + (HEARTBEAT_TIMEOUT / 10) + " seconds, assuming the connection is dropped");
     }
 }
