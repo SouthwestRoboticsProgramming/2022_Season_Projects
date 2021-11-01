@@ -298,7 +298,20 @@ public class TaskViewPanel extends JPanel {
     }
 
     private void onUploadButtonPressed(ActionEvent e) {
+        if (selectedTask == null) {
+            throw new IllegalStateException("No task selected but upload button pressed");
+        }
 
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("ZIP Archive", "zip"));
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            Path path = chooser.getSelectedFile().toPath();
+            try {
+                selectedTask.upload(Files.readAllBytes(path));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private void onTaskListSelectionChanged(ListSelectionEvent e) {
