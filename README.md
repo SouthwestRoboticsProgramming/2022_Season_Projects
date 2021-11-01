@@ -12,3 +12,6 @@ These values can include things such as predicted position, obstacle detection, 
 A set of libraries that make working with coprocessors easier.
 Allows starting, stopping, and deploying tasks to coprocessors.
 See the readme in TaskManager for more details.
+
+### Vision Processing
+Uses OpenCV to manipulate webcam inputs. So far this has been implemented to detect balls.
