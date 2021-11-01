@@ -1,0 +1,5 @@
+Collecting SQLAlchemy
+  Downloading SQLAlchemy-1.4.23-cp39-cp39-win_amd64.whl (1.5 MB)
+Requirement already satisfied: greenlet!=0.4.17 in c:\users\nate king\appdata\local\packages\pythonsoftwarefoundation.python.3.9_qbz5n2kfra8p0\localcache\local-packages\python39\site-packages (from SQLAlchemy) (1.1.1)
+Installing collected packages: SQLAlchemy
+Successfully installed SQLAlchemy-1.4.23
