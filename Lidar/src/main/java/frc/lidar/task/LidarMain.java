@@ -1,4 +1,4 @@
-package frc;
+package frc.lidar.task;
 
 import com.fazecast.jSerialComm.SerialPort;
 
