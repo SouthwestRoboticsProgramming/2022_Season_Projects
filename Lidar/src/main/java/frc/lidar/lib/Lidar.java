@@ -32,13 +32,26 @@ public class Lidar implements SerialPortDataListener {
     private static final byte REQUEST_GET_INFO = 0x50;
     private static final byte REQUEST_GET_HEALTH = 0x52;
 
+    private static final long BUSY_TIME = 2;
+
     private enum ResponseType {
         INFO, HEALTH, SCAN
+    }
+
+    private enum BusyState {
+        NOT_BUSY,
+        BUSY_UNTIL_RESPONSE,
+        BUSY_FOR_TIME
     }
 
     private final SerialPort port;
     private final Set<CompletableFuture<LidarInfo>> infoFutures;
     private final Set<CompletableFuture<LidarHealth>> healthFutures;
+
+    private long busyBegin;
+    private BusyState busy;
+    private ResponseType expectedResponse;
+    private byte[] readBuffer = null;
 
     /**
      * Gets a list of serial ports that could be a lidar.
@@ -99,6 +112,8 @@ public class Lidar implements SerialPortDataListener {
         infoFutures = new HashSet<>();
         healthFutures = new HashSet<>();
 
+        busy = BusyState.NOT_BUSY;
+
         port.setBaudRate(115200);
         port.setParity(SerialPort.NO_PARITY);
         port.setNumStopBits(1);
@@ -115,12 +130,20 @@ public class Lidar implements SerialPortDataListener {
      * so it must return a future.
      *
      * @return future for device info
+     * @throws LidarBusyException if busy
      */
     public CompletableFuture<LidarInfo> getInfo() {
+        if (isBusy()) {
+            throw new LidarBusyException();
+        }
+
         CompletableFuture<LidarInfo> future = new CompletableFuture<>();
         infoFutures.add(future);
 
         sendRequest(REQUEST_GET_INFO, null);
+        busy = BusyState.BUSY_UNTIL_RESPONSE;
+
+        readBuffer = new byte[7];
 
         return future;
     }
@@ -132,12 +155,20 @@ public class Lidar implements SerialPortDataListener {
      * scan the environment.
      *
      * @return future for device health
+     * @throws LidarBusyException if busy
      */
     public CompletableFuture<LidarHealth> getHealth() {
+        if (isBusy()) {
+            throw new LidarBusyException();
+        }
+
         CompletableFuture<LidarHealth> future = new CompletableFuture<>();
         healthFutures.add(future);
 
         sendRequest(REQUEST_GET_HEALTH, null);
+        busy = BusyState.BUSY_UNTIL_RESPONSE;
+
+        readBuffer = new byte[7];
 
         return future;
     }
@@ -149,8 +180,15 @@ public class Lidar implements SerialPortDataListener {
      * @throws LidarBusyException if busy
      */
     public void startScanning() {
+        if (isBusy()) {
+            throw new LidarBusyException();
+        }
+
         port.clearDTR();
         sendRequest(REQUEST_SCAN, null);
+        beginTimedBusy();
+
+        readBuffer = new byte[7];
     }
 
     /**
@@ -158,7 +196,9 @@ public class Lidar implements SerialPortDataListener {
      * Will do nothing if the lidar is not currently scanning.
      */
     public void stopScanning() {
-
+        sendRequest(REQUEST_STOP, null);
+        port.setDTR();
+        beginTimedBusy();
     }
 
     /**
@@ -189,7 +229,8 @@ public class Lidar implements SerialPortDataListener {
      * @throws LidarBusyException if busy
      */
     public void reset() {
-
+        sendRequest(REQUEST_RESET, null);
+        beginTimedBusy();
     }
 
     /**
@@ -198,7 +239,15 @@ public class Lidar implements SerialPortDataListener {
      * @return whether the lidar is busy
      */
     public boolean isBusy() {
-        return false;
+        if (busy == BusyState.BUSY_FOR_TIME) {
+            long now = System.currentTimeMillis();
+            
+            if (now - busyBegin > BUSY_TIME) {
+                busy = BusyState.NOT_BUSY;
+            }
+        }
+
+        return busy;
     }
 
     /**
@@ -268,9 +317,15 @@ public class Lidar implements SerialPortDataListener {
         if (written != requestData.length) {
             throw new RuntimeException("Failed to write all data: " + written);
         }
-        System.out.println("Wrote data");
+    }
 
-        System.out.println(toHex(requestData, requestData.length));
+    private void beginTimedBusy() {
+        busy = Busy.BUSY_FOR_TIME;
+        busyBegin = System.currentTimeMillis();
+    }
+
+    private void onReadBufferFilled() {
+        
     }
 
     @Override
