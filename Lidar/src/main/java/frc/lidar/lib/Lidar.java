@@ -173,7 +173,7 @@ public class Lidar implements SerialPortDataListener {
 
     /**
      * Sets a callback for when scan data is received.
-     * This callback is called vary frequently! Try to keep
+     * This callback is called very frequently! Try to keep
      * the amount of processing in the function to
      * a minimum.
      *
