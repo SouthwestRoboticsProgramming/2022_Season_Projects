@@ -116,8 +116,18 @@ public class Lidar {
     }
 
     /**
+     * Sets a callback for when a new round of scanning is
+     * started. 
+     *
+     * @param callback callback function
+     */
+    public void setScanStartCallback(Runnable callback) {
+        
+    }
+
+    /**
      * Sets a callback for when scan data is received.
-     * This callback is called vary frequently! Tey to keep
+     * This callback is called vary frequently! Try to keep
      * the amount of processing in the function to
      * a minimum.
      *
