@@ -55,12 +55,18 @@ public class Lidar implements SerialPortDataListener {
         BUSY_FOR_TIME
     }
 
+    // Serial connection to lidar
     private final SerialPort port;
+
+    // Storage for futures that have not yet been completed
     private final Set<CompletableFuture<LidarInfo>> infoFutures;
     private final Set<CompletableFuture<LidarHealth>> healthFutures;
 
+    // Busy info
     private long busyBegin;
     private BusyState busy;
+
+    // Response reading
     private ReadState readState;
     private ResponseType expectedResponse;
     private byte[] readBuffer = null;
@@ -337,17 +343,20 @@ public class Lidar implements SerialPortDataListener {
         }
     }
 
+    // Sets the busy state to BUSY_FOR_TIME and initializes the time
     private void beginTimedBusy() {
         busy = Busy.BUSY_FOR_TIME;
         busyBegin = System.currentTimeMillis();
     }
 
+    // Reads a response containing device info data
     private void readResponseInfo() {
 
     }
 
+    // Reads a response containing response health data
     private void readResponseHealth() {
-        assert readBuffer.length == 3;
+        assert readBuffer.length == 3; // Length should always be 3
 
         int status = readBuffer[0];
         LidarHealth health;
@@ -368,34 +377,39 @@ public class Lidar implements SerialPortDataListener {
         for (CompletableFuture<LidarHealth> future : healthFutures) {
             future.complete(health);
         }
+        healthFutures.clear();
 
         readState = ReadState.NO_READ;
         readBuffer = null;
     }
 
+    // Reads a response containing scan response data
     private void readResponseScan() {
 
     }
 
+    // Method called when the read buffer has been filled
     private void onReadBufferFilled() {
         switch (readState) {
             case NO_READ:
                 return;
             case READ_DESCRIPTOR: {
+                // Read descriptor format:
+                // [Start Flag 1] [Start Flag 2] [30-bit response length] [2 bit send mode] [data type]
+
                 assert readBuffer.length == 7;
-                assert readBuffer[0] == START_FLAG;
-                assert readBuffer[1] == START_FLAG_2;
+                assert readBuffer[0] == START_FLAG; // For data validation
+                assert readBuffer[1] == START_FLAG_2; // Also for data validation
 
                 int responseLen = readBuffer[2] | 
                     readBuffer[3] << 8 | 
                     readBuffer[4] << 16 | 
-                    (readBuffer[5] & 0x3F) << 24;
-                int sendMode = readBuffer[5] & 0xC0;
+                    (readBuffer[5] & 0x3F) << 24; // Mask out the send mode bits
+                //int sendMode = readBuffer[5] & 0xC0; // Probably not needed
                 int dataType = readBuffer[6];
 
                 responseLength = responseLen;
                 expectedResponse = getResponseTypeById(dataType);
-                // Send mode is probably not needed
 
                 readState = ReadState.READ_RESPONSE;
                 readBuffer = new byte[responseLen];
@@ -414,10 +428,15 @@ public class Lidar implements SerialPortDataListener {
                         readResponseScan();
                         break;
                 }
+
+                if (busy == BusyState.BUSY_UNTIL_RESPONSE) {
+                    busy = BusyState.NOT_BUSY;
+                }
             }
         }
     }
 
+    // Gets a response type from the protocol identifier
     private ResponseType getResponseTypeById(int id) {
         switch (id) {
             case RESPONSE_SCAN:
@@ -433,9 +452,11 @@ public class Lidar implements SerialPortDataListener {
 
     @Override
     public int getListeningEvents() {
+        // Listen for when data becomes available
         return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
     }
 
+    // Called when new data arrives from the lidar
     @Override
     public void serialEvent(SerialPortEvent event) {
         if (readBuffer == null) {
@@ -458,6 +479,8 @@ public class Lidar implements SerialPortDataListener {
         }
     }
 
+    // Converts a byte array to a hex string
+    // Limit is the amount of data to read from the array
     private String toHex(byte[] data, int limit) {
         final char[] CHARS = "0123456789abcdef".toCharArray();
         char[] hex = new char[limit * 2];
