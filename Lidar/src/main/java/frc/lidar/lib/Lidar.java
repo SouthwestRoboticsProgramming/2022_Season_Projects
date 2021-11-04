@@ -337,6 +337,41 @@ public class Lidar implements SerialPortDataListener {
         busyBegin = System.currentTimeMillis();
     }
 
+    private void readResponseInfo() {
+
+    }
+
+    private void readResponseHealth() {
+        assert readBuffer.length == 3;
+
+        int status = readBuffer[0];
+        LidarHealth health;
+        switch (status) {
+            case 0:
+                health = LidarHealth.GOOD;
+                break;
+            case 1:
+                health = LidarHealth.WARNING;
+                break;
+            case 2:
+                health = LidarHealth.ERROR;
+                break;
+            default:
+                throw new RuntimeException("Unknown status id " + status);
+        }
+
+        for (CompletableFuture<LidarHealth> future : healthFutures) {
+            future.complete(health);
+        }
+
+        readState = ReadState.NO_READ;
+        readBuffer = null;
+    }
+
+    private void readResponseScan() {
+
+    }
+
     private void onReadBufferFilled() {
         switch (readState) {
             case NO_READ:
@@ -358,11 +393,22 @@ public class Lidar implements SerialPortDataListener {
                 // Send mode is probably not needed
 
                 readState = ReadState.READ_RESPONSE;
+                readBuffer = new byte[responseLen];
 
                 return;
             }
             case READ_RESPONSE: {
-                return;
+                switch (expectedResponse) {
+                    case INFO:
+                        readResponseInfo();
+                        break;
+                    case HEALTH:
+                        readResponseHealth();
+                        break;
+                    case SCAN:
+                        readResponseScan();
+                        break;
+                }
             }
         }
     }
@@ -387,6 +433,10 @@ public class Lidar implements SerialPortDataListener {
 
     @Override
     public void serialEvent(SerialPortEvent event) {
+        if (readBuffer == null) {
+            return;
+        }
+
         while (port.bytesAvailable() > 0) {
             byte[] buffer = new byte[readBuffer.length - readIndex];
             int read = port.readBytes(buffer, buffer.length);
@@ -401,9 +451,6 @@ public class Lidar implements SerialPortDataListener {
                 }
             }
         }
-        int read = port.readBytes(data, data.length);
-
-        System.out.println("Hex: " + toHex(data, read));
     }
 
     private String toHex(byte[] data, int limit) {
