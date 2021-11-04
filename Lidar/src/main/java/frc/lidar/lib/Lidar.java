@@ -32,6 +32,11 @@ public class Lidar implements SerialPortDataListener {
     private static final byte REQUEST_GET_INFO = 0x50;
     private static final byte REQUEST_GET_HEALTH = 0x52;
 
+    // Response id constants
+    private static final byte RESPONSE_SCAN = (byte) 0x81;
+    private static final byte RESPONSE_INFO = 0x04;
+    private static final byte RESPONSE_HEALTH = 0x06;
+
     private static final long BUSY_TIME = 2;
 
     private enum ResponseType {
