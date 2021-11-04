@@ -38,6 +38,12 @@ public class Lidar implements SerialPortDataListener {
         INFO, HEALTH, SCAN
     }
 
+    private enum ReadState {
+        READ_DESCRIPTOR,
+        READ_RESPONSE,
+        NO_READ
+    }
+
     private enum BusyState {
         NOT_BUSY,
         BUSY_UNTIL_RESPONSE,
@@ -50,8 +56,11 @@ public class Lidar implements SerialPortDataListener {
 
     private long busyBegin;
     private BusyState busy;
+    private ReadState readState;
     private ResponseType expectedResponse;
     private byte[] readBuffer = null;
+    private int readIndex = 0;
+    private int responseLength = -1;
 
     /**
      * Gets a list of serial ports that could be a lidar.
@@ -113,6 +122,7 @@ public class Lidar implements SerialPortDataListener {
         healthFutures = new HashSet<>();
 
         busy = BusyState.NOT_BUSY;
+        readState = ReadState.NO_READ;
 
         port.setBaudRate(115200);
         port.setParity(SerialPort.NO_PARITY);
@@ -144,6 +154,7 @@ public class Lidar implements SerialPortDataListener {
         busy = BusyState.BUSY_UNTIL_RESPONSE;
 
         readBuffer = new byte[7];
+        readState = ReadState.READ_DESCRIPTOR;
 
         return future;
     }
@@ -169,6 +180,7 @@ public class Lidar implements SerialPortDataListener {
         busy = BusyState.BUSY_UNTIL_RESPONSE;
 
         readBuffer = new byte[7];
+        readState = ReadState.READ_DESCRIPTOR;
 
         return future;
     }
@@ -189,6 +201,7 @@ public class Lidar implements SerialPortDataListener {
         beginTimedBusy();
 
         readBuffer = new byte[7];
+        readState = ReadState.READ_DESCRIPTOR;
     }
 
     /**
@@ -325,7 +338,46 @@ public class Lidar implements SerialPortDataListener {
     }
 
     private void onReadBufferFilled() {
-        
+        switch (readState) {
+            case NO_READ:
+                return;
+            case READ_DESCRIPTOR: {
+                assert readBuffer.length == 7;
+                assert readBuffer[0] == START_FLAG;
+                assert readBuffer[1] == START_FLAG_2;
+
+                int responseLen = readBuffer[2] | 
+                    readBuffer[3] << 8 | 
+                    readBuffer[4] << 16 | 
+                    (readBuffer[5] & 0x3F) << 24;
+                int sendMode = readBuffer[5] & 0xC0;
+                int dataType = readBuffer[6];
+
+                responseLength = responseLen;
+                expectedResponse = getResponseTypeById(dataType);
+                // Send mode is probably not needed
+
+                readState = ReadState.READ_RESPONSE;
+
+                return;
+            }
+            case READ_RESPONSE: {
+                return;
+            }
+        }
+    }
+
+    private ResponseType getResponseTypeById(int id) {
+        switch (id) {
+            case RESPONSE_SCAN:
+                return ResponseType.SCAN;
+            case RESPONSE_INFO:
+                return ResponseType.INFO;
+            case RESPONSE_HEALTH:
+                return ResponseType.HEALTH;
+            default:
+                throw new IllegalArgumentException("Unknown id " + id);
+        }
     }
 
     @Override
@@ -335,7 +387,20 @@ public class Lidar implements SerialPortDataListener {
 
     @Override
     public void serialEvent(SerialPortEvent event) {
-        byte[] data = new byte[port.bytesAvailable()];
+        while (port.bytesAvailable() > 0) {
+            byte[] buffer = new byte[readBuffer.length - readIndex];
+            int read = port.readBytes(buffer, buffer.length);
+            
+            if (read > 0) {
+                System.arraycopy(buffer, 0, readBuffer, readIndex, read);
+                readIndex += read;
+
+                if (readIndex == readBuffer.length) {
+                    onReadBufferFilled();
+                    readIndex = 0;
+                }
+            }
+        }
         int read = port.readBytes(data, data.length);
 
         System.out.println("Hex: " + toHex(data, read));
