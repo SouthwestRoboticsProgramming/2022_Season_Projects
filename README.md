@@ -15,3 +15,6 @@ See the readme in TaskManager for more details.
 
 ### Vision Processing
 Uses OpenCV to manipulate webcam inputs. So far this has been implemented to detect balls.
+
+### Lidar
+A library and a task for interfacing with a RPLidar A1M8 lidar sensor. The API is fully asynchronous to make it easier to incorporate into tasks.
