@@ -6,6 +6,7 @@ package frc.lidar.lib;
  * @author rmheuer
  */
 public class ScanEntry {
+    private final int quality;
     private final double angle;
     private final double distance;
 
@@ -16,9 +17,14 @@ public class ScanEntry {
      * @param angle the angle in radians
      * @param distance the distance in meters
      */
-    public ScanEntry(double angle, double distance) {
+    public ScanEntry(int quality, double angle, double distance) {
+        this.quality = quality;
         this.angle = angle;
         this.distance = distance;
+    }
+
+    public int getQuality() {
+        return quality;
     }
 
     /**
@@ -37,5 +43,14 @@ public class ScanEntry {
      */
     public double getDistance() {
         return distance;
+    }
+
+    @Override
+    public String toString() {
+        return "ScanEntry{" +
+                "quality=" + quality +
+                ", angle=" + angle +
+                ", distance=" + distance +
+                '}';
     }
 }

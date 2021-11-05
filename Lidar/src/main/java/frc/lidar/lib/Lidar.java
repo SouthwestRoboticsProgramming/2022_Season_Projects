@@ -62,6 +62,10 @@ public class Lidar implements SerialPortDataListener {
     private final Set<CompletableFuture<LidarInfo>> infoFutures;
     private final Set<CompletableFuture<LidarHealth>> healthFutures;
 
+    // Callbacks
+    private Runnable scanStartCallback = () -> {};
+    private Consumer<ScanEntry> scanDataCallback = (entry) -> {};
+
     // Busy info
     private long busyBegin;
     private BusyState busy;
@@ -232,7 +236,7 @@ public class Lidar implements SerialPortDataListener {
      * @param callback callback function
      */
     public void setScanStartCallback(Runnable callback) {
-        
+        scanStartCallback = callback;
     }
 
     /**
@@ -244,7 +248,7 @@ public class Lidar implements SerialPortDataListener {
      * @param callback callback function
      */
     public void setScanDataCallback(Consumer<ScanEntry> callback) {
-
+        scanDataCallback = callback;
     }
 
     /**
@@ -271,7 +275,7 @@ public class Lidar implements SerialPortDataListener {
             }
         }
 
-        return busy;
+        return busy != BusyState.NOT_BUSY;
     }
 
     /**
@@ -345,20 +349,41 @@ public class Lidar implements SerialPortDataListener {
 
     // Sets the busy state to BUSY_FOR_TIME and initializes the time
     private void beginTimedBusy() {
-        busy = Busy.BUSY_FOR_TIME;
+        busy = BusyState.BUSY_FOR_TIME;
         busyBegin = System.currentTimeMillis();
     }
 
     // Reads a response containing device info data
     private void readResponseInfo() {
+        assert readBuffer.length == 20; // Length should always be 20
 
+        int modelId = readBuffer[0] & 0xFF;
+        int firmwareMinor = readBuffer[1] & 0xFF;
+        int firmwareMajor = readBuffer[2] & 0xFF;
+        int hardwareVer = readBuffer[3] & 0xFF;
+        long serialNumberLow = 0;
+        long serialNumberHigh = 0;
+        for (int i = 0; i < 8; i++) {
+            serialNumberLow  |= (long) (readBuffer[i +  4] & 0xFF) << (i * 8);
+            serialNumberHigh |= (long) (readBuffer[i + 12] & 0xFF) << (i * 8);
+        }
+
+        LidarInfo info = new LidarInfo(modelId, firmwareMinor, firmwareMajor, hardwareVer, serialNumberLow, serialNumberHigh);
+
+        for (CompletableFuture<LidarInfo> future : infoFutures) {
+            future.complete(info);
+        }
+        infoFutures.clear();
+
+        readState = ReadState.NO_READ;
+        readBuffer = null;
     }
 
     // Reads a response containing response health data
     private void readResponseHealth() {
         assert readBuffer.length == 3; // Length should always be 3
 
-        int status = readBuffer[0];
+        int status = readBuffer[0] & 0xFF;
         LidarHealth health;
         switch (status) {
             case 0:
@@ -385,7 +410,26 @@ public class Lidar implements SerialPortDataListener {
 
     // Reads a response containing scan response data
     private void readResponseScan() {
+        assert readBuffer.length == 5; // Length should always be 5
 
+        boolean start = (readBuffer[0] & 0x01) != 0;
+        assert ((readBuffer[0] & 0x02) ^ (readBuffer[1] & 0x01)) == 1;
+        int quality = (readBuffer[0] & 0xFC) >> 2;
+
+        assert (readBuffer[1] & 0x01) == 1;
+        int angleFixed = (readBuffer[1] & 0xFE) >> 2;
+        angleFixed |= (readBuffer[2] & 0xFF) << 7;
+        double angle = angleFixed / 64.0;
+
+        int distanceFixed = (readBuffer[3] & 0xF) | ((readBuffer[4] & 0xFF) << 8);
+        double distance = distanceFixed / 4.0;
+
+        if (start) {
+            scanStartCallback.run();
+        }
+
+        ScanEntry entry = new ScanEntry(quality, angle, distance);
+        scanDataCallback.accept(entry);
     }
 
     // Method called when the read buffer has been filled
@@ -401,12 +445,12 @@ public class Lidar implements SerialPortDataListener {
                 assert readBuffer[0] == START_FLAG; // For data validation
                 assert readBuffer[1] == START_FLAG_2; // Also for data validation
 
-                int responseLen = readBuffer[2] | 
-                    readBuffer[3] << 8 | 
-                    readBuffer[4] << 16 | 
-                    (readBuffer[5] & 0x3F) << 24; // Mask out the send mode bits
+                int responseLen = (readBuffer[2] & 0xFF) |
+                        (readBuffer[3] & 0xFF) << 8 |
+                        (readBuffer[4] & 0xFF) << 16 |
+                        (readBuffer[5] & 0x3F) << 24; // Mask out the send mode bits
                 //int sendMode = readBuffer[5] & 0xC0; // Probably not needed
-                int dataType = readBuffer[6];
+                byte dataType = readBuffer[6];
 
                 responseLength = responseLen;
                 expectedResponse = getResponseTypeById(dataType);
@@ -437,7 +481,7 @@ public class Lidar implements SerialPortDataListener {
     }
 
     // Gets a response type from the protocol identifier
-    private ResponseType getResponseTypeById(int id) {
+    private ResponseType getResponseTypeById(byte id) {
         switch (id) {
             case RESPONSE_SCAN:
                 return ResponseType.SCAN;

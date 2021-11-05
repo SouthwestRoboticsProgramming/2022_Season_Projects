@@ -7,7 +7,7 @@ package frc.lidar.lib.exceptions;
  * @author rmheuer
  */
 public class LidarBusyException extends LidarException {
-    public LidarBusyException(String message) {
-        super(message);
+    public LidarBusyException() {
+        super("Lidar busy");
     }
 }

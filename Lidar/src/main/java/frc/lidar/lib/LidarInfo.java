@@ -87,4 +87,16 @@ public class LidarInfo {
     public long getSerialNumberHigh() {
         return serialNumberHigh;
     }
+
+    @Override
+    public String toString() {
+        return "LidarInfo{" +
+                "modelId=" + modelId +
+                ", firmwareMinor=" + firmwareMinor +
+                ", firmwareMajor=" + firmwareMajor +
+                ", hardwareVersion=" + hardwareVersion +
+                ", serialNumberLow=" + serialNumberLow +
+                ", serialNumberHigh=" + serialNumberHigh +
+                '}';
+    }
 }
