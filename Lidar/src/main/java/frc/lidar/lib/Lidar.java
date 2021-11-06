@@ -421,7 +421,7 @@ public class Lidar implements SerialPortDataListener {
         angleFixed |= (readBuffer[2] & 0xFF) << 7;
         double angle = angleFixed / 64.0;
 
-        int distanceFixed = (readBuffer[3] & 0xF) | ((readBuffer[4] & 0xFF) << 8);
+        int distanceFixed = (readBuffer[3] & 0xFF) | ((readBuffer[4] & 0xFF) << 8);
         double distance = distanceFixed / 4.0;
 
         if (start) {
