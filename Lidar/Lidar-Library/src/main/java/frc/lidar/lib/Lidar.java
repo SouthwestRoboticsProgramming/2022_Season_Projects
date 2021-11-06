@@ -421,15 +421,25 @@ public class Lidar implements SerialPortDataListener {
         angleFixed |= (readBuffer[2] & 0xFF) << 7;
         double angle = angleFixed / 64.0;
 
-        int distanceFixed = (readBuffer[3] & 0xF) | ((readBuffer[4] & 0xFF) << 8);
+        int distanceFixed = (readBuffer[3] & 0xFF) | ((readBuffer[4] & 0xFF) << 8);
         double distance = distanceFixed / 4.0;
 
         if (start) {
-            scanStartCallback.run();
+            try {
+                scanStartCallback.run();
+            } catch (Throwable e) {
+                System.err.println("Exception in scan start callback:");
+                e.printStackTrace();
+            }
         }
 
         ScanEntry entry = new ScanEntry(quality, angle, distance);
-        scanDataCallback.accept(entry);
+        try {
+            scanDataCallback.accept(entry);
+        } catch (Throwable e) {
+            System.err.println("Exception in scan data callback:");
+            e.printStackTrace();
+        }
     }
 
     // Method called when the read buffer has been filled
@@ -470,6 +480,9 @@ public class Lidar implements SerialPortDataListener {
                         break;
                     case SCAN:
                         readResponseScan();
+                        break;
+                    default:
+                        System.out.println(toHex(readBuffer, readBuffer.length));
                         break;
                 }
 

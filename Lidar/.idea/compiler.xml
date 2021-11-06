@@ -6,7 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Lidar" />
+        <module name="Lidar-Demo" />
+        <module name="Lidar-Library" />
+        <module name="Lidar-Task" />
       </profile>
     </annotationProcessing>
   </component>
