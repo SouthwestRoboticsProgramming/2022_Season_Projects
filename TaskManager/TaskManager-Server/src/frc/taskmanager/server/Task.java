@@ -50,9 +50,14 @@ public class Task {
                 @Override
                 protected void processLine(String line) {
                     ByteArrayOutputStream b = new ByteArrayOutputStream();
-                    DataOutputStream o = new DataOutputStream(b);
-                    o.writeUTF(line);
-                    o.close();
+                    try {
+                        DataOutputStream o = new DataOutputStream(b);
+                        o.writeUTF(line);
+                        o.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
                     
                     manager.queueClientboundMessage(new ClientboundMessage(name, "STDOUT", b.toByteArray()));
                 }
@@ -61,9 +66,14 @@ public class Task {
                 @Override
                 protected void processLine(String line) {
                     ByteArrayOutputStream b = new ByteArrayOutputStream();
-                    DataOutputStream o = new DataOutputStream(b);
-                    o.writeUTF(line);
-                    o.close();
+                    try {
+                        DataOutputStream o = new DataOutputStream(b);
+                        o.writeUTF(line);
+                        o.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
                     
                     manager.queueClientboundMessage(new ClientboundMessage(name, "STDERR", b.toByteArray()));
                 }
@@ -131,7 +141,7 @@ public class Task {
     private void copyStream(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
-        while ((read = in.read(buf)) != -1) {
+        while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
     }

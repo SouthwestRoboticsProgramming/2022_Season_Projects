@@ -1,5 +1,5 @@
 // Original source from https://github.com/zeroturnaround/zt-exec/blob/master/src/main/java/org/zeroturnaround/exec/stream/LogOutputStream.java
-// Slighty modified to work correctly with the TaskManager server
+// Slightly modified to work correctly with the TaskManager server
 
 /*
  * Copyright (C) 2014 ZeroTurnaround <support@zeroturnaround.com>
@@ -24,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 /**
  * Base class to connect a logging system to the output and/or
