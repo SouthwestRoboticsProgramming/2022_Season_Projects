@@ -5,7 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -18,8 +19,10 @@ public class Task {
     private final TaskManager manager;
     private final Queue<TaskboundMessage> messageQueue;
     private Process process;
-    private BufferedReader stdOut;
-    private BufferedReader stdErr;
+    private InputStream stdOutInput;
+    private InputStream stdErrInput;
+    private LogOutputStream stdOutOutput;
+    private LogOutputStream stdErrOutput;
 
     public Task(String name, File folder, TaskManager manager) {
         this.name = name;
@@ -40,8 +43,31 @@ public class Task {
         System.out.println("Starting task '" + name + "'");
         try {
             process = Runtime.getRuntime().exec(COMMAND, new String[0], folder);
-            stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            stdOutInput = process.getInputStream();
+            stdErrInput = process.getErrorStream();
+            
+            stdOutOutput = new LogOutputStream() {
+                @Override
+                protected void processLine(String line) {
+                    ByteArrayOutputStream b = new ByteArrayOutputStream();
+                    DataOutputStream o = new DataOutputStream(b);
+                    o.writeUTF(line);
+                    o.close();
+                    
+                    manager.queueClientboundMessage(new ClientboundMessage(name, "STDOUT", b.toByteArray()));
+                }
+            };
+            stdErrOutput = new LogOutputStream() {
+                @Override
+                protected void processLine(String line) {
+                    ByteArrayOutputStream b = new ByteArrayOutputStream();
+                    DataOutputStream o = new DataOutputStream(b);
+                    o.writeUTF(line);
+                    o.close();
+                    
+                    manager.queueClientboundMessage(new ClientboundMessage(name, "STDERR", b.toByteArray()));
+                }
+            };
         } catch (Exception e) {
             System.err.println("Error while starting task '" + name + "':");
             e.printStackTrace();
@@ -88,33 +114,25 @@ public class Task {
         }
 
         try {
-            while (stdOut.ready()) {
-                String line = stdOut.readLine();
-                ByteArrayOutputStream b = new ByteArrayOutputStream();
-                DataOutputStream o = new DataOutputStream(b);
-                o.writeUTF(line);
-                o.close();
-
-                manager.queueClientboundMessage(new ClientboundMessage(name, "STDOUT", b.toByteArray()));
-            }
+            copyStream(stdOutInput, stdOutOutput);
         } catch (IOException e) {
             System.err.println("Exception while flushing stdout:");
             e.printStackTrace();
         }
 
         try {
-            while (stdErr.ready()) {
-                String line = stdErr.readLine();
-                ByteArrayOutputStream b = new ByteArrayOutputStream();
-                DataOutputStream o = new DataOutputStream(b);
-                o.writeUTF(line);
-                o.close();
-
-                manager.queueClientboundMessage(new ClientboundMessage(name, "STDERR", b.toByteArray()));
-            }
+            copyStream(stdErrInput, stdErrOutput);
         } catch (IOException e) {
             System.err.println("Exception while flushing stderr:");
             e.printStackTrace();
+        }
+    }
+    
+    private void copyStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buf)) != -1) {
+            out.write(buffer, 0, read);
         }
     }
 
