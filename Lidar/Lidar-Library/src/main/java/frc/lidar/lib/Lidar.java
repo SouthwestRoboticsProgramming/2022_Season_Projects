@@ -75,7 +75,6 @@ public class Lidar implements SerialPortDataListener {
     private ResponseType expectedResponse;
     private byte[] readBuffer = null;
     private int readIndex = 0;
-    private int responseLength = -1;
 
     /**
      * Gets a list of serial ports that could be a lidar.
@@ -461,8 +460,7 @@ public class Lidar implements SerialPortDataListener {
                         (readBuffer[5] & 0x3F) << 24; // Mask out the send mode bits
                 //int sendMode = readBuffer[5] & 0xC0; // Probably not needed
                 byte dataType = readBuffer[6];
-
-                responseLength = responseLen;
+                
                 expectedResponse = getResponseTypeById(dataType);
 
                 readState = ReadState.READ_RESPONSE;
