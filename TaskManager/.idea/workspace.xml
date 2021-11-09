@@ -4,51 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Controller/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Task-Client/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TaskManager-Client/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TaskManager-Server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/TaskManager_Server_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_formdev_flatlaf_1_6_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/Controller.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/frc/taskmanager/controller/ControllerMain.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/frc/taskmanager/controller/CoprocessorConnectionParams.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/frc/taskmanager/controller/CoprocessorController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/frc/taskmanager/controller/LogPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/frc/taskmanager/controller/NumberFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/frc/taskmanager/controller/SmartScroller.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/frc/taskmanager/controller/TaskViewPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TODO.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Task-Client/Task-Client.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Task-Client/src/frc/taskmanager/taskclient/TaskMessenger.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Client/TaskManager-Client.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Client/src/frc/taskmanager/client/Coprocessor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Client/src/frc/taskmanager/client/Task.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/TaskManager-Server.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/ClientConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/ClientboundMessage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/LogOutputStream.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/MessageServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/MessageServerClientConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/ServerMain.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/Task.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/TaskManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/TaskManagerServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/frc/taskmanager/server/TaskboundMessage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/task.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks/Single Line Test/task.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks/TestTask/task.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks/TestTask2/task.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ziptest.zip" beforeDir="false" />
-    </list>
+    <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,6 +28,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$/Downloads/visualvm_21/bin/visualvm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
