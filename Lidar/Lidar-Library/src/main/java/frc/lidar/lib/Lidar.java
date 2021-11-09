@@ -411,6 +411,8 @@ public class Lidar implements SerialPortDataListener {
     private void readResponseScan() {
         assert readBuffer.length == 5; // Length should always be 5
 
+        // This works, do not question it
+      
         boolean start = (readBuffer[0] & 0x01) != 0;
         assert ((readBuffer[0] & 0x02) ^ (readBuffer[1] & 0x01)) == 1;
         int quality = (readBuffer[0] & 0xFC) >> 2;
