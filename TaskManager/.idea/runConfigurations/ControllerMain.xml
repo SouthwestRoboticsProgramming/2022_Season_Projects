@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ControllerMain" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="frc.taskmanager.controller.ControllerMain" />
+    <module name="Controller" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="frc.taskmanager.controller.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

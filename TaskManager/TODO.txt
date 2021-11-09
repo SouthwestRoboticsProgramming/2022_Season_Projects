@@ -1,3 +1,0 @@
-Get list of all tasks
-
-BUG: STDOUT and STDERR are not sent until a second line is output

@@ -79,6 +79,7 @@ public class MessageServerClientConnection extends Thread {
                 }
             }
             System.out.println("Message server client '" + (origin == null ? "unknown" : origin.getName()) + "' disconnected due to heartbeat timeout");
+            socket.close();
         } catch (IOException e) {
             System.err.println("Exception while handling client connection:");
             e.printStackTrace();

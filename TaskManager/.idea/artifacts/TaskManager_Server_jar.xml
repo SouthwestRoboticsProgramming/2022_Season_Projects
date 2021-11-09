@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="TaskManager-Server:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/TaskManager_Server_jar</output-path>
-    <root id="archive" name="TaskManager-Server.jar">
-      <element id="module-output" name="TaskManager-Server" />
-    </root>
-  </artifact>
-</component>
