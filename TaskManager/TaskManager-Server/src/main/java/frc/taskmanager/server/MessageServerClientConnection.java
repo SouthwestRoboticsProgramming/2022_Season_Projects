@@ -28,7 +28,12 @@ public class MessageServerClientConnection extends Thread {
 
     private void readPacket() throws IOException {
         if (origin == null) {
-            origin = manager.getTask(in.readUTF());
+            String name = in.readUTF();
+            origin = manager.getTask(name);
+            if (origin == null) {
+                System.out.println("Warning: Message server client identified as nonexistent task '" + name + "'");
+                return;
+            }
             System.out.println("Message server client has identified as task '" + origin.getName() + "'");
             heartbeatTimer = HEARTBEAT_TIMEOUT;
             return;
@@ -80,7 +85,7 @@ public class MessageServerClientConnection extends Thread {
             }
             System.out.println("Message server client '" + (origin == null ? "unknown" : origin.getName()) + "' disconnected due to heartbeat timeout");
             socket.close();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             System.err.println("Exception while handling client connection:");
             e.printStackTrace();
         }

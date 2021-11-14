@@ -9,22 +9,21 @@ class TaskMessenger:
         
         self.socket = socket
         self.messageCallback = lambda mType, data: None
+        self.heartbeat = struct.pack(">h", len("_Heartbeat")) + "_Heartbeat" + struct.pack(">i", 0)
+
+        # Identify ourselves to the message server
+        self._write(struct.pack(">h", len(name)) + name.encode("utf-8"))
 
     def sendMessage(self, mType, data):
         typeLen = struct.pack(">h", len(mType))
         dataLen = struct.pack(">i", len(data))
         encoded = typeLen + mType.encode("utf-8") + dataLen + data
-        encodedLen = len(encoded)
-
-        totalSent = 0
-        while totalSent < encodedLen:
-            sent = self.socket.send(encoded[totalSent:])
-            if sent == 0:
-                raise RuntimeError("socket disconnected")
-            totalSent += sent
+        self._write(encoded)
 
     def read(self):
-        readable = select.select([self.socket], [], [])
+        self._write(self.heartbeat)
+
+        readable = select.select([self.socket], [], [], 0)
         for socket in readable:
             if socket == self.socket:
                 self._handleRead()
@@ -40,6 +39,15 @@ class TaskMessenger:
         while len(data) < count:
             data += self.socket.recv(count)
         return data
+
+    def _write(self, data):
+        dataLen = len(data)
+        totalSent = 0
+        while totalSent < dataLen:
+            sent = self.socket.send(data[totalSent:])
+            if sent == 0:
+                raise RuntimeError("socket disconnected")
+            totalSent += sent
 
     def _handleRead(self):
         typeLen = struct.unpack(">h", self._read(2))[0]

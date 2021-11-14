@@ -138,6 +138,11 @@ public class Task {
     }
     
     private void copyStream(InputStream in, OutputStream out) throws IOException {
+        // Don't do anything if there is nothing to read
+        if (in.available() == 0) {
+            return;
+        }
+
         byte[] buffer = new byte[1024];
         int read;
         while ((read = in.read(buffer)) != -1) {
