@@ -10,7 +10,7 @@ import java.util.List;
 public class PathfindingDemo extends PApplet {
     private Grid grid;
     private Pathfinder pathfinder;
-    private final int CELLS = 200;
+    private final int CELLS = 52;
     private float cellSize;
     private int startX, startY;
     private int endX, endY;
@@ -27,7 +27,7 @@ public class PathfindingDemo extends PApplet {
         grid = new Grid(CELLS, CELLS);
         cellSize = width / (float) CELLS;
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < CELLS * CELLS / 5; i++) {
             int x = (int) (random(0, CELLS));
             int y = (int) (random(0, CELLS));
 

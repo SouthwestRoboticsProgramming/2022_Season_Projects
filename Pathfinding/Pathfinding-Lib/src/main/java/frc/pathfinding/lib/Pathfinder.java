@@ -41,14 +41,16 @@ public class Pathfinder {
         int y = cell.getY();
         Set<Cell> neighbors = new HashSet<>();
 
-        if (checkValidNeighbor(x - 1, y))
-            neighbors.add(new Cell(x - 1, y));
-        if (checkValidNeighbor(x + 1, y))
-            neighbors.add(new Cell(x + 1, y));
-        if (checkValidNeighbor(x, y - 1))
-            neighbors.add(new Cell(x, y - 1));
-        if (checkValidNeighbor(x, y + 1))
-            neighbors.add(new Cell(x, y + 1));
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0)
+                    continue;
+
+                if (checkValidNeighbor(x + i, y + j)) {
+                    neighbors.add(new Cell(x + i, y + j));
+                }
+            }
+        }
 
         return neighbors;
     }
