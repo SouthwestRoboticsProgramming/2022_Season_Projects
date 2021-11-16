@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Task-Client/ports/python/taskclient.py" beforeDir="false" afterPath="$PROJECT_DIR$/Task-Client/ports/python/taskclient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/MessageServerClientConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/MessageServerClientConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/Task.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Demo/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
