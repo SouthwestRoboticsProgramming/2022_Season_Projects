@@ -10,14 +10,14 @@ import java.util.List;
 public class PathfindingDemo extends PApplet {
     private Grid grid;
     private Pathfinder pathfinder;
-    private final int CELLS = 52;
+    private final int CELLS = 25;
     private float cellSize;
     private int startX, startY;
     private int endX, endY;
 
     @Override
     public void settings() {
-        size(800, 800);
+        fullScreen();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class PathfindingDemo extends PApplet {
         ellipseMode(CENTER);
 
         grid = new Grid(CELLS, CELLS);
-        cellSize = width / (float) CELLS;
+        cellSize = min(width, height) / (float) CELLS;
 
         for (int i = 0; i < CELLS * CELLS / 5; i++) {
             int x = (int) (random(0, CELLS));
@@ -101,6 +101,11 @@ public class PathfindingDemo extends PApplet {
             endY = y;
             pathfinder.setGoalCell(new Cell(endX, endY));
         }
+    }
+
+    @Override
+    public void mouseDragged() {
+        mousePressed();
     }
 
     public static void main(String[] args) {
