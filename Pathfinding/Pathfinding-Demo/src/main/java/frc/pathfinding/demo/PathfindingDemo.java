@@ -2,6 +2,7 @@ package frc.pathfinding.demo;
 
 import frc.pathfinding.lib.Cell;
 import frc.pathfinding.lib.Grid;
+import frc.pathfinding.lib.PathOptimizer;
 import frc.pathfinding.lib.Pathfinder;
 import processing.core.PApplet;
 
@@ -10,13 +11,16 @@ import java.util.List;
 public class PathfindingDemo extends PApplet {
     private Grid grid;
     private Pathfinder pathfinder;
-    private final int CELLS = 25;
+    private PathOptimizer optimizer;
+    private final int CELLS_Y = 26 * 12 / 6;
+    private final int CELLS_X = 54 * 12 / 6;
     private float cellSize;
     private int startX, startY;
     private int endX, endY;
 
     @Override
     public void settings() {
+        //size(800, 600);
         fullScreen();
     }
 
@@ -24,23 +28,24 @@ public class PathfindingDemo extends PApplet {
     public void setup() {
         ellipseMode(CENTER);
 
-        grid = new Grid(CELLS, CELLS);
-        cellSize = min(width, height) / (float) CELLS;
+        grid = new Grid(CELLS_X, CELLS_Y);
+        cellSize = width / (float) CELLS_X;
 
-        for (int i = 0; i < CELLS * CELLS / 5; i++) {
-            int x = (int) (random(0, CELLS));
-            int y = (int) (random(0, CELLS));
+        for (int i = 0; i < CELLS_X * CELLS_Y / 2; i++) {
+            int x = (int) (random(0, CELLS_X));
+            int y = (int) (random(0, CELLS_Y));
 
             grid.setCellBlocked(x, y, true);
         }
 
         pathfinder = new Pathfinder(grid);
+        optimizer = new PathOptimizer(grid);
 
         startX = 1;
         startY = 1;
         pathfinder.setStartCell(new Cell(startX, startY));
-        endX = CELLS - 2;
-        endY = CELLS - 2;
+        endX = CELLS_X - 2;
+        endY = CELLS_Y - 2;
         pathfinder.setGoalCell(new Cell(endX, endY));
     }
 
@@ -50,8 +55,8 @@ public class PathfindingDemo extends PApplet {
 
         stroke(0);
         strokeWeight(1);
-        for (int i = 0; i < CELLS; i++) {
-            for (int j = 0; j < CELLS; j++) {
+        for (int i = 0; i < CELLS_X; i++) {
+            for (int j = 0; j < CELLS_Y; j++) {
                 if (grid.isCellBlocked(i, j)) {
                     fill(255, 0, 0);
                 } else {
@@ -75,7 +80,21 @@ public class PathfindingDemo extends PApplet {
         if (path == null) {
             return;
         }
-        stroke(0, 0, 255);
+
+//        stroke(0, 0, 255);
+//        strokeWeight(3);
+//        beginShape(LINES);
+//        for (int i = 0; i < path.size() - 1; i++) {
+//            Cell c1 = path.get(i);
+//            Cell c2 = path.get(i + 1);
+//            vertex((c1.getX() + 0.5f) * cellSize, (c1.getY() + 0.5f) * cellSize);
+//            vertex((c2.getX() + 0.5f) * cellSize, (c2.getY() + 0.5f) * cellSize);
+//        }
+//        endShape();
+
+        path = optimizer.optimize(path);
+
+        stroke(0, 128, 255);
         strokeWeight(3);
         beginShape(LINES);
         for (int i = 0; i < path.size() - 1; i++) {
@@ -85,6 +104,14 @@ public class PathfindingDemo extends PApplet {
             vertex((c2.getX() + 0.5f) * cellSize, (c2.getY() + 0.5f) * cellSize);
         }
         endShape();
+
+//        if (optimizer.testLineOfSight(new Cell(startX, startY), new Cell(endX, endY))) {
+//            stroke(0, 255, 0);
+//        } else {
+//            stroke(255, 128, 0);
+//        }
+//        translate(cellSize * 0.5f, cellSize * 0.5f);
+//        line(startX * cellSize, startY * cellSize, endX * cellSize, endY * cellSize);
     }
 
     @Override

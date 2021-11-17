@@ -16,16 +16,16 @@ public class Pathfinder {
         this.grid = grid;
     }
 
-    private double heuristic(Cell cell) {
+    private double heuristic(Node start, Node cell) {
         return distance(start, cell);
     }
 
-    private List<Cell> reconstructPath(Map<Cell, Cell> cameFrom, Cell current) {
+    private List<Cell> reconstructPath(Node current) {
         List<Cell> path = new ArrayList<>();
-        path.add(current);
-        while (cameFrom.containsKey(current)) {
-            current = cameFrom.get(current);
-            path.add(0, current);
+        path.add(new Cell(current.x, current.y));
+        while (current.parent != null) {
+            current = current.parent;
+            path.add(0, new Cell(current.x, current.y));
         }
         return path;
     }
@@ -36,10 +36,10 @@ public class Pathfinder {
                 !grid.isCellBlocked(x, y);
     }
 
-    private Set<Cell> getNeighbors(Cell cell) {
-        int x = cell.getX();
-        int y = cell.getY();
-        Set<Cell> neighbors = new HashSet<>();
+    private Set<Node> getNeighbors(Node[][] nodes, Node cell) {
+        int x = cell.x;
+        int y = cell.y;
+        Set<Node> neighbors = new HashSet<>();
 
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
@@ -47,7 +47,7 @@ public class Pathfinder {
                     continue;
 
                 if (checkValidNeighbor(x + i, y + j)) {
-                    neighbors.add(new Cell(x + i, y + j));
+                    neighbors.add(getNode(nodes, x + i, y + j));
                 }
             }
         }
@@ -55,10 +55,19 @@ public class Pathfinder {
         return neighbors;
     }
 
-    private double distance(Cell a, Cell b) {
-        double dx = a.getX() - b.getX();
-        double dy = a.getY() - b.getY();
+    private double distance(Node a, Node b) {
+        double dx = a.x - b.x;
+        double dy = a.y - b.y;
         return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    private Node getNode(Node[][] nodes, int x, int y) {
+        Node node = nodes[x][y];
+        if (node == null) {
+            node = new Node(x, y);
+            nodes[x][y] = node;
+        }
+        return node;
     }
 
     public List<Cell> getPath() {
@@ -70,38 +79,38 @@ public class Pathfinder {
             throw new IllegalStateException("Goal position has not been set");
         }
 
-        Set<Cell> openSet = new HashSet<>();
-        openSet.add(start);
-        Map<Cell, Cell> cameFrom = new HashMap<>();
-        Map<Cell, Double> gScore = new HashMap<>();
-        gScore.put(start, 0.0);
-        Map<Cell, Double> fScore = new HashMap<>();
-        fScore.put(start, heuristic(start));
+        Node[][] nodes = new Node[grid.getWidth()][grid.getHeight()];
+        Node startNode = getNode(nodes, start.getX(), start.getY());
+        startNode.gScore = 0;
+        startNode.fScore = heuristic(startNode, startNode);
+
+        Set<Node> openSet = new HashSet<>();
+        openSet.add(startNode);
 
         while (!openSet.isEmpty()) {
-            Cell current = null;
+            Node current = null;
             double lowestFScore = Double.POSITIVE_INFINITY;
-            for (Cell cell : openSet) {
-                double score = fScore.getOrDefault(cell, Double.POSITIVE_INFINITY);
+            for (Node node : openSet) {
+                double score = node.fScore;
                 if (score < lowestFScore) {
-                    current = cell;
+                    current = node;
                     lowestFScore = score;
                 }
             }
             if (current == null) {
                 throw new IllegalStateException("Current was null!");
             }
-            if (current.equals(goal)) {
-                return reconstructPath(cameFrom, current);
+            if (current.x == goal.getX() && current.y == goal.getY()) {
+                return reconstructPath(current);
             }
 
             openSet.remove(current);
-            for (Cell neighbor : getNeighbors(current)) {
-                double tentativeGScore = gScore.get(current) + distance(current, neighbor);
-                if (tentativeGScore < gScore.getOrDefault(neighbor, Double.POSITIVE_INFINITY)) {
-                    cameFrom.put(neighbor, current);
-                    gScore.put(neighbor, tentativeGScore);
-                    fScore.put(neighbor, tentativeGScore + heuristic(neighbor));
+            for (Node neighbor : getNeighbors(nodes, current)) {
+                double tentativeGScore = current.gScore + distance(current, neighbor);
+                if (tentativeGScore < neighbor.gScore) {
+                    neighbor.parent = current;
+                    neighbor.gScore = tentativeGScore;
+                    neighbor.fScore = neighbor.gScore + heuristic(startNode, neighbor);
                     if (!openSet.contains(neighbor)) {
                         openSet.add(neighbor);
                     }
@@ -111,6 +120,19 @@ public class Pathfinder {
 
         // No path was found
         return null;
+    }
+
+    private static class Node {
+        private final int x;
+        private final int y;
+        private double fScore = Double.POSITIVE_INFINITY;
+        private double gScore = Double.POSITIVE_INFINITY;
+        private Node parent;
+
+        public Node(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 
     public void setStartCell(Cell start) {
