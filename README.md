@@ -14,7 +14,7 @@ Allows starting, stopping, and deploying tasks to coprocessors.
 See the readme in TaskManager for more details.
 
 ### Vision
-Uses OpenCV to manipulate webcam inputs. So far this has been implemented to detect balls.
+Uses OpenCV to manipulate webcam inputs. This has been implemented to find vision targets and balls as well as using two cameras to find depth to any object.
 
 ### Lidar
 A library and a task for interfacing with a RPLidar A1M8 lidar sensor. The API is fully asynchronous to make it easier to incorporate into tasks.
