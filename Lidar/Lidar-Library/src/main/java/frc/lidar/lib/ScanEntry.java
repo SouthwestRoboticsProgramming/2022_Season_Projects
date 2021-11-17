@@ -15,7 +15,7 @@ public class ScanEntry {
      * given data.
      *
      * @param angle the angle in radians
-     * @param distance the distance in meters
+     * @param distance the distance in millimeters
      */
     public ScanEntry(int quality, double angle, double distance) {
         this.quality = quality;
@@ -39,7 +39,7 @@ public class ScanEntry {
     /**
      * Gets the distance of this measurement.
      *
-     * @return the distance in meters
+     * @return the distance in millimeters
      */
     public double getDistance() {
         return distance;

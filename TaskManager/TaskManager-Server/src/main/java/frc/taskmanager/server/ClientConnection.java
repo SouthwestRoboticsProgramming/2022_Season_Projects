@@ -255,10 +255,6 @@ public class ClientConnection {
     }
 
     private void flushTaskMessages() throws IOException {
-        for (Task task : manager.getTasks()) {
-            task.flushOutput();
-        }
-
         ClientboundMessage msg;
         while ((msg = manager.pollMessageQueue()) != null) {
             writePacket(msg.getOrigin(), msg.getType(), msg.getData());

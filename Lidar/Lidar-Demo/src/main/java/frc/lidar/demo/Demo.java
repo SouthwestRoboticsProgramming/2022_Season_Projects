@@ -58,7 +58,7 @@ public class Demo extends PApplet {
 
         noFill();
         stroke(255, 0, 0);
-        strokeWeight(2 / scale);
+        strokeWeight(8 / scale);
 
         List<ScanEntry> scanList  = new ArrayList<>(scan);
         scanList.sort(Comparator.comparingDouble(ScanEntry::getAngle));
@@ -71,6 +71,16 @@ public class Demo extends PApplet {
             vertex(x, y);
         }
         endShape();
+
+        strokeWeight(3 / scale);
+        beginShape();
+        for (ScanEntry entry : scanList) {
+            float x = (float) (Math.cos(Math.toRadians(entry.getAngle())) * entry.getDistance());
+            float y = (float) (Math.sin(Math.toRadians(entry.getAngle())) * entry.getDistance());
+
+            vertex(x, y);
+        }
+        endShape(CLOSE);
     }
 
     @Override

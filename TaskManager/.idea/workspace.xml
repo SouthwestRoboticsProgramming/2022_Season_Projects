@@ -1,26 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="TaskManager-Server:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Demo/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lidar/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/TaskManager_Server_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TaskManager-Client/src/main/java/frc/taskmanager/client/Something.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Demo/Lidar-Demo.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Library/Lidar-Library.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Library/src/main/java/frc/lidar/lib/ScanEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Library/src/main/java/frc/lidar/lib/ScanEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/Lidar-Task.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaskManager-Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/ClientConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/ClientConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/LogOutputStream.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/Task.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythontest/clienttest.py" beforeDir="false" afterPath="$PROJECT_DIR$/pythontest/clienttest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythontest/pythontest.zip" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
-      </MavenGeneralSettings>
-    </option>
   </component>
   <component name="ProjectId" id="20hDLRDtJDJK6QTc6lWxNB2IITz" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -30,8 +52,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/visualvm_21/bin/visualvm" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager" selected="Application.ControllerMain" />
@@ -46,57 +72,15 @@
     </task>
     <servers />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="883" y="135" key="#xdebugger.evaluate" timestamp="1636927555382">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state x="883" y="135" key="#xdebugger.evaluate/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927555382" />
-    <state width="249" height="420" key="GridCell.Tab.0.bottom" timestamp="1636927965057">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="249" height="420" key="GridCell.Tab.0.bottom/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965057" />
-    <state width="249" height="420" key="GridCell.Tab.0.center" timestamp="1636927965057">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="249" height="420" key="GridCell.Tab.0.center/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965057" />
-    <state width="249" height="420" key="GridCell.Tab.0.left" timestamp="1636927965057">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="249" height="420" key="GridCell.Tab.0.left/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965057" />
-    <state width="249" height="420" key="GridCell.Tab.0.right" timestamp="1636927965057">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="249" height="420" key="GridCell.Tab.0.right/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965057" />
-    <state width="1146" height="420" key="GridCell.Tab.1.bottom" timestamp="1636927965053">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="1146" height="420" key="GridCell.Tab.1.bottom/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965053" />
-    <state width="1146" height="420" key="GridCell.Tab.1.center" timestamp="1636927965053">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="1146" height="420" key="GridCell.Tab.1.center/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965053" />
-    <state width="1146" height="420" key="GridCell.Tab.1.left" timestamp="1636927965053">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="1146" height="420" key="GridCell.Tab.1.left/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965053" />
-    <state width="1146" height="420" key="GridCell.Tab.1.right" timestamp="1636927965053">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state width="1146" height="420" key="GridCell.Tab.1.right/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636927965053" />
-    <state x="93" y="135" width="1341" height="602" key="new project wizard" timestamp="1636487974033">
-      <screen x="0" y="0" width="1440" height="868" />
-    </state>
-    <state x="93" y="135" width="1341" height="602" key="new project wizard/0.0.1440.868/1440.0.1920.1080@0.0.1440.868" timestamp="1636487974033" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/Task.java</url>
-          <line>147</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

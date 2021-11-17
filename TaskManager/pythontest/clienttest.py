@@ -14,8 +14,12 @@ while True:
     timer = timer - 1
     if timer == 0:
         timer = 100
+
+
         client.sendMessage("Python! " + str(count), b'')
-        print("sent message")
+
+
+        print("sent message: " + str(count))
         count = count + 1
     time.sleep(0.01)
     

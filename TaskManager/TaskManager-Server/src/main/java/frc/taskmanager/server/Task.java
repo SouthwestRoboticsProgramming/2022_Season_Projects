@@ -1,11 +1,10 @@
 package frc.taskmanager.server;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.zeroturnaround.exec.ProcessExecutor;
+import org.zeroturnaround.exec.StartedProcess;
+import org.zeroturnaround.exec.stream.LogOutputStream;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -18,10 +17,6 @@ public class Task {
     private final TaskManager manager;
     private final Queue<TaskboundMessage> messageQueue;
     private Process process;
-    private InputStream stdOutInput;
-    private InputStream stdErrInput;
-    private LogOutputStream stdOutOutput;
-    private LogOutputStream stdErrOutput;
 
     public Task(String name, File folder, TaskManager manager) {
         this.name = name;
@@ -41,42 +36,45 @@ public class Task {
         }
         System.out.println("Starting task '" + name + "'");
         try {
-            process = Runtime.getRuntime().exec(COMMAND, new String[0], folder);
-            stdOutInput = process.getInputStream();
-            stdErrInput = process.getErrorStream();
-            
-            stdOutOutput = new LogOutputStream() {
+            ProcessExecutor executor = new ProcessExecutor();
+            executor.command(COMMAND);
+            executor.directory(folder);
+            executor.redirectOutput(new LogOutputStream() {
                 @Override
-                protected void processLine(String line) {
+                protected void processLine(String s) {
+                    System.out.println("out: " + s);
+
                     ByteArrayOutputStream b = new ByteArrayOutputStream();
+                    DataOutputStream d = new DataOutputStream(b);
+
                     try {
-                        DataOutputStream o = new DataOutputStream(b);
-                        o.writeUTF(line);
-                        o.close();
+                        d.writeUTF(s);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        return;
                     }
-                    
-                    manager.queueClientboundMessage(new ClientboundMessage(name, "STDOUT", b.toByteArray()));
+
+                    messageQueue.add(new TaskboundMessage("STDOUT", b.toByteArray()));
                 }
-            };
-            stdErrOutput = new LogOutputStream() {
+            });
+            executor.redirectError(new LogOutputStream() {
                 @Override
-                protected void processLine(String line) {
+                protected void processLine(String s) {
+                    System.err.println("err: " + s);
+
                     ByteArrayOutputStream b = new ByteArrayOutputStream();
+                    DataOutputStream d = new DataOutputStream(b);
+
                     try {
-                        DataOutputStream o = new DataOutputStream(b);
-                        o.writeUTF(line);
-                        o.close();
+                        d.writeUTF(s);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        return;
                     }
-                    
-                    manager.queueClientboundMessage(new ClientboundMessage(name, "STDERR", b.toByteArray()));
+
+                    messageQueue.add(new TaskboundMessage("STDERR", b.toByteArray()));
                 }
-            };
+            });
+            StartedProcess p = executor.start();
+            process = p.getProcess();
         } catch (Exception e) {
             System.err.println("Error while starting task '" + name + "':");
             e.printStackTrace();
@@ -115,39 +113,6 @@ public class Task {
 
     public boolean isRunning() {
         return process != null && process.isAlive();
-    }
-
-    public void flushOutput() {
-        if (!isRunning()) {
-            return;
-        }
-
-        try {
-            copyStream(stdOutInput, stdOutOutput);
-        } catch (IOException e) {
-            System.err.println("Exception while flushing stdout:");
-            e.printStackTrace();
-        }
-
-        try {
-            copyStream(stdErrInput, stdErrOutput);
-        } catch (IOException e) {
-            System.err.println("Exception while flushing stderr:");
-            e.printStackTrace();
-        }
-    }
-    
-    private void copyStream(InputStream in, OutputStream out) throws IOException {
-        // Don't do anything if there is nothing to read
-        if (in.available() == 0) {
-            return;
-        }
-
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
-        }
     }
 
     public void queueMessage(TaskboundMessage message) {
