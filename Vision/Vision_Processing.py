@@ -3,6 +3,7 @@ import numpy as np
 import math
 import glob
 import taskclient as tc
+import struct
 
 #client = tc.TaskMessenger("localhost", 8264, "Vision_Prosessing")
 
@@ -291,6 +292,8 @@ while True:
 
 
     print(visionTarget[1])
+    data = struct.pack(">f", visionTarget[1])
+    #client.sendMessage("Angle", data)
 
     # creating 'q' as the quit button for the video
     if cv2.waitKey(1) & 0xFF == ord('q'):
