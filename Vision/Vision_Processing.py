@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import math
 import glob
-#import taskclient as tc
+import taskclient as tc
 
 #client = tc.TaskMessenger("localhost", 8264, "Vision_Prosessing")
 
@@ -53,7 +53,7 @@ class Vision:
         objp = np.zeros((1, checkerboard[0] * checkerboard[1], 3), np.float32)
         objp[0,:,:2] = np.mgrid[0:checkerboard[0],0:checkerboard[1]].T.reshape(-1,2)
 
-        images = glob.glob('OpenCV/checkerboards/*.jpg')
+        images = glob.glob('Vision/checkerboards/*.jpg')
         for fname in images:
             img = cv2.imread(fname)
             gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -124,9 +124,12 @@ class Vision:
         #Draw a squigly line around the object
         cv2.drawContours(frame,contours,-1,(0,255,255),3)
                 
-        distance = None
-        angleToBall = None
+        horFOV = self.alpha
+        
+        distance = (.5*frame.shape[1])/(math.tan(math.radians(.5*horFOV)))
+        angle = None
         w = None
+        center = None
 
         #Find a rectangle that fits around the ball (Thill will be used to find location)
         if len(contours)> 0:
@@ -139,20 +142,14 @@ class Vision:
 
             #Get distance to ball
             ballW = 7 #Inches (Could be wrong)
-            horFOV = 45 #Degree
-            ########################
+            #######################
 
-            frameInches = (frame.shape[1]/w)*ballW
 
-            #distance = (.5 * frameInches)/math.tan(.5*horFOV) #Old way using FOV and tangent.
-            distance = 148.638*.9881**w
-
-            angle = math.degrees(math.atan2(-(.5*frame.shape[1]-(x+.5*w)),distance))
-            angleToBall = angle * (.5 * horFOV / 90)
+            angle = math.degrees(math.atan(((x+.5*w) -(frame.shape[1]/2))/distance))
 
         cv2.imshow("Result",frameResult)
         cv2.imshow("Binary",binary)
-        return(distance,angleToBall,w,colorMask,center)
+        return(distance,angle,w,colorMask,center)
 
     def visionTargetAngle(self,targetFrame):
 
@@ -247,7 +244,7 @@ class Vision:
         visualizer = np.zeros((500,500,3),np.uint8)
         cv2.imshow("Visualizer",visualizer)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 #capL = cv2.VideoCapture(2)
 #capR = cv2.VideoCapture(1)
 
@@ -275,7 +272,7 @@ while True:
 
     #dist,locat = detectingBall.ballDetection(frame)
     #print(dist, locat)
-    #visionTarget = vision.ballDetection(frame)
+    visionTarget = vision.ballDetection(frame)
     #print(visionTarget[0])
     #vision.Visualizer(None)
     #sCamL,sCamR = vision.calibrateCamera(frameL,frameR,cal[0],cal[1],cal[2],cal[3])
@@ -291,6 +288,9 @@ while True:
 
     #Run stereo vision
     #vision.stereoVision(leftMask,rightMask,centerL,centerR)
+
+
+    print(visionTarget[1])
 
     # creating 'q' as the quit button for the video
     if cv2.waitKey(1) & 0xFF == ord('q'):
