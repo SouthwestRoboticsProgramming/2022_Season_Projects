@@ -1,10 +1,20 @@
 # Timeline (can change)
-* Week 1: Localization, find balls
-* Week 2: Pathfinding/finish localization, vision targets
-* Week 3: Follow the path, testing vision, decide on RPi vs. Nano
-* Week 4: Vision and pathfinding together
-* Week 5: Driver controls
-* Week 6: Debugging and finalization
+* Week 1: 
+  * Localization [DONE]
+  * Find balls [DONE]
+* Week 2: 
+  * Pathfinding/finish localization [DONE]
+  * Vision targets
+* Week 3: 
+  * Follow the path
+  * Testing vision
+  * Decide on RPi vs. Nano
+* Week 4: 
+  * Vision and pathfinding together
+* Week 5: 
+  * Driver controls
+* Week 6: 
+  * Debugging and finalization
 
 # To do
 * Pathfinding
