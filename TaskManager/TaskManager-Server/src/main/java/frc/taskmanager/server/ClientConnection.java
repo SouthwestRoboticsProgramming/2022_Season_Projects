@@ -28,7 +28,7 @@ public class ClientConnection {
     public static final String TASK_RUNNING_RESPONSE = "TaskRunningResponse";
     public static final String GET_TASKS_RESPONSE = "GetTasksResponse";
 
-    private final int HEARTBEAT_TIMEOUT = 1000;
+    private final int HEARTBEAT_TIMEOUT = 300;
 
     private final Socket socket;
     private final TaskManager manager;
@@ -283,6 +283,6 @@ public class ClientConnection {
             }
         }
 
-        System.out.println("No heartbeat received in the past " + (HEARTBEAT_TIMEOUT / 10) + " seconds, assuming the connection is dropped");
+        System.out.println("No heartbeat received in the past " + (HEARTBEAT_TIMEOUT / 100) + " seconds, assuming the connection is dropped");
     }
 }

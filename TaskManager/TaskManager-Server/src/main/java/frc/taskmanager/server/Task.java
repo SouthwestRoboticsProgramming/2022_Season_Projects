@@ -10,7 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Task {
-    private static final String COMMAND = "./task.sh";
+    private static final String[] COMMAND = {"bash", "task.sh"};
 
     private final String name;
     private final File folder;
@@ -53,7 +53,7 @@ public class Task {
                         e.printStackTrace();
                     }
 
-                    messageQueue.add(new TaskboundMessage("STDOUT", b.toByteArray()));
+                    manager.queueClientboundMessage(new ClientboundMessage(name, "STDOUT", b.toByteArray()));
                 }
             });
             executor.redirectError(new LogOutputStream() {
@@ -70,7 +70,7 @@ public class Task {
                         e.printStackTrace();
                     }
 
-                    messageQueue.add(new TaskboundMessage("STDERR", b.toByteArray()));
+                    manager.queueClientboundMessage(new ClientboundMessage(name, "STDERR", b.toByteArray()));
                 }
             });
             StartedProcess p = executor.start();

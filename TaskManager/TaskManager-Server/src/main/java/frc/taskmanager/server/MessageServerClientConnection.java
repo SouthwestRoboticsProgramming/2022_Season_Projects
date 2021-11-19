@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class MessageServerClientConnection extends Thread {
-    private static final int HEARTBEAT_TIMEOUT = 1000;
+    private static final int HEARTBEAT_TIMEOUT = 300;
 
     private final Socket socket;
     private final TaskManager manager;

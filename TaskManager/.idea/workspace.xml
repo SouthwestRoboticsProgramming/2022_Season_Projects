@@ -10,24 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../Lidar/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/TaskManager_Server_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TaskManager-Client/src/main/java/frc/taskmanager/client/Something.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Demo/Lidar-Demo.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Library/Lidar-Library.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Library/src/main/java/frc/lidar/lib/ScanEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Library/src/main/java/frc/lidar/lib/ScanEntry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/Lidar-Task.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tasks/Python Task/pythontest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/ClientConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/ClientConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/LogOutputStream.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pythontest/clienttest.py" beforeDir="false" afterPath="$PROJECT_DIR$/pythontest/clienttest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pythontest/pythontest.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/Python Task/task.sh" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/Python Task/task.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +29,13 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="ProjectId" id="20hDLRDtJDJK6QTc6lWxNB2IITz" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -82,5 +75,44 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="410" y="253" width="614" height="395" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1637349930121">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="410" y="253" width="614" height="395" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637349930121" />
+    <state width="1398" height="458" key="GridCell.Tab.0.bottom" timestamp="1637350615426">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615426" />
+    <state width="1398" height="458" key="GridCell.Tab.0.center" timestamp="1637350615426">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615426" />
+    <state width="1398" height="458" key="GridCell.Tab.0.left" timestamp="1637350615426">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615426" />
+    <state width="1398" height="458" key="GridCell.Tab.0.right" timestamp="1637350615426">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615426" />
+    <state width="1398" height="458" key="GridCell.Tab.1.bottom" timestamp="1637350615427">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.1.bottom/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615427" />
+    <state width="1398" height="458" key="GridCell.Tab.1.center" timestamp="1637350615426">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.1.center/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615426" />
+    <state width="1398" height="458" key="GridCell.Tab.1.left" timestamp="1637350615426">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.1.left/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615426" />
+    <state width="1398" height="458" key="GridCell.Tab.1.right" timestamp="1637350615426">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="458" key="GridCell.Tab.1.right/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350615426" />
   </component>
 </project>
