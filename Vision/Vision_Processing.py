@@ -13,7 +13,7 @@ class Vision:
 
     frame_rate = 120
 
-    baseline = 7.62 #Distance between cameras in centimeters
+    baseline = 3.2 #Distance between cameras in centimeters
     focalLength = 10 #Focal length in millimeters
     alpha = 59.7 #Horizontal fov in degrees
 
@@ -28,12 +28,12 @@ class Vision:
         # Make trackbars
         cv2.namedWindow("Track Bars")
         cv2.resizeWindow("Track Bars", 1000,500)
-        cv2.createTrackbar("Hue Min","Track Bars",0,179,self.empty)
-        cv2.createTrackbar("Hue Max","Track Bars",179,179,self.empty)
-        cv2.createTrackbar("Saturation Min","Track Bars",0,255,self.empty)
+        cv2.createTrackbar("Hue Min","Track Bars",20,179,self.empty)
+        cv2.createTrackbar("Hue Max","Track Bars",35,179,self.empty)
+        cv2.createTrackbar("Saturation Min","Track Bars",104,255,self.empty)
         cv2.createTrackbar("Saturation Max","Track Bars",255,255,self.empty)
-        cv2.createTrackbar("Value Min","Track Bars",0,255,self.empty)
-        cv2.createTrackbar("Value Max","Track Bars",255,255,self.empty)
+        cv2.createTrackbar("Value Min","Track Bars",41,255,self.empty)
+        cv2.createTrackbar("Value Max","Track Bars",240,255,self.empty)
         cv2.createTrackbar("Number of Yellow Min","Track Bars",0,100000,self.empty)
         cv2.createTrackbar("Thresh Low", "Track Bars", 0 , 255, self.empty)
         cv2.createTrackbar("Thresh High", "Track Bars", 255 , 255, self.empty)
@@ -96,8 +96,7 @@ class Vision:
 
 
     # Find a ball using color and get it's properties
-    def ballDetection(self,frame):
-        
+    def ballDetection(self,frame,cameraNumber):
         #Get posision of trackbars and assign them to variables
         h_min = cv2.getTrackbarPos("Hue Min","Track Bars")
         h_max = cv2.getTrackbarPos("Hue Max","Track Bars")
@@ -130,7 +129,7 @@ class Vision:
         distance = (.5*frame.shape[1])/(math.tan(math.radians(.5*horFOV)))
         angle = None
         w = None
-        center = None
+        center = (None,None)
 
         #Find a rectangle that fits around the ball (Thill will be used to find location)
         if len(contours)> 0:
@@ -148,8 +147,8 @@ class Vision:
 
             angle = math.degrees(math.atan(((x+.5*w) -(frame.shape[1]/2))/distance))
 
-        cv2.imshow("Result",frameResult)
-        cv2.imshow("Binary",binary)
+        cv2.imshow("Result" + str(cameraNumber),frameResult)
+        cv2.imshow("Binary" + str(cameraNumber),binary)
         return(distance,angle,w,colorMask,center)
 
     def visionTargetAngle(self,targetFrame):
@@ -218,26 +217,27 @@ class Vision:
         cv2.imshow("Frame mask",frameMask)
         return(distance,localXAngle,localYAngle)
     
-    def stereoVision(self,frameLeft,frameRight,centerL,centerR):
-        self.count +=1
+    def stereoVision(self,frameLeft,frameRight,centerL,centerR,camAngleL,camAngleR):
+        z = None
+        cam1 = None
+        cam2 = None
+        s = None
+        y = None
+        x = None
+        if centerL is not None and centerR is not None and camAngleL is not None and camAngleR is not None:
+            cam1 = math.tan(math.radians(-camAngleL+90))
+            cam2 = math.tan(math.radians(-camAngleR+90))
+            s = self.baseline
 
-        heightLeft, widthLeft, depthLeft = frameLeft.shape
-        heightRight, widthRight, depthRight = frameRight.shape
-        
-        if widthRight == widthLeft:
-            f_pixel = (widthRight*.5)/math.tan(self.alpha * .5 * math.pi/180)
-        else: raise Exception("Cameras have differnt pixel widths")
+            x = -((cam2*s)/(cam1-cam2))
+            y = x * cam1
 
-        x_right = centerL[0]
-        x_left = centerR[0]
-
-        #calculate disparity
-        disparity = x_left-x_right
+            # y = s/(math.tan(cam1)-math.tan(cam2)+.00000001)
+            # x = (y*math.tan(cam1)+y*math.tan(cam2))/2
+            z = math.sqrt(math.pow(x,2) + math.pow(y,2))
         
-        zDepth = (self.baseline*f_pixel)/(disparity+.001)
-        print(zDepth)
         
-        return()
+        return(cam1,cam2,s,y,x,z)
         
     def Visualizer(self, estPose):
 
@@ -245,27 +245,27 @@ class Vision:
         visualizer = np.zeros((500,500,3),np.uint8)
         cv2.imshow("Visualizer",visualizer)
 
-cap = cv2.VideoCapture(1)
-#capL = cv2.VideoCapture(2)
-#capR = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(2)
+capL = cv2.VideoCapture(1)
+capR = cv2.VideoCapture(0)
 
 #Set properties of cameras
-#capL.set(cv2.CAP_PROP_AUTO_WB,0)
-#capR.set(cv2.CAP_PROP_AUTO_WB,0)
-#capL.set(cv2.CAP_PROP_AUTOFOCUS,0)
-#capR.set(cv2.CAP_PROP_AUTOFOCUS,0)
+capL.set(cv2.CAP_PROP_AUTO_WB,0)
+capR.set(cv2.CAP_PROP_AUTO_WB,0)
+capL.set(cv2.CAP_PROP_AUTOFOCUS,0)
+capR.set(cv2.CAP_PROP_AUTOFOCUS,0)
 
 vision = Vision()
 cal = vision.calibrateCameraInit()
 
-while True:
+for i in range (0,2000):
     # Capture frames in the video
     cap.set(cv2.CAP_PROP_EXPOSURE,-  cv2.getTrackbarPos("Exposure",  "Track Bars"))
-    #capL.set(cv2.CAP_PROP_EXPOSURE,-  cv2.getTrackbarPos("Exposure",  "Track Bars"))
-    #capR.set(cv2.CAP_PROP_EXPOSURE,-  cv2.getTrackbarPos("Exposure",  "Track Bars"))
+    capL.set(cv2.CAP_PROP_EXPOSURE,-  cv2.getTrackbarPos("Exposure",  "Track Bars"))
+    capR.set(cv2.CAP_PROP_EXPOSURE,-  cv2.getTrackbarPos("Exposure",  "Track Bars"))
     ret, frame = cap.read()
-    # ret, frameL = capL.read()
-    # ret, frameR = capR.read()
+    ret, frameL = capL.read()
+    ret, frameR = capR.read()
     cleanFrame = frame.copy()
     targetFrame = frame.copy()
     cv2.imshow("Target Frame", targetFrame)
@@ -273,15 +273,19 @@ while True:
 
     #dist,locat = detectingBall.ballDetection(frame)
     #print(dist, locat)
-    visionTarget = vision.ballDetection(frame)
+
     #print(visionTarget[0])
     #vision.Visualizer(None)
     #sCamL,sCamR = vision.calibrateCamera(frameL,frameR,cal[0],cal[1],cal[2],cal[3])
-    calCam, calCam = vision.calibrateCamera(frame,frame,cal[0],cal[1],cal[2],cal[3])
-    # cv2.imshow("Left Camera",sCamL)
-    # cv2.imshow("Right Camera",sCamR)
-
-
+    sCamL, sCamR = vision.calibrateCamera(frameL,frameR,cal[0],cal[1],cal[2],cal[3])
+    centerL = vision.ballDetection(sCamL,0)[4][0]
+    centerR = vision.ballDetection(sCamR,1)[4][0]
+    angleL = vision.ballDetection(sCamL,0)[1]
+    angleR = vision.ballDetection(sCamR,1)[1]
+    cv2.imshow("Left Camera",sCamL)
+    cv2.imshow("Right Camera",sCamR)
+    cam1,cam2,s,y,x,z = vision.stereoVision(sCamL,sCamR,centerL,centerR,angleL,angleR)
+    print(z)
     # leftMask = vision.ballDetection(sCamL)[3]
     # rightMask = vision.ballDetection(sCamR)[3]
     # centerL = vision.ballDetection(sCamL)[4]
@@ -290,9 +294,7 @@ while True:
     #Run stereo vision
     #vision.stereoVision(leftMask,rightMask,centerL,centerR)
 
-
-    print(visionTarget[1])
-    data = struct.pack(">f", visionTarget[1])
+    #data = struct.pack(">f", visionTarget[1])
     #client.sendMessage("Angle", data)
 
     # creating 'q' as the quit button for the video
@@ -302,4 +304,4 @@ while True:
 # release the cap object
 cap.release()
 # close all windows
-cv2.destroyAllWindows()
+cv2.destroyAllWindows() 
