@@ -7,41 +7,30 @@ import java.util.Scanner;
 public class LidarMain {
     public static void main(String[] args) {
         Lidar lidar = new Lidar();
-        lidar.getHealth().thenAccept((health) -> System.out.println("Health: " + health));
+        lidar.getHealth().thenAccept((health) -> {
+            System.out.println("H " + health);
+        });
 
-        lidar.setScanStartCallback(() -> System.out.println("Scan started!"));
+        lidar.setScanStartCallback(() -> System.out.println("S " + System.currentTimeMillis()));
         lidar.setScanDataCallback((entry) -> {
             if (entry.getDistance() == 0) return;
             if (entry.getQuality() == 0) return;
 
-            System.out.println("Scan data: " + entry);
+            System.out.println("s " + entry.getQuality() + " " + entry.getDistance() + " " + entry.getAngle());
         });
 
-        Scanner scanner = new Scanner(System.in);
-        boolean running = true;
-        while (running) {
-            String line = scanner.nextLine();
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {}
 
-            // Basic command-line interface
-            switch (line) {
-                case "exit":
-                    running = false;
-                    break;
-                case "scan":
-                    lidar.startScanning();
-                    break;
-                case "stop":
-                    lidar.stopScanning();
-                    break;
-                case "health":
-                    lidar.getHealth().thenAccept((health) -> System.out.println("Health: " + health));
-                    break;
-                case "info":
-                    lidar.getInfo().thenAccept((info) -> System.out.println("Info: " + info));
-                    break;
-            }
+        System.out.println("M The lidar is starting");
+        lidar.startScanning();
+
+        // Run forever
+        while (true) {
+            try {
+                Thread.sleep(1000000);
+            } catch (Exception e) {}
         }
-
-        lidar.close();
     }
 }
