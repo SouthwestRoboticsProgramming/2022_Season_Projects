@@ -15,7 +15,7 @@ class Vision:
 
     baseline = 3.2 #Distance between cameras (Units here affect distance units)
     alpha = 59.7 #Horizontal fov in degrees
-    pixelsWidth = 1280
+    pixelsWidth = 640
 
     boundingColor = (121, 82, 179)
     contourColor = (255, 193, 7)
@@ -308,7 +308,7 @@ class Vision:
 
 
 stereo_vision = Vision()
-stereo_vision.run_stereo(0,1)
+stereo_vision.run_stereo(1,0)
   
 
 # close all windows
