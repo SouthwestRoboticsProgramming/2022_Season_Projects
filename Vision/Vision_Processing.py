@@ -11,11 +11,11 @@ class Vision:
 
     experimental = True
 
-    frame_rate = 120
-
-    baseline = 3.2 #Distance between cameras (Units here affect distance units)
-    alpha = 59.7 #Horizontal fov in degrees
+    baseline = 3.2 # Distance between cameras (Units here affect distance units)
+    alpha = 59.7 # Horizontal FOV in degrees
+    beta = 31.5 # Vertical FOV in degrees
     pixelsWidth = 640
+    pixelsHeight = 360
 
     boundingColor = (121, 82, 179)
     contourColor = (255, 193, 7)
@@ -31,7 +31,8 @@ class Vision:
     v_max = 240
     TLow = 0
 
-    pixDistance = (.5*pixelsWidth)/(math.tan(math.radians(.5*alpha)))
+    pixDistanceX = (.5*pixelsWidth)/(math.tan(math.radians(.5*alpha)))
+    pixDistanceY = (.5*pixelsHeight)/(math.tan(math.radians(.5*beta)))
 
     def empty(self,a):
         pass
@@ -111,7 +112,7 @@ class Vision:
 
 
     # Find a ball using color and get it's properties
-    def ballDetection(self,frame,cameraNumber):
+    def ballDetection(self,frame,cameraNumber,haveY):
         # Get posision of trackbars and assign them to variables
         if self.experimental == True: 
             h_min = cv2.getTrackbarPos("Hue Min","Track Bars")
@@ -142,12 +143,12 @@ class Vision:
         frameMask = cv2.inRange(frameHSV,lower,upper)
         frameResult = cv2.bitwise_and(frame,frame,mask=frameMask)
         frameGrayMask = cv2.bitwise_and(frameGray,frameGray, mask=frameMask)
-        colorMask = frameResult.copy()
         ret,binary = cv2.threshold(frameGrayMask,TLow,THigh,cv2.THRESH_BINARY)
         contours, hierarchy = cv2.findContours(binary,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
                 
         
-        pixDistance = self.pixDistance
+        pixDistanceX = self.pixDistanceX
+        pixDistanceY = self.pixDistanceY
         angle = None
 
 
@@ -157,7 +158,10 @@ class Vision:
             
             x, y, w, h = cv2.boundingRect(bestContour)
 
-            angle = math.degrees(math.atan(((x+.5*w) -(frame.shape[1]/2))/pixDistance))
+            if haveY:
+                angle = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
+            else:
+                angle = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
 
             if self.experimental:
                 cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
@@ -169,68 +173,63 @@ class Vision:
 
     def visionTargetAngle(self,targetFrame):
 
-
         # Get posision of trackbars and assign them to variables
-        h_min = cv2.getTrackbarPos("Hue Min","Track Bars")
-        h_max = cv2.getTrackbarPos("Hue Max","Track Bars")
-        s_min = cv2.getTrackbarPos("Saturation Min","Track Bars")
-        s_max = cv2.getTrackbarPos("Saturation Max","Track Bars")
-        v_min = cv2.getTrackbarPos("Value Min","Track Bars")
-        v_max = cv2.getTrackbarPos("Value Max","Track Bars")
-        TLow = cv2.getTrackbarPos("Thresh Low", "Track Bars")
-        THigh = 255
+        if self.experimental == True: 
+            h_min = cv2.getTrackbarPos("Hue Min","Track Bars")
+            h_max = cv2.getTrackbarPos("Hue Max","Track Bars")
+            s_min = cv2.getTrackbarPos("Saturation Min","Track Bars")
+            s_max = cv2.getTrackbarPos("Saturation Max","Track Bars")
+            v_min = cv2.getTrackbarPos("Value Min","Track Bars")
+            v_max = cv2.getTrackbarPos("Value Max","Track Bars")
+            TLow = cv2.getTrackbarPos("Thresh Low", "Track Bars")
+            THigh = 255
+        else:
+            h_min = self.h_min
+            h_max = self.h_max
+            s_min = self.s_min
+            s_max = self.s_max
+            v_min = self.v_min
+            v_max = self.v_max
+            TLow = self.TLow
+            THigh = 255
+
 
         
         lower = np.array([h_min,s_min,v_min])
         upper = np.array([h_max,s_max,v_max])
-        frameHSV = cv2.cvtColor(targetFrame,cv2.COLOR_BGR2HSV)
-        frameGray = cv2.cvtColor(targetFrame,cv2.COLOR_BGR2GRAY)
-        frameMask = cv2.inRange(frameHSV,lower,upper)
-        frameResult = cv2.bitwise_and(targetFrame,targetFrame,mask=frameMask)
-        frameGrayMask = cv2.bitwise_and(frameGray,frameGray, mask=frameMask)
 
+        frameHSV = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+        frameGray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        frameMask = cv2.inRange(frameHSV,lower,upper)
+        frameResult = cv2.bitwise_and(frame,frame,mask=frameMask)
+        frameGrayMask = cv2.bitwise_and(frameGray,frameGray, mask=frameMask)
         ret,binary = cv2.threshold(frameGrayMask,TLow,THigh,cv2.THRESH_BINARY)
-        inverted = cv2.bitwise_not(binary)
         contours, hierarchy = cv2.findContours(binary,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
                 
-        #Draw a squigly line around the object
-        cv2.drawContours(targetFrame,contours,-1,(0,255,255),3)
-                
-        distance = None
-        localXAngle = None
-        localYAngle = None
+        
+        pixDistanceX = self.pixDistanceX
+        pixDistanceY = self.pixDistanceY
+        angleX = None
+        angleY = None
 
-        #Find a rectangle that fits around the ball (Thill will be used to find location)
+
+        # Find a rectangle that fits around the ball (Thill will be used to find location)
         if len(contours)> 0:
             bestContour = max(contours, key = cv2.contourArea)
             
             x, y, w, h = cv2.boundingRect(bestContour)
-            cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.color,3)
 
-            #Get distance to ball
-            targetW = 39.25 #Inches
-            targetH = 17 #Inches
-            horFOV = self.alpha #Degrees
-            verFOV = 24 #Degrees
-            ########################
+            angleX = math.degrees(math.atan(((x+.5*w) -(frame.shape[1]/2))/pixDistanceX))
+            angleY = math.degrees(math.atan(((y+.5*h) -(frame.shape[0]/2))/pixDistanceY))
 
-            frameInches = targetFrame.shape[0]/h*targetH
-
-            distance = (.5 * frameInches)/math.tan(.5*verFOV)
-
-            localYAngle = math.degrees(math.atan2(-(.5*targetFrame.shape[0]-(y+h)),distance))
-            localXAngle = math.degrees(math.atan2(-(.5*targetFrame.shape[1]-(x+.5*w)),distance))
+            if self.experimental:
+                cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
+                cv2.imshow("Result" + str(cameraNumber),frameResult)
+                cv2.imshow("Binary" + str(cameraNumber),binary)
 
 
-            # pointA = (x+int(.5*w),y)
-            #pointB = (x+int(.5*w),y+h)
-            #cv2.line(frameMask,pointA,pointB,(0,0,0),3)
-            
+        return(angleX,angleY)
 
-        cv2.imshow("Result",frameResult)
-        cv2.imshow("Binary",binary)
-        cv2.imshow("Frame mask",frameMask)
-        return(distance,localXAngle,localYAngle)
     
     def stereoVision(self,camAngleL,camAngleR):
         z = None
@@ -243,17 +242,19 @@ class Vision:
 
             x = -((cam2*s)/((cam1-cam2)*1.001+.0001))
             y = x * cam1
-
-            z = math.sqrt(math.pow(x,2) + math.pow(y,2))
         
-        return(x,y,z)
+        return(x,y)
         
     def Visualizer(self, estPose):
 
-        #Create a visualizer to see where it thinks the robot/ball is
+
+        # Create a visualizer to see where it thinks the robot/ball is
         visualizer = np.zeros((500,500,3),np.uint8)
         cv2.imshow("Visualizer",visualizer)
-
+        cv2.circle(visualizer,(250,450),5,self.contourColor,3)
+        cv2.circle(visualizer,(x,visualizer.shape[0]-y),5,self.contourColor,3)
+        cv2.line(visualizer,(250,450),(x,visualizer.shape[0]-y),self.boundingColor,3)
+        cv2.putText(visualizer,d,((250+x)/2,(450+visualizer.shape[0]-y)/2 ))
     
     
     def run_stereo(self,camIDL,camIDR):
@@ -285,21 +286,32 @@ class Vision:
             sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
             
             # Use ball detection function to find the angle to center of the object in both cameras
-            angleL = self.ballDetection(sCamL,0)
-            angleR = self.ballDetection(sCamR,1)
+            angleL = self.ballDetection(sCamL,0,False)
+            angleR = self.ballDetection(sCamR,1,False)
 
-            x,y,z = self.stereoVision(angleL,angleR)
+            x,z = self.stereoVision(angleL,angleR)
 
+            # Get the vertical distance and angle to the object
+            # stereo cannot be used for this as the cameras are positioned horizontally
+            YangleL = self.ballDetection(sCamL,0,True)
+            YangleR = self.ballDetection(sCamR,0,True)
+            Yangle = (YangleL + YangleR)/2
+            y = math.tan(math.radians(Yangle)*z)
+
+
+            # Get the distance to the object in total using the distance formula
+            #   Note: all of the sub 2's are 0 because we assume that the camera is not moving
+            d = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
 
             # Temporary #
-            print(z)
+            print(d)
+            
 
-            # creating 'q' as the quit button for the video
+            # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 capL.release()
                 capR.release()
                 return()
-
 
 
 
