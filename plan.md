@@ -4,7 +4,7 @@
   * Find balls [DONE]
 * Week 2: 
   * Pathfinding/finish localization [DONE]
-  * Vision targets
+  * Vision targets [DONE]
 * Week 3: 
   * Follow the path
   * Testing vision
