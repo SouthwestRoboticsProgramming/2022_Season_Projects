@@ -16,8 +16,8 @@ public class Pathfinder {
         this.grid = grid;
     }
 
-    private double heuristic(Node start, Node cell) {
-        return distance(start, cell);
+    private double heuristic(Node goal, Node cell) {
+        return distance(goal, cell);
     }
 
     private List<Cell> reconstructPath(Node current) {
@@ -81,8 +81,9 @@ public class Pathfinder {
 
         Node[][] nodes = new Node[grid.getWidth()][grid.getHeight()];
         Node startNode = getNode(nodes, start.getX(), start.getY());
+        Node goalNode = getNode(nodes, goal.getX(), goal.getY());
         startNode.gScore = 0;
-        startNode.fScore = heuristic(startNode, startNode);
+        startNode.fScore = heuristic(goalNode, startNode);
 
         Set<Node> openSet = new HashSet<>();
         openSet.add(startNode);
@@ -110,7 +111,7 @@ public class Pathfinder {
                 if (tentativeGScore < neighbor.gScore) {
                     neighbor.parent = current;
                     neighbor.gScore = tentativeGScore;
-                    neighbor.fScore = neighbor.gScore + heuristic(startNode, neighbor);
+                    neighbor.fScore = neighbor.gScore + heuristic(goalNode, neighbor);
                     if (!openSet.contains(neighbor)) {
                         openSet.add(neighbor);
                     }

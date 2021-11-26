@@ -4,45 +4,59 @@ import frc.pathfinding.lib.Cell;
 import frc.pathfinding.lib.Grid;
 import frc.pathfinding.lib.PathOptimizer;
 import frc.pathfinding.lib.Pathfinder;
+import frc.pathfinding.lib.collision.CircleCollider;
+import frc.pathfinding.lib.collision.Collider;
+import frc.pathfinding.lib.collision.CollisionGrid;
+import frc.pathfinding.lib.collision.RectangleCollider;
 import processing.core.PApplet;
 
 import java.util.List;
 
 public class PathfindingDemo extends PApplet {
-    private Grid grid;
+    private CollisionGrid grid;
     private Pathfinder pathfinder;
     private PathOptimizer optimizer;
+    private CircleCollider robot;
+    private RectangleCollider rect;
     private final int CELLS_Y = 26 * 12 / 6;
     private final int CELLS_X = 54 * 12 / 6;
     private float cellSize;
     private int startX, startY;
     private int endX, endY;
+    private boolean playing = false;
+    private float robotX, robotY;
+    private float padding = 1; // Distance to try to stay away from obstacles
 
     @Override
     public void settings() {
-        //size(800, 600);
-        fullScreen();
+        size(1280, 720);
+        //fullScreen();
     }
 
     @Override
     public void setup() {
         ellipseMode(CENTER);
 
-        grid = new Grid(CELLS_X, CELLS_Y);
+        robot = new CircleCollider(0, 0, 2 + padding);
+        grid = new CollisionGrid(CELLS_X, CELLS_Y, robot);
         cellSize = width / (float) CELLS_X;
 
-        for (int i = 0; i < CELLS_X * CELLS_Y / 2; i++) {
-            int x = (int) (random(0, CELLS_X));
-            int y = (int) (random(0, CELLS_Y));
-
-            grid.setCellBlocked(x, y, true);
-        }
+//        for (int i = 0; i < CELLS_X * CELLS_Y / 2; i++) {
+//            int x = (int) (random(0, CELLS_X));
+//            int y = (int) (random(0, CELLS_Y));
+//
+//            grid.setCellBlocked(x, y, true);
+//        }
+        grid.addObstacle(new CircleCollider(30, 25, 7));
+        grid.addObstacle(rect = new RectangleCollider(75, 25, 12, 30, 0));
 
         pathfinder = new Pathfinder(grid);
         optimizer = new PathOptimizer(grid);
 
         startX = 1;
         startY = 1;
+        robotX = startX;
+        robotY = startY;
         pathfinder.setStartCell(new Cell(startX, startY));
         endX = CELLS_X - 2;
         endY = CELLS_Y - 2;
@@ -51,6 +65,8 @@ public class PathfindingDemo extends PApplet {
 
     @Override
     public void draw() {
+        rect.setRotation(millis() / 1000.0 * Math.PI);
+
         background(255);
 
         stroke(0);
@@ -67,20 +83,66 @@ public class PathfindingDemo extends PApplet {
             }
         }
 
+        stroke(0, 255, 0);
+        strokeWeight(3);
+        noFill();
+        ellipse(robotX * cellSize, robotY * cellSize, (float) (robot.getRadius() - padding) * 2 * cellSize, (float) (robot.getRadius() - padding) * 2 * cellSize);
+
+        for (Collider c : grid.getObstacles()) {
+            if (c instanceof CircleCollider) {
+                stroke(255, 128, 0);
+                strokeWeight(3);
+                noFill();
+
+                CircleCollider circle = (CircleCollider) c;
+                ellipse((float) circle.getX() * cellSize, (float) circle.getY() * cellSize, (float) circle.getRadius() * 2 * cellSize, (float) circle.getRadius() * 2 * cellSize);
+            } else if (c instanceof RectangleCollider) {
+                stroke(255, 128, 0);
+                strokeWeight(3);
+                noFill();
+
+                RectangleCollider rect = (RectangleCollider) c;
+                pushMatrix();
+                translate((float) rect.getX() * cellSize, (float) rect.getY() * cellSize);
+                rotate((float) -rect.getRotation());
+                rect((float) -rect.getWidth() / 2 * cellSize, (float) -rect.getHeight() / 2 * cellSize, (float) rect.getWidth() * cellSize, (float) rect.getHeight() * cellSize);
+                popMatrix();
+            }
+        }
+
         fill(0, 255, 0);
+        stroke(0);
+        strokeWeight(1);
         ellipse((startX + 0.5f) * cellSize, (startY + 0.5f) * cellSize, cellSize / 2, cellSize / 2);
 
         fill(0, 0, 255);
         ellipse((endX + 0.5f) * cellSize, (endY + 0.5f) * cellSize, cellSize / 2, cellSize / 2);
 
-        long start = System.currentTimeMillis();
         List<Cell> path = pathfinder.getPath();
-        long end = System.currentTimeMillis();
-        System.out.println("pathfinding took " + (end - start) + " milliseconds");
         if (path == null) {
             return;
         }
+        if (playing) play: {
+            if (path.size() == 1) {
+                playing = false;
+                break play;
+            }
 
+            Cell target = path.get(1);
+            double dx = startX - target.getX();
+            double dy = startY - target.getY();
+            double len = Math.sqrt(dx * dx + dy * dy);
+            dx /= -len;
+            dy /= -len;
+
+            robotX += dx * 1;
+            robotY += dy * 1;
+            startX = (int) Math.floor(robotX);
+            startY = (int) Math.floor(robotY);
+            pathfinder.setStartCell(new Cell(startX, startY));
+        }
+
+        // Raw path line
 //        stroke(0, 0, 255);
 //        strokeWeight(3);
 //        beginShape(LINES);
@@ -94,6 +156,17 @@ public class PathfindingDemo extends PApplet {
 
         path = optimizer.optimize(path);
 
+        // Robot bounds highlight
+        stroke(0, 128, 255, 64);
+        strokeWeight((float) robot.getRadius() * cellSize * 2);
+        noFill();
+        beginShape();
+        for (Cell c1 : path) {
+            vertex((c1.getX() + 0.5f) * cellSize, (c1.getY() + 0.5f) * cellSize);
+        }
+        endShape();
+
+        // Path line
         stroke(0, 128, 255);
         strokeWeight(3);
         beginShape(LINES);
@@ -118,10 +191,15 @@ public class PathfindingDemo extends PApplet {
     public void mousePressed() {
         int x = (int) (mouseX / cellSize);
         int y = (int) (mouseY / cellSize);
+        if (x < 0 || x >= grid.getWidth() || y < 0 || y >= grid.getHeight()) {
+            return;
+        }
 
         if (mouseButton == LEFT) {
             startX = x;
             startY = y;
+            robotX = x;
+            robotY = y;
             pathfinder.setStartCell(new Cell(startX, startY));
         } else if (mouseButton == RIGHT) {
             endX = x;
@@ -133,6 +211,11 @@ public class PathfindingDemo extends PApplet {
     @Override
     public void mouseDragged() {
         mousePressed();
+    }
+
+    @Override
+    public void keyPressed() {
+        playing = !playing;
     }
 
     public static void main(String[] args) {

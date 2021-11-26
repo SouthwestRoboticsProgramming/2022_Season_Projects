@@ -11,7 +11,7 @@ public class PathOptimizer {
         this.grid = grid;
     }
 
-    public boolean testLineOfSight(Cell start, Cell end) {
+    private boolean testLineOfSight(Cell start, Cell end) {
         // TODO: Use a proper algorithm
 
         double precision = 0.01;
@@ -20,12 +20,10 @@ public class PathOptimizer {
             double y = start.getY() + (end.getY() - start.getY()) * precision * i + 0.5;
 
             if (grid.isCellBlocked((int) x, (int) y)) {
-                System.out.println(start.getX() + " " + start.getY() + " | " + end.getX() + " " + end.getY() + ": false");
                 return false;
             }
         }
 
-        System.out.println(start.getX() + " " + start.getY() + " | " + end.getX() + " " + end.getY() + ": true");
         return true;
     }
 
