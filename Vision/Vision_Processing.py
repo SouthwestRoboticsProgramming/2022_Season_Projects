@@ -188,23 +188,16 @@ class Vision:
 
 
         
-    def Visualizer(self, x,y,d):
+    def Visualizer(self, x,y,z,d):
+
 
         # Create a visualizer to see where it thinks the robot/ball is
         visualizer = np.zeros((500,500,3),np.uint8)
-
-        scale = 10
-        cam = ( int(visualizer.shape[1]*.5),int(visualizer.shape[0]-50) )
-        obj = ( int(visualizer.shape[1]*.5+x*scale) , int(visualizer.shape[0]-50-y*scale) )
-
-        print(obj)
-        cv2.circle(visualizer,cam,5,self.contourColor,3)
-        cv2.circle(visualizer,obj,5,self.contourColor,3)
-        cv2.line(visualizer,cam,obj,self.boundingColor,3)
-        cv2.putText(visualizer,("Distance: " + str(d)),(int((cam[0]+obj[0])/2),int((cam[1]+obj[1])/2)),cv2.FONT_HERSHEY_COMPLEX,.5,(255,255,255))
         cv2.imshow("Visualizer",visualizer)
-
-        cv2.waitKey(0)
+        cv2.circle(visualizer,(250,450),5,self.contourColor,3)
+        cv2.circle(visualizer,(x,visualizer.shape[0]-y),5,self.contourColor,3)
+        cv2.line(visualizer,(250,450),(x,visualizer.shape[0]-y),self.boundingColor,3)
+        cv2.putText(visualizer,d,((250+x)/2,(450+visualizer.shape[0]-y)/2 ))
 
     
     
@@ -256,10 +249,7 @@ class Vision:
             if x is not None and y is not None and z is not None:
                 d = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
             else: 
-                d = None
-
-            if self.experimental:
-                self.Visualizer(x,y,d)
+                d = "No object found"
 
 
             # Temporary #
@@ -276,10 +266,11 @@ class Vision:
 
 
 
-stereo_vision = Vision()
-#stereo_vision.run_stereo(1,0)
-stereo_vision.Visualizer(-10,20,50)
 
+
+stereo_vision = Vision()
+stereo_vision.run_stereo(1,0)
+  
 
 # close all windows
 cv2.destroyAllWindows() 
