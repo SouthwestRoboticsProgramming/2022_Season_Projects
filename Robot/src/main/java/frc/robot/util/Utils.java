@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.util;
 
 public final class Utils {
     public static double clamp(double value, double min, double max) {

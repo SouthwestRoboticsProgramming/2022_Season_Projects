@@ -4,7 +4,7 @@ import java.util.List;
 
 import frc.robot.DriveTrain;
 import frc.robot.Localizer;
-import frc.robot.Utils;
+import frc.robot.util.Utils;
 
 public final class PathFollower {
     private final Localizer localizer;
