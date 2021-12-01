@@ -21,3 +21,6 @@ A library and a task for interfacing with a RPLidar A1M8 lidar sensor. The API i
 
 ### Pathfinding
 A library that allows the robot to autonomously calculate paths through the environment.
+
+### Robot
+A simplified version of the mini robot code for testing things.
