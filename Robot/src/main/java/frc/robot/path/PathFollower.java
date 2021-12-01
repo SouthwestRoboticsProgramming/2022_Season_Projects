@@ -63,7 +63,7 @@ public final class PathFollower {
             double angle = -Math.atan2(-deltaY, deltaX);
             double angleDiff = Utils.normalizeAngle(angle - posRot);
             if (Math.abs(angleDiff) > angleTolerance) {
-                double speedCutoff = Utils.clamp((Math.abs(angleDiff) - angleTolerance) / 0.1, 1);
+                double speedCutoff = Utils.clamp((Math.abs(angleDiff) - angleTolerance) / angleSlowdownPoint, 0.1, 1);
 
                 if (angleDiff > 0) {
                     left = -1;
