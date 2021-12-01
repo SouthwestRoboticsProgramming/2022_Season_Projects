@@ -56,7 +56,7 @@ public final class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15);
+    pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15, 45);
 
     List<Point> path = new ArrayList<>();
     path.add(new Point(1, 1));

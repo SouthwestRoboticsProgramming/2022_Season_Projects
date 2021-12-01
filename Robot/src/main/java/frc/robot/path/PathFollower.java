@@ -12,14 +12,16 @@ public final class PathFollower {
     private final double distanceToleranceSq;
     private final double angleTolerance;
     private final double speed;
+    private final double angleSlowdownPoint;
     private List<Point> path;
     private Point target;
     private int targetIndex;
 
-    public PathFollower(Localizer localizer, DriveTrain drive, double speed, double positionTolerance, double angleTolerance) {
+    public PathFollower(Localizer localizer, DriveTrain drive, double speed, double positionTolerance, double angleTolerance, double angleSlowdownPoint) {
         this.localizer = localizer;
         this.drive = drive;
         this.speed = speed;
+        this.angleSlowdownPoint = angleSlowdownPoint;
         this.distanceToleranceSq = positionTolerance * positionTolerance;
         this.angleTolerance = Math.toRadians(angleTolerance);
         this.path = null;
@@ -61,6 +63,8 @@ public final class PathFollower {
             double angle = -Math.atan2(-deltaY, deltaX);
             double angleDiff = Utils.normalizeAngle(angle - posRot);
             if (Math.abs(angleDiff) > angleTolerance) {
+                double speedCutoff = Utils.clamp((Math.abs(angleDiff) - angleTolerance) / 0.1, 1);
+
                 if (angleDiff > 0) {
                     left = -1;
                     right = 1;
@@ -68,6 +72,9 @@ public final class PathFollower {
                     left = 1;
                     right = -1;
                 }
+
+                left *= speedCutoff;
+                right *= speedCutoff;
             } else {
                 left = 1;
                 right = 1;
