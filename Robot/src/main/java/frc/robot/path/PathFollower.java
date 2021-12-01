@@ -42,7 +42,7 @@ public final class PathFollower {
 
         double posX = localizer.getX();
         double posY = localizer.getY();
-        double posRot = Utils.normalizeAngle(localizer.getRotationRadians());
+        double posRot = Utils.normalizeAngle(localizer.getRotationRadians() + Math.PI);
 
         double left = 0;
         double right = 0;
