@@ -7,6 +7,11 @@ public final class Utils {
         return value;
     }
 
+    // Makes the angle be in the interval [-PI, PI)
+    public static double normalizeAngle(double angle) {
+        return -Math.PI + ((Math.PI * 2 + ((angle + Math.PI) % (Math.PI * 2))) % (Math.PI * 2));
+    }
+
     private Utils() {
         throw new AssertionError();
     }

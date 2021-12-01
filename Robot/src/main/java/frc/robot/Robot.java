@@ -1,9 +1,14 @@
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.lib.ADIS16448_IMU;
 import frc.lib.ADIS16448_IMU.IMUAxis;
+import frc.robot.path.PathFollower;
+import frc.robot.path.Point;
 
 public final class Robot extends TimedRobot {
   private DriveTrain driveTrain;
@@ -11,6 +16,7 @@ public final class Robot extends TimedRobot {
   private VisualizerCommunicator visualizer;
   private Gyro gyro;
   private Localizer localizer;
+  private PathFollower pathFollower;
 
   @Override
   public void robotInit() {
@@ -49,10 +55,20 @@ public final class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15);
+
+    List<Point> path = new ArrayList<>();
+    path.add(new Point(1, 1));
+    path.add(new Point(-1, 1));
+
+    pathFollower.setPath(path);
+  }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    pathFollower.update();
+  }
 
   @Override
   public void teleopInit() {}
