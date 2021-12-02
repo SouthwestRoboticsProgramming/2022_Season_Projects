@@ -161,6 +161,7 @@ class Vision:
 
             angleX = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
             angleY = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
+            angle2X = math.degrees(math.atan(((x) - (frame.shape)[1]))/pixDistanceX)
 
             if self.experimental:
                 cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
@@ -168,7 +169,7 @@ class Vision:
                 cv2.imshow("Binary" + str(cameraNumber),binary)
 
 
-        return(angleX,angleY)
+        return(angleX,angleY,angle2X)
 
 
     
@@ -185,6 +186,16 @@ class Vision:
             y = x * cam1
         
         return(x,y)
+
+    def solveGlobal(self,lengthA,lengthB,centerAngle):
+        
+        # First solve for width of object (c)
+        c = math.sqrt(math.pow(lengthA,2)+math.pow(lengthB,2)-2*lengthA*lengthB*math.cos(centerAngle))
+
+        # For debugging
+        xReal = c
+        yReal = None
+        return(xReal,yReal)
 
 
         
@@ -230,30 +241,40 @@ class Vision:
             # Calibrate every frame using the calibration profile
             sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
             
-            # Use ball detection function to find the angle to center of the object in both cameras
-            XangleL, YangleL = self.objectDetection(sCamL,0)
-            XangleR, YangleR = self.objectDetection(sCamR,1)
+            # Use ball detection function to find the angle to center and right side of the object in both cameras
+            XangleL, YangleL, XangleL2 = self.objectDetection(sCamL,0)
+            XangleR, YangleR, XangleR2 = self.objectDetection(sCamR,1)
+
 
             x,z = self.stereoVision(XangleL,XangleR)
+            x2,z2 = self.stereoVision(XangleL2,XangleR2)
 
 
             if YangleL is not None and YangleR is not None:
                 Yangle = (YangleL + YangleR)/2
                 y = math.tan(math.radians(Yangle)*z)
             else:
-                y = None
+                y = 0
 
 
             # Get the distance to the object in total using the distance formula
-            #   Note: all of the sub 2's are 0 because we assume that the camera is not moving
-            if x is not None and y is not None and z is not None:
-                d = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
-            else: 
-                d = "No object found"
+            #   Note: all of the sub 2's are 0 because for now we assume that the camera is not moving
+            d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
+            d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
+
+
+            disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
+
+            centerAngle = math.degrees(abs(math.atan2(z,x)-math.atan2(z2,x2)))
+
+            xReal, yReal = self.solveGlobal(d,d2,centerAngle)
 
 
             # Temporary #
-            print(d)
+            print(xReal)
+
+            if self.experimental:
+                self.Visualizer(x,y,d)
             
 
             # Creating 'q' as the quit button for the webcam
