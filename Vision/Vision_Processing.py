@@ -22,7 +22,7 @@ class Vision:
 
 
 
-    #Default values for object detection (Also used for locked mode)
+    # Default values for object detection (Also used for locked mode)
     h_min = 20
     h_max = 35
     s_min = 104
@@ -72,9 +72,9 @@ class Vision:
         for fname in images:
             img = cv2.imread(fname)
             gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-            #Find the corners
+            # Find the corners
             ret, corners = cv2.findChessboardCorners(gray,checkerboard,cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
-            #If criterion is met, refine the corners
+            # If criterion is met, refine the corners
             if ret == True:
                 objpoints.append(objp)
                 corners2 = cv2.cornerSubPix(gray, corners, (11,11),(-1,-1),criteria)
@@ -199,8 +199,17 @@ class Vision:
 
 
         
+<<<<<<< Updated upstream
     def Visualizer(self, x,y,z,d):
 
+=======
+<<<<<<< HEAD
+    def visualizer(self, x,y,d):
+=======
+    def Visualizer(self, x,y,z,d):
+
+>>>>>>> 781309fe66019805599b0266197bd37074571f96
+>>>>>>> Stashed changes
 
         # Create a visualizer to see where it thinks the robot/ball is
         visualizer = np.zeros((500,500,3),np.uint8)
@@ -262,12 +271,23 @@ class Vision:
             d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
             d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+            if self.experimental:
+                self.visualizer(x,y,d)
+=======
+>>>>>>> Stashed changes
 
             disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
 
             centerAngle = math.degrees(abs(math.atan2(z,x)-math.atan2(z2,x2)))
 
             xReal, yReal = self.solveGlobal(d,d2,centerAngle)
+<<<<<<< Updated upstream
+=======
+>>>>>>> 781309fe66019805599b0266197bd37074571f96
+>>>>>>> Stashed changes
 
 
             # Temporary #
@@ -287,6 +307,15 @@ class Vision:
 
 
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+stereo_vision = Vision()
+#stereo_vision.run_stereo(1,0)
+stereo_vision.visualizer(-10,20,50)
+=======
+>>>>>>> 781309fe66019805599b0266197bd37074571f96
+>>>>>>> Stashed changes
 
 
 stereo_vision = Vision()
