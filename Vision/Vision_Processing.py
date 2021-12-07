@@ -194,9 +194,13 @@ class Vision:
         # First solve for width of object (c)
         c = math.sqrt(math.pow(lengthA,2)+math.pow(lengthB,2)-2*lengthA*lengthB*math.cos(centerAngle))
 
+        a = lengthA
+        b = lengthB
+
         # For debugging
-        xReal = c
-        yReal = None
+        xReal = (math.pow(b,2)-math.pow(c,2)-math.pow(a,2))/2*c
+        yReal = math.sqrt(math.pow(a,2)-math.pow(x,2))
+        
         return(xReal,yReal)
 
 
