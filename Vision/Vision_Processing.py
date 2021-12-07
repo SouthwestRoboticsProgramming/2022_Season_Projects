@@ -200,16 +200,17 @@ class Vision:
         # For debugging
         xReal = (math.pow(b,2)-math.pow(c,2)-math.pow(a,2))/2*c
         yReal = math.sqrt(math.pow(a,2)-math.pow(x,2))
-        
+
         return(xReal,yReal)
 
 
         
-    def Visualizer(self, x,y,z,d):
+    def visualizer(self, x,y):
 
 
         # Create a visualizer to see where it thinks the robot/ball is
         visualizer = np.zeros((500,500,3),np.uint8)
+        globalVisualizer = np.zeros((500,500,3),np,uint8)
 
         scale = 10
         cam = ( int(visualizer.shape[1]*.5),int(visualizer.shape[0]-50) )
@@ -221,6 +222,12 @@ class Vision:
         cv2.line(visualizer,cam,obj,self.boundingColor,3)
         cv2.putText(visualizer,("Distance: " + str(d)),(int((cam[0]+obj[0])/2),int((cam[1]+obj[1])/2)),cv2.FONT_HERSHEY_COMPLEX,.5,(255,255,255))
         cv2.imshow("Visualizer",visualizer)
+
+        wh = 50
+        cv2.line(globalVisualizer,(0,wh),(globalVisualizer.shape[1],wh))
+        cv2.circle(globalVisualizer,(x,y),5,self.contourColor,3)
+
+
 
         cv2.waitKey(0)
 
@@ -290,8 +297,8 @@ class Vision:
             # Temporary #
             print(xReal)
 
-            if self.experimental:
-                self.Visualizer(x,y,d)
+            #if self.experimental:
+                self.visualizer(xReal,yReal)
             
 
             # Creating 'q' as the quit button for the webcam
