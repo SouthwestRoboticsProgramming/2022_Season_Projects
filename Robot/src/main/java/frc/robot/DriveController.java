@@ -15,8 +15,8 @@ public final class DriveController {
         double turn = input.getTurn();
         double drive = input.getDrive();
 
-        double leftDrive = (drive - turn) * driveSpeed;
-        double rightDrive = (drive + turn) * driveSpeed;
+        double leftDrive = (drive + turn) * driveSpeed;
+        double rightDrive = (drive - turn) * driveSpeed;
         driveTrain.driveMotors(leftDrive, rightDrive);
     }
 }

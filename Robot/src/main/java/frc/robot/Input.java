@@ -8,7 +8,7 @@ public class Input {
     }
 
     public double getDrive() {
-        return controller.getLeftStickY();
+        return -controller.getLeftStickY();
     }
 
     public double getTurn() {

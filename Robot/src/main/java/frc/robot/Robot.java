@@ -3,6 +3,7 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.lib.ADIS16448_IMU;
@@ -17,6 +18,7 @@ public final class Robot extends TimedRobot {
   private Gyro gyro;
   private Localizer localizer;
   private PathFollower pathFollower;
+  private List<Point> path;
 
   @Override
   public void robotInit() {
@@ -28,13 +30,20 @@ public final class Robot extends TimedRobot {
 
     visualizer = new VisualizerCommunicator();
 
-    gyro = new ADIS16448_IMU(IMUAxis.kZ, edu.wpi.first.wpilibj.SPI.Port.kMXP, 10);
+    gyro = new ADIS16448_IMU(IMUAxis.kZ, SPI.Port.kMXP, 10);
     localizer = new Localizer(driveTrain, gyro);
+
+    path = new ArrayList<>();
+    path.add(new Point(1, 0));
+    path.add(new Point(1, 1));
+    path.add(new Point(0, 0));
   }
 
   @Override
   public void robotPeriodic() {
     localizer.update();
+
+    //System.out.println(driveTrain.getLeftEncoderTicks() + " | " + driveTrain.getRightEncoderTicks() );
 
     if (visualizer.connected()) {
       visualizer.setMemUsage();
@@ -43,6 +52,8 @@ public final class Robot extends TimedRobot {
       visualizer.setPredictedAngle(localizer.getRotationRadians());
       visualizer.setPredictedX(localizer.getX() * 100); // Visualizer expects measurements in centimeters
       visualizer.setPredictedY(localizer.getY() * 100);
+
+      visualizer.setPath(path);
     }
   }
 
@@ -58,16 +69,15 @@ public final class Robot extends TimedRobot {
   public void autonomousInit() {
     pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15, 45);
 
-    List<Point> path = new ArrayList<>();
-    path.add(new Point(1, 1));
-    path.add(new Point(-1, 1));
-
     pathFollower.setPath(path);
   }
 
   @Override
   public void autonomousPeriodic() {
     pathFollower.update();
+    if (pathFollower.isDone()) {
+      pathFollower.setPath(path);
+    }
   }
 
   @Override

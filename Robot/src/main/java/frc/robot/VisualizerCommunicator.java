@@ -4,6 +4,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
+
+import frc.robot.path.Point;
 
 public class VisualizerCommunicator {
     private static final int PORT = 8372;
@@ -96,6 +99,20 @@ public class VisualizerCommunicator {
             out.writeByte(7);
             out.writeDouble(left);
             out.writeDouble(right);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    public void setPath(List<Point> path) {
+        try {
+            out.writeByte(4);
+            out.writeInt(path.size());
+            for (Point point : path) {
+                out.writeDouble(point.getX());
+                out.writeDouble(point.getY());
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(0);

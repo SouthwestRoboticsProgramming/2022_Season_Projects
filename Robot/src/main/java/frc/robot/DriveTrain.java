@@ -45,18 +45,18 @@ public final class DriveTrain {
     }
 
     public int getLeftEncoderTicks() {
-        return (int) leftMotor.getSelectedSensorPosition();
+        return (int) -leftMotor.getSelectedSensorPosition();
     }
-
+ 
     public int getRightEncoderTicks() {
-        return (int) rightMotor.getSelectedSensorPosition();
+        return (int) -rightMotor.getSelectedSensorPosition();
     }
 
     public void driveMotors(double left, double right) {
         left = Utils.clamp(left, -1, 1);
         right = Utils.clamp(right, -1, 1);
-        leftMotor.set(ControlMode.PercentOutput, left);
-        rightMotor.set(ControlMode.PercentOutput, right);
+        leftMotor.set(ControlMode.PercentOutput, -left);
+        rightMotor.set(ControlMode.PercentOutput, -right);
     }
 
     public void stopMotors() {
