@@ -14,8 +14,6 @@ class Vision:
     baseline = 7.38 # Distance between cameras (Units here affect distance units)
     alpha = 59.7 # Horizontal FOV in degrees
     beta = 31.5 # Vertical FOV in degrees
-    pixelsWidth = 640
-    pixelsHeight = 360
 
     boundingColor = (121, 82, 179)
     contourColor = (255, 193, 7)
@@ -31,8 +29,8 @@ class Vision:
     v_max = 240
     TLow = 0
 
-    pixDistanceX = (.5*pixelsWidth)/(math.tan(math.radians(.5*alpha)))
-    pixDistanceY = (.5*pixelsHeight)/(math.tan(math.radians(.5*beta)))
+    pixDistanceX = None
+    pixDistanceY = None
 
     def empty(self,a):
         pass
@@ -52,6 +50,10 @@ class Vision:
             cv2.createTrackbar("Value Max","Track Bars",240,255,self.empty)
             cv2.createTrackbar("Thresh Low", "Track Bars", 0 , 255, self.empty)
             cv2.createTrackbar("Exposure","Track Bars", -10,10, self.empty)
+
+    def setFrameShape(frame):
+        self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*alpha)))
+        self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*beta)))
         
 
         
@@ -161,8 +163,8 @@ class Vision:
 
             angleX = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
             angleY = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
-            angle2X = math.degrees(math.atan(((x) - (frame.shape)[1]))/pixDistanceX)
-
+            angle2X = math.degrees(math.atan((x-(frame.shape[1]/2))/pixDistanceX))
+            
             if self.experimental:
                 cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
                 cv2.imshow("Result" + str(cameraNumber),frameResult)
@@ -235,6 +237,9 @@ class Vision:
 
         # Sets a calibration profile to calibrate the cameras on
         calProfile = self.calibrateCameraInit()
+
+        ret, frame = capL.read()
+        self.setFrameShape(frame)
 
         while True:
 
