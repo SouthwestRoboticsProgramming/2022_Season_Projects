@@ -41,7 +41,7 @@ public class Robot {
 
         // Move into position
         g.translate((float) predictedX, wheelRadius, (float) predictedY);
-        g.rotateY((float) predictedAngle);
+        g.rotateY((float) -predictedAngle - (float) Math.PI / 2);
 
         // Draw the body
         g.fill(255);

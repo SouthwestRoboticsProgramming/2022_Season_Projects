@@ -15,11 +15,10 @@ public class PathOverlay implements Overlay {
         g.stroke(0, 255, 0);
         g.noFill();
 
-        g.translate(0, 0.1f, 0);
         g.beginShape(g.LINE_STRIP);
         g.vertex((float) robot.getPredictedX(), 0, (float) robot.getPredictedY());
         for (Point p : path) {
-            g.vertex((float) p.getX(), 0, (float) p.getY());
+            g.vertex((float) p.getX() * 100, 0, (float) p.getY() * 100);
         }
         g.endShape();
 
@@ -29,11 +28,6 @@ public class PathOverlay implements Overlay {
             g.rotateX((float) Math.PI / 2);
             g.ellipse((float) last.getX(), (float) last.getY(), 10, 10);
             g.popMatrix();
-
-            g.translate(0, -0.1f, 0);
-            g.stroke(255, 128, 0);
-            g.line((float) robot.getPredictedX(), 0, (float) robot.getPredictedY(), (float) last.getX(), 0, (float) last.getY());
-            g.translate(0, 0.1f, 0);
         }
     }
 
