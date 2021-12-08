@@ -11,6 +11,9 @@ class TaskMessenger:
         self.messageCallback = lambda mType, data: None
 
     def sendMessage(self, mType, data):
+        if data == "_Heartbeat":
+            raise Exception("Message type '_Heartbeat' not allowed!")
+
         typeLen = struct.pack(">h", len(mType))
         dataLen = struct.pack(">i", len(data))
         encoded = typeLen + mType.encode("utf-8") + dataLen + data
@@ -24,6 +27,9 @@ class TaskMessenger:
             totalSent += sent
 
     def read(self):
+        # Send a heartbeat
+        self.sendMessage("_Heartbeat", b"")
+
         readable = select.select([self.socket], [], [])
         for socket in readable:
             if socket == self.socket:
