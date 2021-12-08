@@ -21,7 +21,7 @@ public final class PathFollower {
         this.localizer = localizer;
         this.drive = drive;
         this.speed = speed;
-        this.angleSlowdownPoint = angleSlowdownPoint;
+        this.angleSlowdownPoint = Math.toRadians(angleSlowdownPoint);
         this.distanceToleranceSq = positionTolerance * positionTolerance;
         this.angleTolerance = Math.toRadians(angleTolerance);
         this.path = null;
@@ -37,6 +37,10 @@ public final class PathFollower {
         targetIndex = 0;
     }
 
+    public boolean isDone() {
+        return target == null;
+    }
+
     public void update() {
         if (path == null || target == null) {
             return;
@@ -44,7 +48,7 @@ public final class PathFollower {
 
         double posX = localizer.getX();
         double posY = localizer.getY();
-        double posRot = Utils.normalizeAngle(localizer.getRotationRadians() + Math.PI);
+        double posRot = Utils.normalizeAngle(localizer.getRotationRadians());
 
         double left = 0;
         double right = 0;
@@ -62,8 +66,11 @@ public final class PathFollower {
         } else {
             double angle = -Math.atan2(-deltaY, deltaX);
             double angleDiff = Utils.normalizeAngle(angle - posRot);
+            System.out.println(angleDiff);
             if (Math.abs(angleDiff) > angleTolerance) {
-                double speedCutoff = Utils.clamp((Math.abs(angleDiff) - angleTolerance) / angleSlowdownPoint, 0.1, 1);
+                //System.out.println((Math.abs(angleDiff) - angleTolerance) / angleSlowdownPoint);
+                double speedCutoff = Utils.clamp((Math.abs(angleDiff) - angleTolerance) / angleSlowdownPoint, 0.5, 1);
+                //System.out.println("Speed cutoff: " + speedCutoff);
 
                 if (angleDiff > 0) {
                     left = -1;
@@ -85,5 +92,8 @@ public final class PathFollower {
         right *= speed;
 
         drive.driveMotors(left, right);
+        System.out.println("Driving (" + left + ", " + right + ")");
+
+        //System.out.println(localizer.getRotationRadians());
     }
 }

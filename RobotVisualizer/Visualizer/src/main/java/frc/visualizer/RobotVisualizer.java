@@ -2,10 +2,7 @@ package frc.visualizer;
 
 import frc.visualizer.controller.RobotController;
 import frc.visualizer.controller.VirtualRobotController;
-import frc.visualizer.overlays.PerformanceOverlay;
-import frc.visualizer.overlays.Overlay;
-import frc.visualizer.overlays.PathOverlay;
-import frc.visualizer.overlays.PathTreeOverlay;
+import frc.visualizer.overlays.*;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -26,8 +23,8 @@ public class RobotVisualizer extends PApplet {
     // Nothing except size should ever be in here!
     @Override
     public void settings() {
-        //size(500, 400, P3D);
-        fullScreen(P3D);
+        size(1280, 720, P3D);
+        //fullScreen(P3D);
     }
 
     @Override
@@ -36,7 +33,7 @@ public class RobotVisualizer extends PApplet {
 
         camera = new PeasyCam(this, 500);
         grid = new Grid(15, 10);
-        robot = new Robot(28.5f, 3.75f, 3, 34, 1, 11);
+        robot = new Robot(28.5f, 7.62f / 2f, 2.2225f, 34, 1, 11.2f);
         //controller = new PhysicalRobotController("Visualizer", TEAM_NUMBER);
         controller = new VirtualRobotController();
 
@@ -44,6 +41,7 @@ public class RobotVisualizer extends PApplet {
         overlays.add(new PerformanceOverlay());
         overlays.add(new PathTreeOverlay());
         overlays.add(new PathOverlay());
+        overlays.add(new DebugOverlay());
     }
 
     @Override
@@ -51,9 +49,11 @@ public class RobotVisualizer extends PApplet {
         // Update robot controller
         controller.update(robot);
 
+        //robot.setPredictedAngle(millis() / 1000f * PI);
+
         // Set up scene
         background(0);
-        scale(5, -5, 5);
+        scale(5, -5, -5);
         ambientLight(128, 128, 128);
         directionalLight(128, 128, 128, -1, 1, -1);
 
@@ -76,7 +76,27 @@ public class RobotVisualizer extends PApplet {
             fill(255);
             text("Team " + TEAM_NUMBER + ": \"" + TEAM_NAME + "\"", 0, 0);
             text("FPS: " + frameRate, 0, 20);
-            text("Connected using " + controller.getClass().getSimpleName(), 0, 40);
+            //text("Connected using " + controller.getClass().getSimpleName(), 0, 40);
+
+            pushMatrix();
+
+            translate(200, 100);
+            ellipse(0, 0, 50, 50);
+            stroke(255);
+            strokeWeight(4);
+            line(0, 0, 50 * cos((float) robot.getLeftRotation()), 50 * sin((float) robot.getLeftRotation()));
+
+            popMatrix();
+            pushMatrix();
+
+            translate(400, 100);
+            ellipse(0, 0, 50, 50);
+            stroke(255);
+            strokeWeight(4);
+            line(0, 0, 50 * cos((float) robot.getRightRotation()), 50 * sin((float) robot.getRightRotation()));
+
+            popMatrix();
+
 
             translate(0, 80);
             for (Overlay overlay : overlays) {

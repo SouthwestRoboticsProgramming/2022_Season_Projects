@@ -44,6 +44,6 @@ public final class Localizer {
     }
 
     private Rotation2d getGyroAngle() {
-        return Rotation2d.fromDegrees(-gyro.getAngle());
+        return Rotation2d.fromDegrees(gyro.getAngle());
     }
 }

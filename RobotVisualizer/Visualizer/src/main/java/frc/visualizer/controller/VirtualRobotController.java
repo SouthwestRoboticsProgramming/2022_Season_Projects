@@ -25,7 +25,7 @@ public class VirtualRobotController implements RobotController {
 
         try {
             System.out.println("Connecting to virtual robot...");
-            Socket socket = new Socket("192.168.50.71", 8372);
+            Socket socket = new Socket("10.21.29.2", 8372);
             if (!socket.isConnected()) {
                 throw new RuntimeException("Failed to connect!");
             } else {
@@ -87,6 +87,13 @@ public class VirtualRobotController implements RobotController {
         robot.setTicksPerSecond(tps);
     }
 
+    private void readWheelRotations(Robot robot) throws Exception {
+        double left = in.readDouble();
+        double right = in.readDouble();
+        robot.setLeftRotation(left * Math.PI * 2);
+        robot.setRightRotation(right * Math.PI * 2);
+    }
+
     @Override
     public void update(Robot robot) {
         try {
@@ -100,6 +107,7 @@ public class VirtualRobotController implements RobotController {
                     case 4: readPath(robot.getPath()); break;
                     case 5: readMemUsage(robot); break;
                     case 6: readTPS(robot); break;
+                    case 7: readWheelRotations(robot); break;
                 }
             }
         } catch (Exception e) {

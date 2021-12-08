@@ -22,11 +22,11 @@ public class VirtualRobot {
         scheduler = new Scheduler();
         predictor = new RobotLocationPredictor(28.5, 3.75);
         visualizer = new VisualizerCommunicator();
-        pathfinder = new RTRRTStar(new Environment(-200, -200, 200, 200), new Point(0, 0), new Point(125, 125), 1, 10, 3, 50, 0.1, 2, 10);
+        pathfinder = new RTRRTStar(new Environment(-200, -200, 200, 200), new Point(0, 0), new Point(125, 125), 1, 10, 10, 50, 0.1, 2, 10);
 
         // Send the tree to the visualizer every 20 ticks
         scheduler.scheduleRepeating(20, () -> {
-            visualizer.setPathTree(pathfinder.tree);
+            //visualizer.setPathTree(pathfinder.tree);
         });
     }
 
