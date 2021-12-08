@@ -318,8 +318,13 @@ class Vision:
 
 
 stereo_vision = Vision()
+#
 stereo_vision.run_stereo(2,4)
 #stereo_vision.visualizer(20,40,80,80)
+
+x,y = stereo_vision.solveGlobal(11.18,12.80,12.09)
+
+print(x)
   
 
 # close all windows
