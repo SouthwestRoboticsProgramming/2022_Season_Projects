@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>Lidar-Task</artifactId>
+    
     <dependencies>
         <dependency>
             <groupId>frc</groupId>
@@ -17,7 +18,10 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>frc</groupId>
+            <artifactId>Task-Client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-
-
 </project>
