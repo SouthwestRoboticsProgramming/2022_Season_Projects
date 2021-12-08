@@ -14,8 +14,6 @@ class Vision:
     baseline = 7.38 # Distance between cameras (Units here affect distance units)
     alpha = 59.7 # Horizontal FOV in degrees
     beta = 31.5 # Vertical FOV in degrees
-    pixelsWidth = 640
-    pixelsHeight = 360
 
     boundingColor = (121, 82, 179)
     contourColor = (255, 193, 7)
@@ -31,8 +29,8 @@ class Vision:
     v_max = 240
     TLow = 0
 
-    pixDistanceX = (.5*pixelsWidth)/(math.tan(math.radians(.5*alpha)))
-    pixDistanceY = (.5*pixelsHeight)/(math.tan(math.radians(.5*beta)))
+    pixDistanceX = None
+    pixDistanceY = None
 
     def empty(self,a):
         pass
@@ -51,7 +49,11 @@ class Vision:
             cv2.createTrackbar("Value Min","Track Bars",41,255,self.empty)
             cv2.createTrackbar("Value Max","Track Bars",240,255,self.empty)
             cv2.createTrackbar("Thresh Low", "Track Bars", 0 , 255, self.empty)
-            cv2.createTrackbar("Exposure","Track Bars", -10,10, self.empty)
+            cv2.createTrackbar("Exposure","Track Bars", 5,10, self.empty)
+
+    def setFrameShape(self,frame):
+        self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.alpha)))
+        self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.beta)))
         
 
         
@@ -162,7 +164,7 @@ class Vision:
 
             angleX = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
             angleY = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
-            angle2X = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
+            angle2X = math.degrees(math.atan(((x) - (frame.shape[1]/2))/pixDistanceX))
 
 
             if self.experimental:
@@ -194,18 +196,22 @@ class Vision:
         # First solve for width of object (c)
         c = math.sqrt(math.pow(lengthA,2)+math.pow(lengthB,2)-2*lengthA*lengthB*math.cos(centerAngle))
 
+        a = lengthA
+        b = lengthB
+
         # For debugging
-        xReal = c
-        yReal = None
+        xReal = (math.pow(b,2)-math.pow(c,2)-math.pow(a,2))/2*c
+        yReal = math.sqrt(abs(math.pow(a,2)-math.pow(xReal,2)))
+
         return(xReal,yReal)
 
 
         
-    def visualizer(self, x,y,z,d):
-
+    def visualizer(self, x,y,d):
 
         # Create a visualizer to see where it thinks the robot/ball is
         visualizer = np.zeros((500,500,3),np.uint8)
+        globalVisualizer = np.zeros((500,500,3),np.uint8)
 
         scale = 10
         cam = ( int(visualizer.shape[1]*.5),int(visualizer.shape[0]-50) )
@@ -217,6 +223,12 @@ class Vision:
         cv2.line(visualizer,cam,obj,self.boundingColor,3)
         cv2.putText(visualizer,("Distance: " + str(d)),(int((cam[0]+obj[0])/2),int((cam[1]+obj[1])/2)),cv2.FONT_HERSHEY_COMPLEX,.5,(255,255,255))
         cv2.imshow("Visualizer",visualizer)
+
+        wh = 50
+        cv2.line(globalVisualizer,(0,wh),(globalVisualizer.shape[1],wh))
+        cv2.circle(globalVisualizer,(x,y),5,self.contourColor,3)
+
+
 
         cv2.waitKey(0)
 
@@ -238,6 +250,9 @@ class Vision:
         # Sets a calibration profile to calibrate the cameras on
         calProfile = self.calibrateCameraInit()
 
+        ret, frame = capL.read()
+        self.setFrameShape(frame)
+
         while True:
 
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
@@ -252,8 +267,8 @@ class Vision:
             sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
             
             # Use ball detection function to find the angle to center and right side of the object in both cameras
-            XangleL, YangleL, XangleL2 = self.objectDetection(sCamL,0)
-            XangleR, YangleR, XangleR2 = self.objectDetection(sCamR,1)
+            XangleL, YangleL, XangleL2 = self.objectDetection(frameL,0)
+            XangleR, YangleR, XangleR2 = self.objectDetection(frameR,1)
 
 
             x,z = self.stereoVision(XangleL,XangleR)
@@ -269,22 +284,25 @@ class Vision:
 
             # Get the distance to the object in total using the distance formula
             #   Note: all of the sub 2's are 0 because for now we assume that the camera is not moving
-            d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
-            d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
+            if x is not None:
+                d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
+                d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
+            else:
+                d = 0
+                d2 = 0
 
 
-            disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
+            #disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
 
-            centerAngle = math.degrees(abs(math.atan2(z,x)-math.atan2(z2,x2)))
-
+            centerAngle = abs(XangleL - XangleL2)
             xReal, yReal = self.solveGlobal(d,d2,centerAngle)
 
 
             # Temporary #
-            print(XangleL2)
+            print(yReal)
 
             #if self.experimental:
-                #self.visualizer(x,y,d)
+                #self.visualizer(xReal,yReal,d)
             
 
             # Creating 'q' as the quit button for the webcam
