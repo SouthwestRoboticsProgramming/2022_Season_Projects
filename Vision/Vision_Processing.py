@@ -245,7 +245,10 @@ class Vision:
         calProfile = self.calibrateCameraInit()
 
         ret, frame = capL.read()
-        self.setFrameShape(frame)
+        if ret:
+            self.setFrameShape(frame)
+        else:
+            print("Left camera not found")
 
         while True:
 
@@ -254,50 +257,56 @@ class Vision:
                 capL.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars"))
                 capR.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars"))
             # Turn raw camera input into readable frames
-            ret, frameL = capL.read()
-            ret, frameR = capR.read()
+            retL, frameL = capL.read()
+            retR, frameR = capR.read()
 
-            # Calibrate every frame using the calibration profile
-            sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
-            
-            # Use ball detection function to find the angle to center and right side of the object in both cameras
-            XangleL, YangleL, XangleL2 = self.objectDetection(frameL,0)
-            XangleR, YangleR, XangleR2 = self.objectDetection(frameR,1)
+            if retL and retR:
 
-
-            x,z = self.stereoVision(XangleL,XangleR)
-            x2,z2 = self.stereoVision(XangleL2,XangleR2)
+                # Calibrate every frame using the calibration profile
+                sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+                
+                # Use ball detection function to find the angle to center and right side of the object in both cameras
+                XangleL, YangleL, XangleL2 = self.objectDetection(frameL,0)
+                XangleR, YangleR, XangleR2 = self.objectDetection(frameR,1)
 
 
-            if YangleL is not None and YangleR is not None:
-                Yangle = (YangleL + YangleR)/2
-                y = math.tan(math.radians(Yangle)*z)
-            else:
-                y = 0
+                x,z = self.stereoVision(XangleL,XangleR)
+                x2,z2 = self.stereoVision(XangleL2,XangleR2)
 
 
-            # Get the distance to the object in total using the distance formula
-            #   Note: all of the sub 2's are 0 because for now we assume that the camera is not moving
-            if x is not None:
-                d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
-                d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
-            else:
-                d = 0
-                d2 = 0
+                if YangleL is not None and YangleR is not None:
+                    Yangle = (YangleL + YangleR)/2
+                    y = math.tan(math.radians(Yangle)*z)
+                else:
+                    y = 0
 
 
-            #disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
+                # Get the distance to the object in total using the distance formula
+                #   Note: all of the sub 2's are 0 because for now we assume that the camera is not moving
+                if x is not None:
+                    d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
+                    d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
+                else:
+                    d = 0
+                    d2 = 0
 
-            centerAngle = abs(XangleL - XangleL2)
-            xReal, yReal = self.solveGlobal(d,d2,centerAngle)
+
+                #disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
+
+                centerAngle = abs(XangleL - XangleL2)
+                xReal, yReal = self.solveGlobal(d,d2,centerAngle)
 
 
-            # Temporary #
-            print(yReal)
+                # Temporary #
+                print(yReal)
 
-            #if self.experimental:
-                #self.visualizer(xReal,yReal,d)
-            
+                #if self.experimental:
+                    #self.visualizer(xReal,yReal,d)
+            elif retL:
+                print("I'm gonna use the left camera only")
+            elif retR:
+                print("I'm gonna use the right camera only")
+                
 
             # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -313,13 +322,11 @@ class Vision:
 
 stereo_vision = Vision()
 #
-#stereo_vision.run_stereo(2,4)
+stereo_vision.run_stereo(2,4)
 #stereo_vision.visualizer(20,40,80,80)
 
 # Debugging
-x,y = stereo_vision.solveGlobal(11.18,12.80,12.09)
-
-print(y)
+#x,y = stereo_vision.solveGlobal(11.18,12.80,12.09)
   
 
 # close all windows
