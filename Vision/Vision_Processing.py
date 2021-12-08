@@ -149,8 +149,9 @@ class Vision:
         
         pixDistanceX = self.pixDistanceX
         pixDistanceY = self.pixDistanceY
+        angleX = None
         angleY = None
-        angleY = None
+        angle2X = None
 
 
         # Find a rectangle that fits around the ball (This will be used to find location)
@@ -161,7 +162,8 @@ class Vision:
 
             angleX = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
             angleY = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
-            angle2X = math.degrees(math.atan(((x) - (frame.shape)[1]))/pixDistanceX)
+            angle2X = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
+
 
             if self.experimental:
                 cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
@@ -199,7 +201,7 @@ class Vision:
 
 
         
-    def Visualizer(self, x,y,z,d):
+    def visualizer(self, x,y,z,d):
 
 
         # Create a visualizer to see where it thinks the robot/ball is
@@ -279,10 +281,10 @@ class Vision:
 
 
             # Temporary #
-            print(xReal)
+            print(XangleL2)
 
-            if self.experimental:
-                self.Visualizer(x,y,d)
+            #if self.experimental:
+                #self.visualizer(x,y,d)
             
 
             # Creating 'q' as the quit button for the webcam
@@ -298,7 +300,8 @@ class Vision:
 
 
 stereo_vision = Vision()
-stereo_vision.run_stereo(1,0)
+stereo_vision.run_stereo(2,4)
+#stereo_vision.visualizer(20,40,80,80)
   
 
 # close all windows
