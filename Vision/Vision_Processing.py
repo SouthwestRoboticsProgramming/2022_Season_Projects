@@ -191,19 +191,13 @@ class Vision:
         
         return(x,y)
 
-    def solveGlobal(self,lengthA,lengthB,centerAngle):
-        
-        # First solve for width of object (c)
-        c = math.sqrt(math.pow(lengthA,2)+math.pow(lengthB,2)-2*lengthA*lengthB*math.cos(centerAngle))
-
-        a = lengthA
-        b = lengthB
-
-        # For debugging
-        xReal = (math.pow(b,2)-math.pow(c,2)-math.pow(a,2))/2*c
-        yReal = math.sqrt(abs(math.pow(a,2)-math.pow(xReal,2)))
-
-        return(xReal,yReal)
+def solveGlobal(self,a,b,centerAngle):
+    
+    c = math.sqrt(math.pow(a,2)+math.pow(b,2)-2*a*b*math.cos(math.radians(centerAngle)))
+    x = (b**2- c**2-a**2) / (2*c)
+    y = math.sqrt(abs(math.pow(a,2)-math.pow(x,2)))
+    
+    return(x,y)
 
 
         
@@ -322,6 +316,7 @@ stereo_vision = Vision()
 stereo_vision.run_stereo(2,4)
 #stereo_vision.visualizer(20,40,80,80)
 
+# Debugging
 x,y = stereo_vision.solveGlobal(11.18,12.80,12.09)
 
 print(x)
