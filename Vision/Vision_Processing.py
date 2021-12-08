@@ -51,6 +51,20 @@ class Vision:
             cv2.createTrackbar("Thresh Low", "Track Bars", 0 , 255, self.empty)
             cv2.createTrackbar("Exposure","Track Bars", 5,10, self.empty)
 
+    # Scans camera ports to find working ones
+    def scanCameras(self):
+        i = -10
+        cams = []
+        while i<=10:
+            cap = cv2.VideoCapture
+            ret, frame = cap.read()
+
+            if ret:
+                print("Camera port " + str(i) + " works!")
+                cams.append(i)
+            i += 1
+        return(cams)
+
     def setFrameShape(self,frame):
         self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.alpha)))
         self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.beta)))
@@ -226,6 +240,37 @@ class Vision:
 
         cv2.waitKey(0)
 
+    def run_single_camera(self,camID)
+        cap = cv2.VideoCapture(camID)
+        cap.set(cv2.CAP_PROP_AUTO_WB,0)
+        cap.set(cv2.CAP_PROP_AUTOFOCUS,0)
+        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE,1)
+        
+        # Sets a calibration profile to calibrate the cameras on
+        calProfile = self.calibrateCameraInit()
+
+        ret, frame = cap.read()
+        self.setFrameShape(frame)
+
+        while True:
+            if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
+                # Constantly set the exposure of the camera to
+                cap.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars"))
+            # Turn raw camera input into readable frames
+            ret, frame = cap.read()
+
+            # Calibrate every frame using the calibration profile
+            sCam, sCam = self.calibrateCamera(frame,frame,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+            
+            # Use ball detection function to find the angle to center and right side of the object in both cameras
+            Xangle, Yangle, Xangle2 = self.objectDetection(sCam,"")
+
+            # Creating 'q' as the quit button for the webcam
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                capL.release()
+                capR.release()
+                return()
+
     
     
     def run_stereo(self,camIDL,camIDR):
@@ -266,8 +311,8 @@ class Vision:
                 sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
                 
                 # Use ball detection function to find the angle to center and right side of the object in both cameras
-                XangleL, YangleL, XangleL2 = self.objectDetection(frameL,0)
-                XangleR, YangleR, XangleR2 = self.objectDetection(frameR,1)
+                XangleL, YangleL, XangleL2 = self.objectDetection(frameL,"Left")
+                XangleR, YangleR, XangleR2 = self.objectDetection(frameR,"Right")
 
 
                 x,z = self.stereoVision(XangleL,XangleR)
@@ -304,8 +349,14 @@ class Vision:
                     #self.visualizer(xReal,yReal,d)
             elif retL:
                 print("I'm gonna use the left camera only")
+                self.run_single_camera(camIDL)
             elif retR:
                 print("I'm gonna use the right camera only")
+                self.run_single_camera(camIDR)
+            else:
+                print("No cameras found, listing open cameras...")
+                cams = self.scanCameras()
+                print(cams)
                 
 
             # Creating 'q' as the quit button for the webcam
