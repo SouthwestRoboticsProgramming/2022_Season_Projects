@@ -15,6 +15,8 @@ class Vision:
     alpha = 59.7 # Horizontal FOV in degrees
     beta = 31.5 # Vertical FOV in degrees
 
+    targetWidth = 6.5
+
     boundingColor = (121, 82, 179)
     contourColor = (255, 193, 7)
 
@@ -56,7 +58,7 @@ class Vision:
         i = -10
         cams = []
         while i<=10:
-            cap = cv2.VideoCapture
+            cap = cv2.VideoCapture(i)
             ret, frame = cap.read()
 
             if ret:
@@ -183,8 +185,8 @@ class Vision:
 
             if self.experimental:
                 cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
-                cv2.imshow("Result" + str(cameraNumber),frameResult)
-                cv2.imshow("Binary" + str(cameraNumber),binary)
+                cv2.imshow("Result " + str(cameraNumber),frameResult)
+                cv2.imshow("Binary " + str(cameraNumber),binary)
 
 
         return(angleX,angleY,angle2X)
@@ -211,7 +213,7 @@ class Vision:
         x = (b**2- c**2-a**2) / (2*c)
         y = math.sqrt(abs(math.pow(a,2)-math.pow(x,2)))
     
-        return(x,y)
+        return(x,y,c)
 
 
         
@@ -240,7 +242,7 @@ class Vision:
 
         cv2.waitKey(0)
 
-    def run_single_camera(self,camID)
+    def run_single_camera(self,camID):
         cap = cv2.VideoCapture(camID)
         cap.set(cv2.CAP_PROP_AUTO_WB,0)
         cap.set(cv2.CAP_PROP_AUTOFOCUS,0)
@@ -250,7 +252,10 @@ class Vision:
         calProfile = self.calibrateCameraInit()
 
         ret, frame = cap.read()
-        self.setFrameShape(frame)
+        if ret:
+            self.setFrameShape(frame)
+        else:
+            print("hmmmmmmmmmm")
 
         while True:
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
@@ -267,8 +272,7 @@ class Vision:
 
             # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
-                capL.release()
-                capR.release()
+                cap.release()
                 return()
 
     
@@ -339,24 +343,34 @@ class Vision:
                 #disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
 
                 centerAngle = abs(XangleL - XangleL2)
-                xReal, yReal = self.solveGlobal(d,d2,centerAngle)
+                xReal, yReal,c = self.solveGlobal(d,d2,centerAngle)
+
+
+                accuracy = -10*abs(c-self.targetWidth)+100
 
 
                 # Temporary #
-                print(yReal)
+                print(accuracy)
 
                 #if self.experimental:
                     #self.visualizer(xReal,yReal,d)
             elif retL:
                 print("I'm gonna use the left camera only")
+                capL.release()
+                capR.release()
                 self.run_single_camera(camIDL)
+                return()
             elif retR:
                 print("I'm gonna use the right camera only")
+                capL.release
+                capR.release()
                 self.run_single_camera(camIDR)
+                return
             else:
                 print("No cameras found, listing open cameras...")
                 cams = self.scanCameras()
                 print(cams)
+                return
                 
 
             # Creating 'q' as the quit button for the webcam
