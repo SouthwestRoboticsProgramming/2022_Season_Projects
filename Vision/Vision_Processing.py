@@ -156,8 +156,9 @@ class Vision:
         lower = np.array([h_min,s_min,v_min])
         upper = np.array([h_max,s_max,v_max])
 
-        frameHSV = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-        frameGray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        frameBlur = cv2.GaussianBlur(frame,(5,5),0)
+        frameHSV = cv2.cvtColor(frameBlur,cv2.COLOR_BGR2HSV)
+        frameGray = cv2.cvtColor(frameBlur,cv2.COLOR_BGR2GRAY)
         frameMask = cv2.inRange(frameHSV,lower,upper)
         frameResult = cv2.bitwise_and(frame,frame,mask=frameMask)
         frameGrayMask = cv2.bitwise_and(frameGray,frameGray, mask=frameMask)
@@ -210,7 +211,7 @@ class Vision:
     def solveGlobal(self,a,b,centerAngle):
     
         c = math.sqrt(math.pow(a,2)+math.pow(b,2)-2*a*b*math.cos(math.radians(centerAngle)))
-        x = (b**2- c**2-a**2) / (2*c)
+        x = (b**2- c**2-a**2) / (2*c+.00001)
         y = math.sqrt(abs(math.pow(a,2)-math.pow(x,2)))
     
         return(x,y,c)
@@ -347,6 +348,8 @@ class Vision:
 
 
                 accuracy = -10*abs(c-self.targetWidth)+100
+                if c == 0 or accuracy < 1:
+                    accuracy = 0
 
 
                 # Temporary #
@@ -386,12 +389,8 @@ class Vision:
 
 
 stereo_vision = Vision()
-#
-stereo_vision.run_stereo(2,4)
-#stereo_vision.visualizer(20,40,80,80)
 
-# Debugging
-#x,y = stereo_vision.solveGlobal(11.18,12.80,12.09)
+stereo_vision.run_stereo(2,4)
   
 
 # close all windows
