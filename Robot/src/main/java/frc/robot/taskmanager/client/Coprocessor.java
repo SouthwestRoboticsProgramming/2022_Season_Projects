@@ -24,7 +24,6 @@ import java.util.concurrent.CompletableFuture;
  * @author rmheuer
  */
 public class Coprocessor {
-    // TODO: Do these need to be public?
     public static final String DEST = "TaskManager";
     public static final String START_TASK = "StartTask";
     public static final String STOP_TASK = "StopTask";
