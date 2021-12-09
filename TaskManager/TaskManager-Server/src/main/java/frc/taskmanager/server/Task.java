@@ -88,7 +88,10 @@ public class Task {
         }
 
         System.out.println("Stopping task '" + name + "'");
-        process.destroy();
+	process.descendants().forEach((child) -> {
+		child.destroyForcibly();
+	    });
+        process.destroyForcibly();
     }
 
     public void delete() {
