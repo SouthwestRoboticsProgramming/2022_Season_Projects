@@ -3,6 +3,13 @@ package frc.robot.lidar;
 import frc.robot.taskmanager.client.Coprocessor;
 import frc.robot.taskmanager.client.Task;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 public final class LidarInterface {
     private static final String START = "Start";
     private static final String STOP = "Stop";
@@ -18,11 +25,11 @@ public final class LidarInterface {
     }
 
     public void startScan() {
-        task.sendMessage(START);
+        task.sendMessage(START, new byte[0]);
     }
 
     public void stopScan() {
-        task.sendMessage(STOP);
+        task.sendMessage(STOP, new byte[0]);
     }
 
     public void stop() {
@@ -42,8 +49,8 @@ public final class LidarInterface {
             int count = in.readInt();
             for (int i = 0; i < count; i++) {
                 int quality = in.readInt();
-                int angle = in.readDouble();
-                int distance = in.readDouble();
+                double angle = in.readDouble();
+                double distance = in.readDouble();
                 scan.add(new ScanEntry(quality, angle, distance));
             }
 

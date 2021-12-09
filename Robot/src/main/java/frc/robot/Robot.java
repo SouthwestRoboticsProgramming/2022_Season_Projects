@@ -14,9 +14,6 @@ import frc.robot.path.Point;
 import frc.robot.taskmanager.client.Coprocessor;
 
 public final class Robot extends TimedRobot {
-  private static final String RPI_ADDRESS = "robopi.local";
-  private static final int RPI_PORT = 8263;
-
   private DriveTrain driveTrain;
   private DriveController driveController;
   private VisualizerCommunicator visualizer;
@@ -49,7 +46,7 @@ public final class Robot extends TimedRobot {
     // There is probably a better way to do this, but I don't know any
     while (rpi == null) {
       try {
-        rpi = new Coprocessor(RPI_ADDRESS, RPI_PORT);
+        rpi = new Coprocessor(Constants.RPI_ADDRESS, Constants.RPI_PORT);
       } catch (RuntimeException e) {
         System.out.println("Raspberry Pi has not yet connected");
       }
@@ -62,7 +59,7 @@ public final class Robot extends TimedRobot {
     }
     System.out.println("Connected to Raspberry Pi");
 
-    lidar = new LidarInterface(rpi);
+    lidar = new LidarInterface(rpi, Constants.LIDAR_TASK_NAME);
     lidar.setScanCallback((scan) -> {
       System.out.println("Scan received");
     });
