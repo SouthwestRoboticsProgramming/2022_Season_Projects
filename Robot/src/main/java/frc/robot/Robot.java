@@ -8,10 +8,15 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.lib.ADIS16448_IMU;
 import frc.lib.ADIS16448_IMU.IMUAxis;
+import frc.robot.lidar.LidarInterface;
 import frc.robot.path.PathFollower;
 import frc.robot.path.Point;
+import frc.robot.taskmanager.client.Coprocessor;
 
 public final class Robot extends TimedRobot {
+  private static final String RPI_ADDRESS = "robopi.local";
+  private static final int RPI_PORT = 8263;
+
   private DriveTrain driveTrain;
   private DriveController driveController;
   private VisualizerCommunicator visualizer;
@@ -19,6 +24,8 @@ public final class Robot extends TimedRobot {
   private Localizer localizer;
   private PathFollower pathFollower;
   private List<Point> path;
+  private Coprocessor rpi;
+  private LidarInterface lidar;
 
   @Override
   public void robotInit() {
@@ -37,13 +44,33 @@ public final class Robot extends TimedRobot {
     path.add(new Point(1, 0));
     path.add(new Point(1, 1));
     path.add(new Point(0, 0));
+
+    // Keep trying to connect until it is successful
+    // There is probably a better way to do this, but I don't know any
+    while (rpi == null) {
+      try {
+        rpi = new Coprocessor(RPI_ADDRESS, RPI_PORT);
+      } catch (RuntimeException e) {
+        System.out.println("Raspberry Pi has not yet connected");
+      }
+
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        // Ignore
+      }
+    }
+    System.out.println("Connected to Raspberry Pi");
+
+    lidar = new LidarInterface(rpi);
+    lidar.setScanCallback((scan) -> {
+      System.out.println("Scan received");
+    });
   }
 
   @Override
   public void robotPeriodic() {
     localizer.update();
-
-    //System.out.println(driveTrain.getLeftEncoderTicks() + " | " + driveTrain.getRightEncoderTicks() );
 
     if (visualizer.connected()) {
       visualizer.setMemUsage();
@@ -55,11 +82,14 @@ public final class Robot extends TimedRobot {
 
       visualizer.setPath(path);
     }
+
+    rpi.flushNetwork();
   }
 
   @Override
   public void disabledInit() {
     driveTrain.stopMotors();
+    lidar.stopScan();
   }
 
   @Override
@@ -70,6 +100,7 @@ public final class Robot extends TimedRobot {
     pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15, 45);
 
     pathFollower.setPath(path);
+    lidar.startScan();
   }
 
   @Override
