@@ -7,5 +7,7 @@ public final class Main {
     RobotBase.startRobot(Robot::new);
   }
 
-  private Main() {}
+  private Main() {
+    throw new AssertionError();
+  }
 }
