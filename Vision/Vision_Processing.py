@@ -415,6 +415,9 @@ single_vision2 = Vision()
 t1 = threading.Thread(target=run_single_camera, args=(single_vision1,0,))
 t2 = threading.Thread(target=run_single_camera, args=(single_vision2,-2,))
 
+t1.start()
+t2.start()
+
 
 #stereo_vision = Vision()
 
