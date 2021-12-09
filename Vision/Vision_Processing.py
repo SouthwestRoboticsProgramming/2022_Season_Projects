@@ -4,6 +4,7 @@ import math
 import glob
 import taskclient as tc
 import struct
+import threading
 
 #client = tc.TaskMessenger("localhost", 8264, "Vision_Prosessing")
 
@@ -282,7 +283,7 @@ class Vision:
             sCam, sCam = self.calibrateCamera(frame,frame,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
             
             # Use ball detection function to find the angle to center and right side of the object in both cameras
-            Xangle, Yangle, Xangle2 = self.objectDetection(sCam,"")
+            Xangle, Yangle, Xangle2 = self.objectDetection(sCam,camID)
 
             # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -407,14 +408,17 @@ class Vision:
                 return()
 
 
+single_vision1 = Vision()
+single_vision2 = Vision()
+
+# Multithreading
+t1 = threading.Thread(target=run_single_camera, args=(single_vision1,0,))
+t2 = threading.Thread(target=run_single_camera, args=(single_vision2,-2,))
 
 
+#stereo_vision = Vision()
 
-
-
-stereo_vision = Vision()
-
-stereo_vision.run_stereo(2,4)
+#stereo_vision.run_stereo(2,4)
   
 
 # close all windows
