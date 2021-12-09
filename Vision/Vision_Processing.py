@@ -15,7 +15,7 @@ class Vision:
     alpha = 59.7 # Horizontal FOV in degrees
     beta = 31.5 # Vertical FOV in degrees
 
-    targetWidth = 6.5
+    targetWidth = 6.5 # Real life measurement for target object (Used for accuracy measurement, optional)
 
     boundingColor = (121, 82, 179)
     contourColor = (255, 193, 7)
@@ -30,6 +30,7 @@ class Vision:
     v_min = 41
     v_max = 240
     TLow = 0
+    exposure = 5
 
     pixDistanceX = None
     pixDistanceY = None
@@ -44,14 +45,14 @@ class Vision:
             # Create sliders
             cv2.namedWindow("Track Bars")
             cv2.resizeWindow("Track Bars", 1000,500)
-            cv2.createTrackbar("Hue Min","Track Bars",20,179,self.empty)
-            cv2.createTrackbar("Hue Max","Track Bars",35,179,self.empty)
-            cv2.createTrackbar("Saturation Min","Track Bars",104,255,self.empty)
-            cv2.createTrackbar("Saturation Max","Track Bars",255,255,self.empty)
-            cv2.createTrackbar("Value Min","Track Bars",41,255,self.empty)
-            cv2.createTrackbar("Value Max","Track Bars",240,255,self.empty)
-            cv2.createTrackbar("Thresh Low", "Track Bars", 0 , 255, self.empty)
-            cv2.createTrackbar("Exposure","Track Bars", 5,10, self.empty)
+            cv2.createTrackbar("Hue Min","Track Bars",self.h_min,179,self.empty)
+            cv2.createTrackbar("Hue Max","Track Bars",self.h_max,179,self.empty)
+            cv2.createTrackbar("Saturation Min","Track Bars",self.s_min,255,self.empty)
+            cv2.createTrackbar("Saturation Max","Track Bars",self.s_max,255,self.empty)
+            cv2.createTrackbar("Value Min","Track Bars",self.v_min,255,self.empty)
+            cv2.createTrackbar("Value Max","Track Bars",self.v_max,255,self.empty)
+            cv2.createTrackbar("Thresh Low", "Track Bars", self.TLow , 255, self.empty)
+            cv2.createTrackbar("Exposure","Track Bars", self.exposure,10, self.empty)
 
     # Scans camera ports to find working ones
     def scanCameras(self):
@@ -67,10 +68,21 @@ class Vision:
             i += 1
         return(cams)
 
+    # Math setup
     def setFrameShape(self,frame):
         self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.alpha)))
         self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.beta)))
         
+    # Locks values to what is currently on the sliders
+    def lockExperimental(self):
+            self.h_min = cv2.getTrackbarPos("Hue Min","Track Bars")
+            self.h_max = cv2.getTrackbarPos("Hue Max","Track Bars")
+            self.s_min = cv2.getTrackbarPos("Saturation Min","Track Bars")
+            self.s_max = cv2.getTrackbarPos("Saturation Max","Track Bars")
+            self.v_min = cv2.getTrackbarPos("Value Min","Track Bars")
+            self.v_max = cv2.getTrackbarPos("Value Max","Track Bars")
+            self.TLow = cv2.getTrackbarPos("Thresh Low", "Track Bars")
+            self.exposure = 0
 
         
     # Create a camera calibration profile
@@ -129,7 +141,7 @@ class Vision:
         return(undestoredCam1,undestoredCam2)
 
 
-    # Find a ball using color and get it's properties
+    # Find an object using color and get it's properties
     def objectDetection(self,frame,cameraNumber):
         # Get posision of trackbars and assign them to variables
         if self.experimental == True: 
@@ -193,7 +205,7 @@ class Vision:
         return(angleX,angleY,angle2X)
 
 
-    
+    # Gets distance to points using two cameras
     def stereoVision(self,camAngleL,camAngleR):
         z = None
         y = None
@@ -207,7 +219,7 @@ class Vision:
             y = x * cam1
         
         return(x,y)
-
+    # Solves for the real posisiton of the camera
     def solveGlobal(self,a,b,centerAngle):
     
         c = math.sqrt(math.pow(a,2)+math.pow(b,2)-2*a*b*math.cos(math.radians(centerAngle)))
@@ -217,7 +229,7 @@ class Vision:
         return(x,y,c)
 
 
-        
+    # Shows a graphic representation of the camera and the object
     def visualizer(self, x,y,d):
 
         # Create a visualizer to see where it thinks the robot/ball is
@@ -243,6 +255,7 @@ class Vision:
 
         cv2.waitKey(0)
 
+    # Used only one camera for object detection, used for non-stero, and when a camera breaks.
     def run_single_camera(self,camID):
         cap = cv2.VideoCapture(camID)
         cap.set(cv2.CAP_PROP_AUTO_WB,0)
@@ -277,7 +290,7 @@ class Vision:
                 return()
 
     
-    
+    # Main method just for stero
     def run_stereo(self,camIDL,camIDR):
         
         capL = cv2.VideoCapture(camIDL)
@@ -296,9 +309,17 @@ class Vision:
 
         ret, frame = capL.read()
         if ret:
-            self.setFrameShape(frame)
+            sCamL, sCamL = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+            self.setFrameShape(sCamL)
         else:
             print("Left camera not found")
+            ret, frameR = capR.read()
+            if ret:
+                sCamR, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+                self.setFrameShape(sCamR)
+            else:
+                print("Right camera not found")
+                
 
         while True:
 
@@ -306,6 +327,9 @@ class Vision:
                 # Constantly set the exposure of the camera to
                 capL.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars"))
                 capR.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars"))
+            else:
+                capL.set(cv2.CAP_PROP_EXPOSURE, -self.exposure))
+                capR.set(cv2.CAP_PROP_EXPOSURE, -self.exposure))
             # Turn raw camera input into readable frames
             retL, frameL = capL.read()
             retR, frameR = capR.read()
@@ -316,8 +340,8 @@ class Vision:
                 sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
                 
                 # Use ball detection function to find the angle to center and right side of the object in both cameras
-                XangleL, YangleL, XangleL2 = self.objectDetection(frameL,"Left")
-                XangleR, YangleR, XangleR2 = self.objectDetection(frameR,"Right")
+                XangleL, YangleL, XangleL2 = self.objectDetection(sCamL,"Left")
+                XangleR, YangleR, XangleR2 = self.objectDetection(sCamR,"Right")
 
 
                 x,z = self.stereoVision(XangleL,XangleR)
