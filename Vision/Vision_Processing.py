@@ -5,6 +5,7 @@ import glob
 import taskclient as tc
 import struct
 import threading
+import time
 
 #client = tc.TaskMessenger("localhost", 8264, "Vision_Prosessing")
 
@@ -308,15 +309,15 @@ class Vision:
         # Sets a calibration profile to calibrate the cameras on
         calProfile = self.calibrateCameraInit()
 
-        ret, frame = capL.read()
+        ret, frameL = capL.read()
         if ret:
-            sCamL, sCamL = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+            sCamL, sCamL = self.calibrateCamera(frameL,frameL,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
             self.setFrameShape(sCamL)
         else:
             print("Left camera not found")
             ret, frameR = capR.read()
             if ret:
-                sCamR, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+                sCamR, sCamR = self.calibrateCamera(frameR,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
                 self.setFrameShape(sCamR)
             else:
                 print("Right camera not found")
@@ -329,8 +330,8 @@ class Vision:
                 capL.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars"))
                 capR.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars"))
             else:
-                capL.set(cv2.CAP_PROP_EXPOSURE, -self.exposure))
-                capR.set(cv2.CAP_PROP_EXPOSURE, -self.exposure))
+                capL.set(cv2.CAP_PROP_EXPOSURE, -self.exposure)
+                capR.set(cv2.CAP_PROP_EXPOSURE, -self.exposure)
             # Turn raw camera input into readable frames
             retL, frameL = capL.read()
             retR, frameR = capR.read()
@@ -407,16 +408,20 @@ class Vision:
                 capR.release()
                 return()
 
+def runVision(camera,camera2):
+    vision = Vision()
+    vision.run_stereo(camera,camera2);
 
-single_vision1 = Vision()
-single_vision2 = Vision()
-
+#single_vision1 = Vision()
+#single_vision2 = Vision()
+#time.sleep(3)
 # Multithreading
-t1 = threading.Thread(target=run_single_camera, args=(single_vision1,0,))
-t2 = threading.Thread(target=run_single_camera, args=(single_vision2,-2,))
+t1 = threading.Thread(target=runVision, args=(5,1,))
+#t2 = threading.Thread(target=single_vision1.run_single_camera, args=(-2,))
+t2 = threading.Thread(target=runVision, args=(0,1,))
 
-t1.start()
 t2.start()
+t1.start()
 
 
 #stereo_vision = Vision()
