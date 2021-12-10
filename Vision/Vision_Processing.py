@@ -431,15 +431,12 @@ vision2 = Vision(2)
 # t1 = threading.Thread(target=runVision, args=(5,1,"vision one",))
 # #t2 = threading.Thread(target=single_vision1.run_single_camera, args=(-2,))
 # t2 = threading.Thread(target=runVision, args=(0,1,"vision two",))
-t1 = threading.Thread(target=vision1.run_stereo(8,9))
-t2 = threading.Thread(target=vision2.printStuff("Stuff is being printed"))
+t1 = threading.Thread(target=vision1.run_stereo, args=(8,9,))
+t2 = threading.Thread(target=vision2.printStuff, args=("Stuff is being printed",))
 
 # t2.start()
-t2.start()
 t1.start()
-
-t1.join()
-t2.join()
+t2.start()
 
 cv2.waitKey(0)
 
