@@ -42,22 +42,22 @@ class Vision:
     def empty(self,a):
         pass
     
-    def __init__(self,instanceNumber):
+    def __init__(self,instanceName):
 
         if self.experimental:
             
-            self.instanceNumber = instanceNumber
+            self.instanceNumber = instanceName
             # Create sliders
-            cv2.namedWindow(self."Track Bars " + str(self.instanceNumber))
-            cv2.resizeWindow(self."Track Bars " + str(self.instanceNumber), 1000,500)
-            cv2.createTrackbar("Hue Min",self."Track Bars " + str(self.instanceNumber),self.h_min,179,self.empty)
-            cv2.createTrackbar("Hue Max",self."Track Bars " + str(self.instanceNumber),self.h_max,179,self.empty)
-            cv2.createTrackbar("Saturation Min",self."Track Bars " + str(self.instanceNumber),self.s_min,255,self.empty)
-            cv2.createTrackbar("Saturation Max",self."Track Bars " + str(self.instanceNumber),self.s_max,255,self.empty)
-            cv2.createTrackbar("Value Min",self."Track Bars " + str(self.instanceNumber),self.v_min,255,self.empty)
-            cv2.createTrackbar("Value Max",self."Track Bars " + str(self.instanceNumber),self.v_max,255,self.empty)
-            cv2.createTrackbar("Thresh Low", self."Track Bars " + str(self.instanceNumber), self.TLow , 255, self.empty)
-            cv2.createTrackbar("Exposure",self."Track Bars " + str(self.instanceNumber), self.exposure,10, self.empty)
+            cv2.namedWindow("Track Bars " + str(self.instanceNumber))
+            cv2.resizeWindow("Track Bars " + str(self.instanceNumber), 1000,500)
+            cv2.createTrackbar("Hue Min","Track Bars " + str(self.instanceNumber),self.h_min,179,self.empty)
+            cv2.createTrackbar("Hue Max","Track Bars " + str(self.instanceNumber),self.h_max,179,self.empty)
+            cv2.createTrackbar("Saturation Min","Track Bars " + str(self.instanceNumber),self.s_min,255,self.empty)
+            cv2.createTrackbar("Saturation Max","Track Bars " + str(self.instanceNumber),self.s_max,255,self.empty)
+            cv2.createTrackbar("Value Min","Track Bars " + str(self.instanceNumber),self.v_min,255,self.empty)
+            cv2.createTrackbar("Value Max","Track Bars " + str(self.instanceNumber),self.v_max,255,self.empty)
+            cv2.createTrackbar("Thresh Low", "Track Bars " + str(self.instanceNumber), self.TLow , 255, self.empty)
+            cv2.createTrackbar("Exposure","Track Bars " + str(self.instanceNumber), self.exposure,10, self.empty)
 
     # Scans camera ports to find working ones
     def scanCameras(self):
@@ -80,14 +80,20 @@ class Vision:
         
     # Locks values to what is currently on the sliders
     def lockExperimental(self):
-            self.h_min = cv2.getTrackbarPos("Hue Min",self."Track Bars " + str(self.instanceNumber))
-            self.h_max = cv2.getTrackbarPos("Hue Max",self."Track Bars " + str(self.instanceNumber))
-            self.s_min = cv2.getTrackbarPos("Saturation Min",self."Track Bars " + str(self.instanceNumber))
-            self.s_max = cv2.getTrackbarPos("Saturation Max",self."Track Bars " + str(self.instanceNumber))
-            self.v_min = cv2.getTrackbarPos("Value Min",self."Track Bars " + str(self.instanceNumber))
-            self.v_max = cv2.getTrackbarPos("Value Max",self."Track Bars " + str(self.instanceNumber))
-            self.TLow = cv2.getTrackbarPos("Thresh Low", self."Track Bars " + str(self.instanceNumber))
+            self.h_min = cv2.getTrackbarPos("Hue Min","Track Bars " + str(self.instanceNumber))
+            self.h_max = cv2.getTrackbarPos("Hue Max","Track Bars " + str(self.instanceNumber))
+            self.s_min = cv2.getTrackbarPos("Saturation Min","Track Bars " + str(self.instanceNumber))
+            self.s_max = cv2.getTrackbarPos("Saturation Max","Track Bars " + str(self.instanceNumber))
+            self.v_min = cv2.getTrackbarPos("Value Min","Track Bars " + str(self.instanceNumber))
+            self.v_max = cv2.getTrackbarPos("Value Max","Track Bars " + str(self.instanceNumber))
+            self.TLow = cv2.getTrackbarPos("Thresh Low", "Track Bars " + str(self.instanceNumber))
             self.exposure = 0
+
+    ################################################
+    # REMOVE ME #
+    ################################################
+    def printStuff(self,stuffToPrint):
+        print(stuffToPrint)
 
         
     # Create a camera calibration profile
@@ -150,13 +156,13 @@ class Vision:
     def objectDetection(self,frame,cameraNumber):
         # Get posision of trackbars and assign them to variables
         if self.experimental == True: 
-            h_min = cv2.getTrackbarPos("Hue Min",self."Track Bars " + str(self.instanceNumber))
-            h_max = cv2.getTrackbarPos("Hue Max",self."Track Bars " + str(self.instanceNumber))
-            s_min = cv2.getTrackbarPos("Saturation Min",self."Track Bars " + str(self.instanceNumber))
-            s_max = cv2.getTrackbarPos("Saturation Max",self."Track Bars " + str(self.instanceNumber))
-            v_min = cv2.getTrackbarPos("Value Min",self."Track Bars " + str(self.instanceNumber))
-            v_max = cv2.getTrackbarPos("Value Max",self."Track Bars " + str(self.instanceNumber))
-            TLow = cv2.getTrackbarPos("Thresh Low", self."Track Bars " + str(self.instanceNumber))
+            h_min = cv2.getTrackbarPos("Hue Min","Track Bars " + str(self.instanceNumber))
+            h_max = cv2.getTrackbarPos("Hue Max","Track Bars " + str(self.instanceNumber))
+            s_min = cv2.getTrackbarPos("Saturation Min","Track Bars " + str(self.instanceNumber))
+            s_max = cv2.getTrackbarPos("Saturation Max","Track Bars " + str(self.instanceNumber))
+            v_min = cv2.getTrackbarPos("Value Min","Track Bars " + str(self.instanceNumber))
+            v_max = cv2.getTrackbarPos("Value Max","Track Bars " + str(self.instanceNumber))
+            TLow = cv2.getTrackbarPos("Thresh Low", "Track Bars " + str(self.instanceNumber))
             THigh = 255
         else:
             h_min = self.h_min
@@ -279,7 +285,7 @@ class Vision:
         while True:
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
                 # Constantly set the exposure of the camera to
-                cap.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  self."Track Bars " + str(self.instanceNumber)))
+                cap.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars " + str(self.instanceNumber)))
             # Turn raw camera input into readable frames
             ret, frame = cap.read()
 
@@ -330,8 +336,8 @@ class Vision:
 
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
                 # Constantly set the exposure of the camera to
-                capL.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  self."Track Bars " + str(self.instanceNumber)))
-                capR.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  self."Track Bars " + str(self.instanceNumber)))
+                capL.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars " + str(self.instanceNumber)))
+                capR.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars " + str(self.instanceNumber)))
             else:
                 capL.set(cv2.CAP_PROP_EXPOSURE, -self.exposure)
                 capR.set(cv2.CAP_PROP_EXPOSURE, -self.exposure)
@@ -411,9 +417,9 @@ class Vision:
                 capR.release()
                 return()
 
-def runVision(camera,camera2):
-    vision = Vision()
-    vision.run_stereo(camera,camera2);
+def runVision(camera,camera2,instanceName):
+    vision = Vision(instanceName)
+    vision.run_stereo(camera,camera2)
 
 #single_vision1 = Vision()
 #single_vision2 = Vision()
@@ -422,12 +428,20 @@ def runVision(camera,camera2):
 
 vision1 = Vision(1)
 vision2 = Vision(2)
-t1 = threading.Thread(target=runVision, args=(5,1,))
-#t2 = threading.Thread(target=single_vision1.run_single_camera, args=(-2,))
-t2 = threading.Thread(target=runVision, args=(0,1,))
+# t1 = threading.Thread(target=runVision, args=(5,1,"vision one",))
+# #t2 = threading.Thread(target=single_vision1.run_single_camera, args=(-2,))
+# t2 = threading.Thread(target=runVision, args=(0,1,"vision two",))
+t1 = threading.Thread(target=vision1.run_stereo(8,9))
+t2 = threading.Thread(target=vision2.printStuff("Stuff is being printed"))
 
+# t2.start()
 t2.start()
 t1.start()
+
+t1.join()
+t2.join()
+
+cv2.waitKey(0)
 
 
 #stereo_vision = Vision()
