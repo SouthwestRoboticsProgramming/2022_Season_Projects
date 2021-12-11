@@ -6,8 +6,6 @@ import frc.robot.taskmanager.client.Task;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public final class LidarInterface {
@@ -16,19 +14,23 @@ public final class LidarInterface {
     private static final String SCAN = "Scan";
 
     private final Task task;
-    private Consumer<List<ScanEntry>> scanCallback = (scan) -> {};
+    private Consumer<ScanEntry> scanCallback = (scan) -> {};
 
     public LidarInterface(Coprocessor cp, String name) {
         task = cp.getTask(name);
         task.setMessageReceiveCallback(this::onMessage);
-        task.start();
+        task.stop(); // Make sure it is stopped
+        try { Thread.sleep(1000); } catch (Throwable e) {}
+        task.start(); // then start it
     }
 
     public void startScan() {
+        System.out.println("Lidar: Sending scan start message");
         task.sendMessage(START, new byte[0]);
     }
 
     public void stopScan() {
+        System.out.println("Lidar: Sending scan stop message");
         task.sendMessage(STOP, new byte[0]);
     }
 
@@ -36,7 +38,7 @@ public final class LidarInterface {
         task.stop();
     }
 
-    public void setScanCallback(Consumer<List<ScanEntry>> callback) {
+    public void setScanCallback(Consumer<ScanEntry> callback) {
         scanCallback = callback;
     }
 
@@ -45,16 +47,11 @@ public final class LidarInterface {
             ByteArrayInputStream b = new ByteArrayInputStream(data);
             DataInputStream in = new DataInputStream(b);
 
-            List<ScanEntry> scan = new ArrayList<>();
-            int count = in.readInt();
-            for (int i = 0; i < count; i++) {
-                int quality = in.readInt();
-                double angle = in.readDouble();
-                double distance = in.readDouble();
-                scan.add(new ScanEntry(quality, angle, distance));
-            }
+            int quality = in.readInt();
+            double angle = in.readDouble();
+            double distance = in.readDouble();
 
-            scanCallback.accept(scan);
+            scanCallback.accept(new ScanEntry(quality, angle, distance));
 
             in.close();
         } catch (IOException e) {

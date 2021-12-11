@@ -7,13 +7,14 @@ import frc.taskmanager.taskclient.TaskMessenger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LidarMain {
     public static void main(String[] args) {
         Lidar lidar = new Lidar();
-        TaskMessenger msg = new TaskMessenger("localhost", 8264);
+        TaskMessenger msg = new TaskMessenger("localhost", 8264, "Lidar");
 
         System.out.println("Getting health of lidar");
         lidar.getHealth().thenAccept((health) -> {
@@ -26,39 +27,32 @@ public class LidarMain {
             msg.sendMessage("Ready", new byte[0]);
         });
 
-        List<ScanEntry> scanData = new ArrayList<>();
         lidar.setScanDataCallback((entry) -> {
-            synchronized (scanData) {
-                scanData.add(entry);
-            }
-        });
-        lidar.setScanStartCallback(() -> {
-            ByteArrayOutputStream b = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(b);
-            synchronized (scanData) {
-                out.writeInt(scanData.size());
-                for (ScanEntry entry : scanData) {
+            try {
+                ByteArrayOutputStream b = new ByteArrayOutputStream();
+                DataOutputStream out = new DataOutputStream(b);
+
                     out.writeInt(entry.getQuality());
                     out.writeDouble(entry.getAngle());
                     out.writeDouble(entry.getDistance());
-                }
-                scanData.clear();
+
+                    msg.sendMessage("Scan", b.toByteArray());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            msg.sendMessage("Scan", b.toByteArray());
         });
 
         boolean scanning = false;
         msg.setMessageCallback((name, data) -> {
+            System.out.println("Lidar task: Got " + name);
             switch (name) {
                 case "Start":
-                    if (!scanning) {
-                        lidar.startScanning();
-                    }
+                    System.out.println("Starting scanning");
+                    lidar.startScanning();
                     break;
                 case "Stop":
-                    if (scanning) {
-                        lidar.stopScanning();
-                    }
+                    System.out.println("Stopping scanning");
+                    lidar.stopScanning();
                     break;
                 default:
                     System.out.println("Warning: Unknown message received: " + name);

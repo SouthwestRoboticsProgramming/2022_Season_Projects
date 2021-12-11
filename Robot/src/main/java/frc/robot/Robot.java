@@ -44,9 +44,11 @@ public final class Robot extends TimedRobot {
 
     // Keep trying to connect until it is successful
     // There is probably a better way to do this, but I don't know any
-    while (rpi == null) {
+    rpi = new Coprocessor(Constants.RPI_ADDRESS, Constants.RPI_PORT);
+    while (true) {
       try {
-        rpi = new Coprocessor(Constants.RPI_ADDRESS, Constants.RPI_PORT);
+        rpi.connect();
+        break;
       } catch (RuntimeException e) {
         System.out.println("Raspberry Pi has not yet connected");
       }
@@ -96,13 +98,13 @@ public final class Robot extends TimedRobot {
   public void autonomousInit() {
     pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15, 45);
 
-    pathFollower.setPath(path);
+    //pathFollower.setPath(path);
     lidar.startScan();
   }
 
   @Override
   public void autonomousPeriodic() {
-    pathFollower.update();
+    //pathFollower.update();
     if (pathFollower.isDone()) {
       pathFollower.setPath(path);
     }

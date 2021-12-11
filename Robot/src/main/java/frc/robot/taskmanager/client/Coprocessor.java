@@ -149,6 +149,7 @@ public class Coprocessor {
     }
 
     void sendMessage(String destination, String type, byte[] data) throws IOException {
+        if (!type.equals("Heartbeat")) System.out.println("CP: Sending: " + type + " to " + destination + "with " + data.length + " data bytes.");
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream o = new DataOutputStream(b);
 
@@ -159,6 +160,8 @@ public class Coprocessor {
 
         out.writeInt(b.size());
         out.write(b.toByteArray());
+
+        if (!type.equals("Heartbeat")) System.out.println("CP: Sent " + b.size() + " bytes");
     }
 
     private void readTaskExistsResponse(byte[] data) throws IOException {

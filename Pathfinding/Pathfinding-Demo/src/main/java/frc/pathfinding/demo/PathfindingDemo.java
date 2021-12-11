@@ -30,7 +30,6 @@ public class PathfindingDemo extends PApplet {
     @Override
     public void settings() {
         size(1280, 720);
-        //fullScreen();
     }
 
     @Override
@@ -41,12 +40,6 @@ public class PathfindingDemo extends PApplet {
         grid = new CollisionGrid(CELLS_X, CELLS_Y, robot);
         cellSize = width / (float) CELLS_X;
 
-//        for (int i = 0; i < CELLS_X * CELLS_Y / 2; i++) {
-//            int x = (int) (random(0, CELLS_X));
-//            int y = (int) (random(0, CELLS_Y));
-//
-//            grid.setCellBlocked(x, y, true);
-//        }
         grid.addObstacle(new CircleCollider(30, 25, 7));
         grid.addObstacle(rect = new RectangleCollider(75, 25, 12, 30, 0));
 
@@ -143,16 +136,16 @@ public class PathfindingDemo extends PApplet {
         }
 
         // Raw path line
-//        stroke(0, 0, 255);
-//        strokeWeight(3);
-//        beginShape(LINES);
-//        for (int i = 0; i < path.size() - 1; i++) {
-//            Cell c1 = path.get(i);
-//            Cell c2 = path.get(i + 1);
-//            vertex((c1.getX() + 0.5f) * cellSize, (c1.getY() + 0.5f) * cellSize);
-//            vertex((c2.getX() + 0.5f) * cellSize, (c2.getY() + 0.5f) * cellSize);
-//        }
-//        endShape();
+        stroke(0, 0, 255);
+        strokeWeight(3);
+        beginShape(LINES);
+        for (int i = 0; i < path.size() - 1; i++) {
+            Cell c1 = path.get(i);
+            Cell c2 = path.get(i + 1);
+            vertex((c1.getX() + 0.5f) * cellSize, (c1.getY() + 0.5f) * cellSize);
+            vertex((c2.getX() + 0.5f) * cellSize, (c2.getY() + 0.5f) * cellSize);
+        }
+        endShape();
 
         path = optimizer.optimize(path);
 
