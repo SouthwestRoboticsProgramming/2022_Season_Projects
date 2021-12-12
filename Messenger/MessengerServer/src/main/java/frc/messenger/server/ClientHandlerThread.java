@@ -35,11 +35,11 @@ public final class ClientHandlerThread extends Thread {
     
     private void readMessage(DataInputStream in) throws IOException {
         int length = in.readInt();
+
         byte[] data = new byte[length];
         in.readFully(data);
-        
-        DataInputStream i = new DataInputStream(new ByteArrayInputStream(data));
 
+        DataInputStream i = new DataInputStream(new ByteArrayInputStream(data));
         String type = i.readUTF();
         int dataLength = i.readInt();
         byte[] messageData = new byte[dataLength];
@@ -87,7 +87,7 @@ public final class ClientHandlerThread extends Thread {
     @Override
     public void run() {
         try {
-            DataInputStream in = new DataInputStream(socket.getInputStream());
+            DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             System.out.println("Client connected");
             

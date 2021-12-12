@@ -2,20 +2,17 @@ package frc.lidar.task;
 
 import frc.lidar.lib.Lidar;
 import frc.lidar.lib.LidarHealth;
-import frc.lidar.lib.ScanEntry;
-import frc.taskmanager.taskclient.TaskMessenger;
+import frc.messenger.client.MessengerClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LidarMain {
     public static void main(String[] args) {
         Lidar lidar = new Lidar();
-        TaskMessenger msg = new TaskMessenger("localhost", 8264, "Lidar");
-        
+        MessengerClient msg = new MessengerClient("localhost", 8341, "Lidar");
+
         // Reset the lidar to make sure it's in the expected state
         //lidar.reset();
        // try {
@@ -23,6 +20,9 @@ public class LidarMain {
         //} catch (InterruptedException e) {
             // Ignore
         //}
+
+        msg.listen("Start");
+        msg.listen("Stop");
 
         System.out.println("Getting health of lidar");
         lidar.getHealth().thenAccept((health) -> {
@@ -40,18 +40,24 @@ public class LidarMain {
                 ByteArrayOutputStream b = new ByteArrayOutputStream();
                 DataOutputStream out = new DataOutputStream(b);
 
-                    out.writeInt(entry.getQuality());
-                    out.writeDouble(entry.getAngle());
-                    out.writeDouble(entry.getDistance());
+                out.writeInt(entry.getQuality());
+                out.writeDouble(entry.getAngle());
+                out.writeDouble(entry.getDistance());
 
+                synchronized (msg) {
                     msg.sendMessage("Scan", b.toByteArray());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+        lidar.setScanStartCallback(() -> {
+            synchronized (msg) {
+                msg.sendMessage("ScanStart", new byte[0]);
+            }
+        });
 
-        boolean scanning = false;
-        msg.setMessageCallback((name, data) -> {
+        msg.setCallback((name, data) -> {
             System.out.println("Lidar task: Got " + name);
             switch (name) {
                 case "Start":
@@ -70,7 +76,9 @@ public class LidarMain {
 
         // Run forever
         while (true) {
-            msg.read(); // Read incoming messages
+            synchronized (msg) {
+                msg.read(); // Read incoming messages
+            }
 
             try {
                 Thread.sleep(25);

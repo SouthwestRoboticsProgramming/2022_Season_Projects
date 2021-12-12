@@ -1,5 +1,8 @@
 package frc.robot;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +11,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.lib.ADIS16448_IMU;
 import frc.lib.ADIS16448_IMU.IMUAxis;
-import frc.robot.lidar.LidarInterface;
+import frc.messenger.client.MessengerClient;
 import frc.robot.path.PathFollower;
 import frc.robot.path.Point;
-import frc.robot.taskmanager.client.Coprocessor;
 
 public final class Robot extends TimedRobot {
   private DriveTrain driveTrain;
@@ -21,6 +23,7 @@ public final class Robot extends TimedRobot {
   private Localizer localizer;
   private PathFollower pathFollower;
   private List<Point> path;
+  private MessengerClient msg;
 
   @Override
   public void robotInit() {
@@ -39,11 +42,25 @@ public final class Robot extends TimedRobot {
     path.add(new Point(1, 0));
     path.add(new Point(1, 1));
     path.add(new Point(0, 0));
+
+    msg = new MessengerClient(Constants.RPI_ADDRESS, Constants.RPI_PORT, "RoboRIO");
   }
 
   @Override
   public void robotPeriodic() {
     localizer.update();
+
+    try {
+      ByteArrayOutputStream b = new ByteArrayOutputStream();
+      DataOutputStream d = new DataOutputStream(b);
+      d.writeDouble(localizer.getX());
+      d.writeDouble(localizer.getY());
+      d.writeDouble(localizer.getRotationRadians());
+
+      msg.sendMessage("Location", b.toByteArray());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     if (visualizer.connected()) {
       visualizer.setMemUsage();

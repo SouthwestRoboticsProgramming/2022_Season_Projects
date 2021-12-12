@@ -2,49 +2,69 @@ package frc.lidar.demo;
 
 import frc.lidar.lib.Lidar;
 import frc.lidar.lib.ScanEntry;
+import frc.messenger.client.MessengerClient;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class Demo extends PApplet {
-    private Lidar lidar;
+    private MessengerClient msg;
     private Set<ScanEntry> scan, newScan;
     private float scale = 1;
     private float tx = 0, ty = 0;
 
     @Override
     public void settings() {
-        fullScreen(P2D);
+        size(800, 600, P2D);
     }
 
     @Override
     public void setup() {
-        lidar = new Lidar();
-        lidar.getHealth().thenAccept(PApplet::println);
+        msg = new MessengerClient("10.21.29.17", 8341, "Lidar-Visualizer");
+        msg.listen("Ready");
+        msg.listen("ScanStart");
+        msg.listen("Scan");
+        msg.setCallback(this::messageCallback);
 
         scan = new HashSet<>();
         newScan = new HashSet<>();
-        lidar.setScanDataCallback((entry) -> {
-            if (entry.getQuality() == 0 || entry.getDistance() == 0) return;
-            System.out.println(entry);
-            newScan.add(entry);
-        });
-        lidar.setScanStartCallback(() -> {
-            scan = newScan;
-            newScan = new HashSet<>();
-        });
+    }
 
-        delay(1000);
-        lidar.startScanning();
+    private void messageCallback(String type, byte[] data) {
+        System.out.println(type);
+        switch (type) {
+            case "Ready":
+                msg.sendMessage("Start", new byte[0]);
+                break;
+            case "ScanStart":
+                scan = newScan;
+                newScan = new HashSet<>();
+                break;
+            case "Scan":
+                DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
+                try {
+                    int quality = in.readInt();
+                    double angle = in.readDouble();
+                    double distance = in.readDouble();
+
+                    if (quality == 0 || distance == 0) break;
+
+                    newScan.add(new ScanEntry(quality, angle, distance));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
     }
 
     @Override
     public void draw() {
+        msg.read();
+
         background(0);
         translate(width / 2f, height / 2f);
 
@@ -60,7 +80,7 @@ public class Demo extends PApplet {
         stroke(255, 0, 0);
         strokeWeight(8 / scale);
 
-        List<ScanEntry> scanList  = new ArrayList<>(scan);
+        List<ScanEntry> scanList = new ArrayList<>(scan);
         scanList.sort(Comparator.comparingDouble(ScanEntry::getAngle));
 
         beginShape(POINTS);
@@ -97,10 +117,7 @@ public class Demo extends PApplet {
 
     @Override
     public void keyPressed() {
-        lidar.stopScanning();
-        delay(1000);
-        lidar.close();
-
+        msg.sendMessage("Stop", new byte[0]);
         exit();
     }
 
