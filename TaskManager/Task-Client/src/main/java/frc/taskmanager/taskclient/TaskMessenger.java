@@ -1,8 +1,6 @@
 package frc.taskmanager.taskclient;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.function.BiConsumer;
 
@@ -51,18 +49,18 @@ public class TaskMessenger {
      *
      * @param type the message type
      * @param data the message data
-     *
-     * @throws IllegalArgumentException if the type is "_Heartbeat"
      */
     public void sendMessage(String type, byte[] data) {
-        if ("_Heartbeat".equals(type)) {
-            throw new IllegalArgumentException("Message type '_Heartbeat' not allowed");
-        }
-
         try {
-            out.writeUTF(type);
-            out.writeInt(data.length);
-            out.write(data);
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            DataOutputStream o = new DataOutputStream(b);
+            o.writeUTF(type);
+            o.writeInt(data.length);
+            o.write(data);
+
+            byte[] packet = b.toByteArray();
+            out.writeInt(packet.length);
+            out.write(packet);
         } catch (IOException e) {
             System.err.println("Failed to send message:");
             e.printStackTrace();
@@ -77,15 +75,22 @@ public class TaskMessenger {
      */
     public void read() {
         try {
-            out.writeUTF("_Heartbeat");
-            out.writeInt(0);
+            sendMessage("_Heartbeat", new byte[0]);
 
             while (in.available() > 0) {
-                String type = in.readUTF();
-                int len = in.readInt();
-                byte[] data = new byte[len];
-                in.readFully(data);
+                System.out.println("Input data is available");
+                int packetLen = in.readInt();
+                System.out.println("Reading " + packetLen + " bytes");
+                byte[] packet = new byte[packetLen];
+                in.readFully(packet);
+                DataInputStream i = new DataInputStream(new ByteArrayInputStream(packet));
 
+                String type = i.readUTF();
+                int len = i.readInt();
+                byte[] data = new byte[len];
+                i.readFully(data);
+
+                System.out.println("Received message: " + type + " with " + len + " data bytes");
                 messageCallback.accept(type, data);
             }
         } catch (IOException e) {

@@ -1,8 +1,6 @@
 package frc.taskmanager.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class MessageServerClientConnection extends Thread {
@@ -39,10 +37,15 @@ public class MessageServerClientConnection extends Thread {
             return;
         }
 
-        String messageType = in.readUTF();
-        int dataLen = in.readInt();
+        int packetLen = in.readInt();
+        byte[] packet = new byte[packetLen];
+        in.readFully(packet);
+
+        DataInputStream i = new DataInputStream(new ByteArrayInputStream(packet));
+        String messageType = i.readUTF();
+        int dataLen = i.readInt();
         byte[] messageData = new byte[dataLen];
-        in.readFully(messageData);
+        i.readFully(messageData);
 
         //System.out.println(messageType);
         if (messageType.equals("_Heartbeat")) {
@@ -58,9 +61,17 @@ public class MessageServerClientConnection extends Thread {
         if (origin == null) return;
         TaskboundMessage msg;
         while ((msg = origin.pollMessageQueue()) != null) {
-            out.writeUTF(msg.getType());
-            out.writeInt(msg.getData().length);
-            out.write(msg.getData());
+            System.out.println("Writing message: " + msg.getType());
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            DataOutputStream o = new DataOutputStream(b);
+
+            o.writeUTF(msg.getType());
+            o.writeInt(msg.getData().length);
+            o.write(msg.getData());
+
+            byte[] data = b.toByteArray();
+            out.writeInt(data.length);
+            out.write(data);
         }
     }
 

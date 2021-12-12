@@ -25,14 +25,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class TaskViewPanel extends JPanel {
     private final Coprocessor cp;
@@ -235,6 +237,7 @@ public class TaskViewPanel extends JPanel {
 
             browse.addActionListener((event) -> {
                 JFileChooser chooser = new JFileChooser(filePath.getText());
+                chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser.setFileFilter(new FileNameExtensionFilter("ZIP Archive", "zip"));
                 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     filePath.setText(chooser.getSelectedFile().getPath());
@@ -267,9 +270,46 @@ public class TaskViewPanel extends JPanel {
         }
 
         try {
-            task.upload(Files.readAllBytes(path));
+            task.upload(readTaskFiles(path));
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private byte[] readTaskFiles(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            Path pathAbsolute = path.toAbsolutePath();
+
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            ZipOutputStream zip = new ZipOutputStream(b);
+
+            Files.walkFileTree(path, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
+                    if (Files.isDirectory(file)) {
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    Path absolute = file.toAbsolutePath();
+                    Path relative = pathAbsolute.relativize(absolute);
+                    System.out.println("Adding " + relative.toString());
+
+                    ZipEntry entry = new ZipEntry(relative.toString());
+                    zip.putNextEntry(entry);
+
+                    byte[] fileData = Files.readAllBytes(file);
+                    zip.write(fileData);
+                    zip.closeEntry();
+
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+
+            zip.close();
+
+            return b.toByteArray();
+        } else {
+            return Files.readAllBytes(path);
         }
     }
 
@@ -322,11 +362,12 @@ public class TaskViewPanel extends JPanel {
         }
 
         JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setFileFilter(new FileNameExtensionFilter("ZIP Archive", "zip"));
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             Path path = chooser.getSelectedFile().toPath();
             try {
-                selectedTask.upload(Files.readAllBytes(path));
+                selectedTask.upload(readTaskFiles(path));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
