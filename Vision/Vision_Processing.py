@@ -89,12 +89,6 @@ class Vision:
             self.TLow = cv2.getTrackbarPos("Thresh Low", "Track Bars " + str(self.instanceNumber))
             self.exposure = 0
 
-    ################################################
-    # REMOVE ME #
-    ################################################
-    def printStuff(self,stuffToPrint):
-        print(stuffToPrint)
-
         
     # Create a camera calibration profile
     def calibrateCameraInit(self):
@@ -230,6 +224,8 @@ class Vision:
             y = x * cam1
         
         return(x,y)
+
+    
     # Solves for the real posisiton of the camera
     def solveGlobal(self,a,b,centerAngle):
     
@@ -259,8 +255,18 @@ class Vision:
         cv2.imshow("Visualizer",visualizer)
 
         wh = 50
-        cv2.line(globalVisualizer,(0,wh),(globalVisualizer.shape[1],wh))
-        cv2.circle(globalVisualizer,(x,y),5,self.contourColor,3)
+        globCam = (int(globalVisualizer.shape[1]*.5+x*scale),int(wh+y*scale))
+        cv2.line(globalVisualizer,(0,wh),(globalVisualizer.shape[1],wh),self.contourColor)
+        cv2.circle(globalVisualizer,globCam,5,self.contourColor,3)
+        cv2.line(globalVisualizer,globCam,(globCam[0],globCam[1]-y*scale),self.boundingColor)
+        cv2.line(globalVisualizer,(int(globalVisualizer.shape[1]*.5),wh),(globCam[0],wh),self.boundingColor)
+        cv2.line(globalVisualizer,globCam,(int(globalVisualizer.shape[1]*.5),wh),self.boundingColor)
+
+        cv2.putText(globalVisualizer,"X: " + str(x),(int(globCam[0]-.5*x*scale),wh-10),cv2.FONT_HERSHEY_COMPLEX,.5,(255,255,255))
+        cv2.putText(globalVisualizer,"Y: " + str(y),(int(globCam[0]+10),int(globCam[1]-.5*y*scale)),cv2.FONT_HERSHEY_COMPLEX,.5,(255,255,255))
+        cv2.putText(globalVisualizer,"Distance: " + str(d),(int((globCam[0]+.5*globalVisualizer.shape[1])/2),int((globCam[1]+wh)/2)-30),cv2.FONT_HERSHEY_COMPLEX,.5,(255,255,255))
+        print(globCam)
+        cv2.imshow("Global Visualizer",globalVisualizer)
 
 
 
@@ -417,26 +423,20 @@ class Vision:
                 capR.release()
                 return()
 
-def runVision(camera,camera2,instanceName):
-    vision = Vision(instanceName)
-    vision.run_stereo(camera,camera2)
 
-#single_vision1 = Vision()
-#single_vision2 = Vision()
-#time.sleep(3)
 # Multithreading
 
 vision1 = Vision(1)
 vision2 = Vision(2)
-# t1 = threading.Thread(target=runVision, args=(5,1,"vision one",))
-# #t2 = threading.Thread(target=single_vision1.run_single_camera, args=(-2,))
-# t2 = threading.Thread(target=runVision, args=(0,1,"vision two",))
-t1 = threading.Thread(target=vision1.run_stereo, args=(8,9,))
-t2 = threading.Thread(target=vision2.printStuff, args=("Stuff is being printed",))
 
-# t2.start()
-t1.start()
-t2.start()
+# vision1.run_single_camera(0)
+# t1 = threading.Thread(target=vision1.run_stereo, args=(8,9,))
+# t2 = threading.Thread(target=vision2.run_single_camera, args=(0,))
+vision1.visualizer(-10,30,45)
+
+
+# t1.start()
+
 
 cv2.waitKey(0)
 
