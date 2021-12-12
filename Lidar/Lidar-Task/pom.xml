@@ -20,7 +20,7 @@
         <dependency>
             <groupId>frc</groupId>
             <artifactId>Task-Client</artifactId>
-            <version>1.0.1-With-Prints</version>
+            <version>1.0.2-With-Prints</version>
         </dependency>
     </dependencies>
 

@@ -17,12 +17,12 @@ public class LidarMain {
         TaskMessenger msg = new TaskMessenger("localhost", 8264, "Lidar");
         
         // Reset the lidar to make sure it's in the expected state
-        lidar.reset();
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
+        //lidar.reset();
+       // try {
+         //   Thread.sleep(10);
+        //} catch (InterruptedException e) {
             // Ignore
-        }
+        //}
 
         System.out.println("Getting health of lidar");
         lidar.getHealth().thenAccept((health) -> {

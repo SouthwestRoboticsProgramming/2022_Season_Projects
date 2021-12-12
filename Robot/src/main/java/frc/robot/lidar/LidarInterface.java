@@ -12,6 +12,7 @@ public final class LidarInterface {
     private static final String START = "Start";
     private static final String STOP = "Stop";
     private static final String SCAN = "Scan";
+    private static final String READY = "Ready";
 
     private final Task task;
     private Consumer<ScanEntry> scanCallback = (scan) -> {};
@@ -22,6 +23,14 @@ public final class LidarInterface {
         task.stop(); // Make sure it is stopped
         try { Thread.sleep(1000); } catch (Throwable e) {}
         task.start(); // then start it
+
+        // Wait for the lidar to be ready
+        try {
+            wait();
+        } catch (Throwable e) {}
+
+        try { Thread.sleep(10000); } catch (Throwable e) {}
+        System.out.println("Lidar successfully initialized!");
     }
 
     public void startScan() {
@@ -63,6 +72,10 @@ public final class LidarInterface {
         switch (type) {
             case SCAN: 
                 readScan(data);
+                break;
+            case READY:
+                System.out.println("Lidar is ready.");
+                notify();
                 break;
             default:
                 System.out.println("Warning: Unknown message: " + type);

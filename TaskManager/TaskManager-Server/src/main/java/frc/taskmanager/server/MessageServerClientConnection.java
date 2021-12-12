@@ -40,6 +40,7 @@ public class MessageServerClientConnection extends Thread {
         int packetLen = in.readInt();
         byte[] packet = new byte[packetLen];
         in.readFully(packet);
+        System.out.println(packet.length);
 
         DataInputStream i = new DataInputStream(new ByteArrayInputStream(packet));
         String messageType = i.readUTF();

@@ -60,6 +60,7 @@ public class TaskMessenger {
 
             byte[] packet = b.toByteArray();
             out.writeInt(packet.length);
+            System.out.println("Length: " + packet.length);
             out.write(packet);
         } catch (IOException e) {
             System.err.println("Failed to send message:");

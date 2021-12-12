@@ -28,19 +28,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../Lidar/task/task.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../RobotVisualizer/.idea/RobotVisualizer.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../RobotVisualizer/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/TaskManager.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/Messenger.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/MessengerClient/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/MessengerServer/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/MessengerServer/src/main/java/frc/messenger/server/ClientConnectThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/MessengerServer/src/main/java/frc/messenger/server/ClientHandlerThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/MessengerServer/src/main/java/frc/messenger/server/MessengerServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Messenger/MessengerServer/src/main/java/frc/messenger/server/main/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Task/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/src/main/java/frc/lidar/task/LidarMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Task/src/main/java/frc/lidar/task/LidarMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Demo/src/main/java/frc/pathfinding/demo/PathfindingDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Demo/src/main/java/frc/pathfinding/demo/PathfindingDemo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Robot/src/main/java/frc/robot/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Robot/src/main/java/frc/robot/Robot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Robot/src/main/java/frc/robot/lidar/LidarInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Robot/src/main/java/frc/robot/lidar/LidarInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Robot/src/main/java/frc/robot/taskmanager/client/Coprocessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Robot/src/main/java/frc/robot/taskmanager/client/Coprocessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller/src/main/java/frc/taskmanager/controller/TaskViewPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Controller/src/main/java/frc/taskmanager/controller/TaskViewPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Task-Client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Task-Client/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Task-Client/src/main/java/frc/taskmanager/taskclient/TaskMessenger.java" beforeDir="false" afterPath="$PROJECT_DIR$/Task-Client/src/main/java/frc/taskmanager/taskclient/TaskMessenger.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/MessageServerClientConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-Server/src/main/java/frc/taskmanager/server/MessageServerClientConnection.java" afterDir="false" />
@@ -116,26 +117,26 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1639178528748" />
-    <state width="1493" height="174" key="GridCell.Tab.0.bottom" timestamp="1639187378362">
+    <state width="1493" height="174" key="GridCell.Tab.0.bottom" timestamp="1639253987058">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1398" height="440" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350900554" />
-    <state width="1493" height="174" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1639187378362" />
-    <state width="1493" height="174" key="GridCell.Tab.0.center" timestamp="1639187378361">
+    <state width="1493" height="174" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1639253987058" />
+    <state width="1493" height="174" key="GridCell.Tab.0.center" timestamp="1639253987058">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1398" height="440" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350900554" />
-    <state width="1493" height="174" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1639187378361" />
-    <state width="1493" height="174" key="GridCell.Tab.0.left" timestamp="1639187378361">
+    <state width="1493" height="174" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1639253987058" />
+    <state width="1493" height="174" key="GridCell.Tab.0.left" timestamp="1639253987058">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1398" height="440" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350900554" />
-    <state width="1493" height="174" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1639187378361" />
-    <state width="1493" height="174" key="GridCell.Tab.0.right" timestamp="1639187378362">
+    <state width="1493" height="174" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1639253987058" />
+    <state width="1493" height="174" key="GridCell.Tab.0.right" timestamp="1639253987058">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1398" height="440" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1637350900554" />
-    <state width="1493" height="174" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1639187378362" />
+    <state width="1493" height="174" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1639253987058" />
     <state width="349" height="440" key="GridCell.Tab.1.bottom" timestamp="1637350646468">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

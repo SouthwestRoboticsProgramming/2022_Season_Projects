@@ -21,8 +21,6 @@ public final class Robot extends TimedRobot {
   private Localizer localizer;
   private PathFollower pathFollower;
   private List<Point> path;
-  private Coprocessor rpi;
-  private LidarInterface lidar;
 
   @Override
   public void robotInit() {
@@ -41,30 +39,6 @@ public final class Robot extends TimedRobot {
     path.add(new Point(1, 0));
     path.add(new Point(1, 1));
     path.add(new Point(0, 0));
-
-    // Keep trying to connect until it is successful
-    // There is probably a better way to do this, but I don't know any
-    rpi = new Coprocessor(Constants.RPI_ADDRESS, Constants.RPI_PORT);
-    while (true) {
-      try {
-        rpi.connect();
-        break;
-      } catch (RuntimeException e) {
-        System.out.println("Raspberry Pi has not yet connected");
-      }
-
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        // Ignore
-      }
-    }
-    System.out.println("Connected to Raspberry Pi");
-
-    lidar = new LidarInterface(rpi, Constants.LIDAR_TASK_NAME);
-    lidar.setScanCallback((scan) -> {
-      System.out.println("Scan received");
-    });
   }
 
   @Override
@@ -81,14 +55,11 @@ public final class Robot extends TimedRobot {
 
       visualizer.setPath(path);
     }
-
-    rpi.flushNetwork();
   }
 
   @Override
   public void disabledInit() {
     driveTrain.stopMotors();
-    lidar.stopScan();
   }
 
   @Override
@@ -99,7 +70,6 @@ public final class Robot extends TimedRobot {
     pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15, 45);
 
     //pathFollower.setPath(path);
-    lidar.startScan();
   }
 
   @Override
