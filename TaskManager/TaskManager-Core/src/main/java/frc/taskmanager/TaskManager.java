@@ -11,18 +11,20 @@ import java.util.zip.ZipInputStream;
 
 public class TaskManager {
     public final MessengerClient msg;
+    public final String messagePrefix;
     private final Map<String, Task> tasks;
     private final File taskFolder;
 
-    public TaskManager(String host, int port, File taskFolder) {
+    public TaskManager(String host, int port, File taskFolder, String messagePrefix) {
+        this.messagePrefix = messagePrefix;
         System.out.println("Connecting to Messenger server at " + host + ":" + port);
-        msg = new MessengerClient(host, port, "TaskManager");
-        msg.listen(Messages.START_TASK);
-        msg.listen(Messages.STOP_TASK);
-        msg.listen(Messages.DELETE_TASK);
-        msg.listen(Messages.UPLOAD_TASK);
-        msg.listen(Messages.GET_TASKS);
-        msg.listen(Messages.IS_TASK_RUNNING);
+        msg = new MessengerClient(host, port, messagePrefix);
+        msg.listen(messagePrefix + Messages.START_TASK);
+        msg.listen(messagePrefix + Messages.STOP_TASK);
+        msg.listen(messagePrefix + Messages.DELETE_TASK);
+        msg.listen(messagePrefix + Messages.UPLOAD_TASK);
+        msg.listen(messagePrefix + Messages.GET_TASKS);
+        msg.listen(messagePrefix + Messages.IS_TASK_RUNNING);
         msg.setCallback(this::messageCallback);
 
         System.out.println("Loading tasks");
@@ -160,7 +162,7 @@ public class TaskManager {
             return;
         }
 
-        msg.sendMessage(Messages.TASKS_RESPONSE, b.toByteArray());
+        msg.sendMessage(messagePrefix + Messages.TASKS_RESPONSE, b.toByteArray());
     }
 
     private void handleIsRunning(byte[] data) {
@@ -184,7 +186,7 @@ public class TaskManager {
             return;
         }
 
-        msg.sendMessage(Messages.RUNNING_RESPONSE, b.toByteArray());
+        msg.sendMessage(messagePrefix + Messages.RUNNING_RESPONSE, b.toByteArray());
     }
 
     private File newFile(File destDir, ZipEntry entry) throws IOException {
@@ -201,28 +203,20 @@ public class TaskManager {
     }
 
     private void messageCallback(String type, byte[] data) {
-        switch (type) {
-            case Messages.START_TASK:
-                handleStart(data);
-                break;
-            case Messages.STOP_TASK:
-                handleStop(data);
-                break;
-            case Messages.DELETE_TASK:
-                handleDelete(data);
-                break;
-            case Messages.UPLOAD_TASK:
-                handleUpload(data);
-                break;
-            case Messages.GET_TASKS:
-                handleGetTasks();
-                break;
-            case Messages.IS_TASK_RUNNING:
-                handleIsRunning(data);
-                break;
-            default:
-                System.out.println("Unknown message: " + type);
-                break;
+        if (type.equals(messagePrefix + Messages.START_TASK)) {
+            handleStart(data);
+        } else if (type.equals(messagePrefix + Messages.STOP_TASK)) {
+            handleStop(data);
+        } else if (type.equals(messagePrefix + Messages.DELETE_TASK)) {
+            handleDelete(data);
+        } else if (type.equals(messagePrefix + Messages.UPLOAD_TASK)) {
+            handleUpload(data);
+        } else if (type.equals(messagePrefix + Messages.GET_TASKS)) {
+            handleGetTasks();
+        } else if (type.equals(messagePrefix + Messages.IS_TASK_RUNNING)) {
+            handleIsRunning(data);
+        } else {
+            System.out.println("Unknown message: " + type);
         }
     }
 

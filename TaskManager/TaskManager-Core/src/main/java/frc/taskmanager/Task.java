@@ -38,8 +38,8 @@ public class Task {
             StartedProcess p = new ProcessExecutor()
                     .command(COMMAND)
                     .directory(folder)
-                    .redirectOutput(new OutputLogger(Messages.STDOUT + name))
-                    .redirectError(new OutputLogger(Messages.STDERR + name))
+                    .redirectOutput(new OutputLogger(manager.messagePrefix + Messages.STDOUT + name))
+                    .redirectError(new OutputLogger(manager.messagePrefix + Messages.STDERR + name))
                     .start();
             process = p.getProcess();
         } catch (IOException e) {

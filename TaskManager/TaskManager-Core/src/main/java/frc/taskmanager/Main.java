@@ -4,9 +4,13 @@ import java.io.File;
 
 public final class Main {
     public static void main(String[] args) {
-        System.out.println("TaskManager starting");
+        TaskManagerConfiguration config = TaskManagerConfiguration.loadFromFile(new File("config.properties"));
 
-        TaskManager manager = new TaskManager("localhost", 8341, new File("tasks"));
+        TaskManager manager = new TaskManager(
+            config.getMessengerHost(),
+            config.getMessengerPort(),
+            config.getTaskFolder()
+        );
         manager.run();
     }
 
