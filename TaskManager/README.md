@@ -1,16 +1,12 @@
 ## Overview of the modules
 
-### TaskManager-Server
-The process that runs once on the coprocessor.
-This process should always be running on the coprocessor (i.e. run as a service)
+### TaskManager-Core
+This process runs on each processor that requires task management.
+It handles starting and stopping tasks, as well as deploying files to the processors.
+The TaskManager connects to the Messenger server to allow other processes to
+start and stop tasks.
 
-### TaskManager-Client
-The library used from the main robot on the RoboRIO.
-Allows the RoboRIO to control the tasks running on the coprocessor.
-Only one client can connect to the server at a time, so the RoboRIO
-can be connected, or the Controller, but not both at once.
-
-### Task-Client
-The library used in each task to communicate with the RoboRIO through the task manager.
-This library is intentionally made very simple to allow easy porting to other
-languages that tasks can be written in.
+### Controller
+This is a graphical application that connects to the TaskManager through the Messenger
+server. It allows easy access to uploading, deleting, and testing tasks. It can also view the
+output of the tasks for debugging them.
