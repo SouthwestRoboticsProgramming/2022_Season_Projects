@@ -47,5 +47,5 @@ The prefix for the Raspberry Pi is `RPi` and the prefix for the Jetson Nano is `
 | --- | --- | --- |
 | `[prefix]:StdOut:[task]` | `string message`: The output line from the task. | A line from the standard output of a task. |
 | `[prefix]:StdErr:[task]` | `string message`: The error output line from the task. | A line from the standard error of a task. |
-| `[prefix]:Tasks ` | `int count`: The number of task names following<br/>`string[] name`: The names of each task.| Response for a list of all task names on the TaskManager. |
+| `[prefix]:Tasks ` | `int count`: The number of task names following<br/>`string[] name`: The names of each task | Response for a list of all task names on the TaskManager. |
 | `[prefix]:Running ` | `string task`: The name of the task<br/>`boolean running`: Whether the task is running | Response for whether a task is running. |
