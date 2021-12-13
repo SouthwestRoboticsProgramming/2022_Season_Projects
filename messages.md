@@ -17,15 +17,15 @@ Runs on the Raspberry Pi.
 ###### Messages Read
 | Message | Data format | Description |
 | --- | --- | --- |
-| `Start` | No data | Tells the lidar to begin scanning. |
-| `Stop` | No data | Tells the lidar to stop scanning. |
+| `Lidar:Start` | No data | Tells the lidar to begin scanning. |
+| `Lidar:Stop` | No data | Tells the lidar to stop scanning. |
 
 ###### Messages Sent
 | Message | Data format | Description |
 | --- | --- | --- |
-| `Ready` | No data | Indicates that the lidar is ready to begin scanning. |
-| `ScanStart` | No data | Indicates that a new round of scanning has started. |
-| `Scan` | `int quality`: Quality of the measurement from 0 to 15<br/>`double angle`: Angle in counterclockwise radians<br/>`double distance`: Distance from the lidar in millimeters<br/>A quality or distance of 0 indicates an invalid scan. | One measurement from the lidar sensor. |
+| `Lidar:Ready` | No data | Indicates that the lidar is ready to begin scanning. |
+| `Lidar:ScanStart` | No data | Indicates that a new round of scanning has started. |
+| `Lidar:Scan` | `int quality`: Quality of the measurement from 0 to 15<br/>`double angle`: Angle in counterclockwise radians<br/>`double distance`: Distance from the lidar in millimeters<br/>A quality or distance of 0 indicates an invalid scan. | One measurement from the lidar sensor. |
 
 ### TaskManager
 Runs on all processors that need task management. (Raspberry Pi and Jetson Nano)
