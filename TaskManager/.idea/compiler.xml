@@ -6,12 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="TaskManager-New" />
-        <module name="Task-Client" />
-        <module name="TaskManager-Client" />
-        <module name="TaskManager-Server" />
         <module name="Controller" />
+        <module name="TaskManager-Core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Task-Client" target="11" />
+      <module name="TaskManager-Client" target="11" />
+      <module name="TaskManager-Server" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>TaskManager-New</artifactId>
+    <artifactId>TaskManager-Core</artifactId>
 
     <dependencies>
         <dependency>
