@@ -13,25 +13,27 @@ public class Task {
     private final String name;
     private final MessengerClient msg;
     private final Set<CompletableFuture<Boolean>> runningFutures;
+    private final String prefix;
 
-    public Task(String name, MessengerClient msg) {
+    public Task(String name, MessengerClient msg, String prefix) {
         this.name = name;
         this.msg = msg;
-        msg.listen(Messages.STDOUT + name);
-        msg.listen(Messages.STDERR + name);
+        this.prefix = prefix;
+        msg.listen(prefix + Messages.STDOUT + name);
+        msg.listen(prefix + Messages.STDERR + name);
         runningFutures = new HashSet<>();
     }
 
     public void start() {
-        msg.sendMessage(Messages.START_TASK, encodeString(name));
+        msg.sendMessage(prefix + Messages.START_TASK, encodeString(name));
     }
 
     public void stop() {
-        msg.sendMessage(Messages.STOP_TASK, encodeString(name));
+        msg.sendMessage(prefix + Messages.STOP_TASK, encodeString(name));
     }
 
     public void delete() {
-        msg.sendMessage(Messages.DELETE_TASK, encodeString(name));
+        msg.sendMessage(prefix +Messages.DELETE_TASK, encodeString(name));
     }
 
     public void upload(byte[] payload) {
@@ -46,13 +48,13 @@ public class Task {
             e.printStackTrace();
         }
 
-        msg.sendMessage(Messages.UPLOAD_TASK, b.toByteArray());
+        msg.sendMessage(prefix + Messages.UPLOAD_TASK, b.toByteArray());
     }
 
     public CompletableFuture<Boolean> isRunning() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         runningFutures.add(future);
-        msg.sendMessage(Messages.IS_TASK_RUNNING, encodeString(name));
+        msg.sendMessage(prefix + Messages.IS_TASK_RUNNING, encodeString(name));
         return future;
     }
 

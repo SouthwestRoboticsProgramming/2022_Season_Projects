@@ -16,20 +16,22 @@ public class TaskManagerAPI {
     private final MessengerClient msg;
     private final Map<String, Task> tasks;
     private final Set<CompletableFuture<Set<Task>>> tasksFutures;
+    private final String prefix;
     private BiConsumer<Task, String> stdOutCallback = (t, s) -> {};
     private BiConsumer<Task, String> stdErrCallback = (t, s) -> {};
 
-    public TaskManagerAPI(String host, int port) {
+    public TaskManagerAPI(String host, int port, String prefix) {
+        this.prefix = prefix;
         msg = new MessengerClient(host, port, "TaskManager-Controller");
         tasks = new HashMap<>();
         tasksFutures = new HashSet<>();
-        msg.listen(Messages.TASKS_RESPONSE);
-        msg.listen(Messages.RUNNING_RESPONSE);
+        msg.listen(prefix + Messages.TASKS_RESPONSE);
+        msg.listen(prefix + Messages.RUNNING_RESPONSE);
         msg.setCallback(this::messageCallback);
     }
 
     public Task getTask(String name) {
-        return tasks.computeIfAbsent(name, (n) -> new Task(n, msg));
+        return tasks.computeIfAbsent(name, (n) -> new Task(n, msg, prefix));
     }
 
     public void setStdOutCallback(BiConsumer<Task, String> callback) {
@@ -45,7 +47,7 @@ public class TaskManagerAPI {
     }
 
     private void messageCallback(String type, byte[] data) {
-        if (type.equals(Messages.RUNNING_RESPONSE)) {
+        if (type.equals(prefix + Messages.RUNNING_RESPONSE)) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
             try {
                 String task = in.readUTF();
@@ -53,7 +55,7 @@ public class TaskManagerAPI {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (type.equals(Messages.TASKS_RESPONSE)) {
+        } else if (type.equals(prefix + Messages.TASKS_RESPONSE)) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
             Set<Task> tasks = new HashSet<>();
             try {
@@ -68,7 +70,7 @@ public class TaskManagerAPI {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (type.startsWith(Messages.STDOUT)) {
+        } else if (type.startsWith(prefix + Messages.STDOUT)) {
             int firstColon = type.indexOf(':');
             int second = type.indexOf(':', firstColon + 1);
             String name = type.substring(second + 1);
@@ -80,7 +82,7 @@ public class TaskManagerAPI {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (type.startsWith(Messages.STDERR)) {
+        } else if (type.startsWith(prefix + Messages.STDERR)) {
             int firstColon = type.indexOf(':');
             int second = type.indexOf(':', firstColon + 1);
             String name = type.substring(second + 1);
@@ -98,7 +100,7 @@ public class TaskManagerAPI {
     public CompletableFuture<Set<Task>> getAllTasks() {
         CompletableFuture<Set<Task>> future = new CompletableFuture<>();
         tasksFutures.add(future);
-        msg.sendMessage(Messages.GET_TASKS, new byte[0]);
+        msg.sendMessage(prefix + Messages.GET_TASKS, new byte[0]);
         return future;
     }
 }

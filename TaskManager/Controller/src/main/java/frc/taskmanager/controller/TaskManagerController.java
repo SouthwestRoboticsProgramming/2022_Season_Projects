@@ -17,10 +17,10 @@ public class TaskManagerController {
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
 
-    public void run(String host, int port) {
+    public void run(String host, int port, String prefix) {
         JFrame frame = createWindow();
 
-        TaskManagerAPI cp = new TaskManagerAPI(host, port);
+        TaskManagerAPI cp = new TaskManagerAPI(host, port, prefix);
 
         run_(frame, cp);
     }
@@ -40,9 +40,10 @@ public class TaskManagerController {
             MessengerConnectionParams params = showConnectionPopup();
             String host = params.getHost();
             int port = params.getPort();
+            String prefix = params.getPrefix();
 
             try {
-                cp = new TaskManagerAPI(host, port);
+                cp = new TaskManagerAPI(host, port, prefix);
             } catch (Throwable e) {
                 System.err.println("Connection error:");
                 e.printStackTrace();
@@ -92,6 +93,7 @@ public class TaskManagerController {
         // Create the fields
         JTextField hostField = new JTextField();
         JTextField portField = new JTextField();
+        JTextField prefixField = new JTextField();
 
         // Port field can only accept numbers
         PlainDocument doc = (PlainDocument) portField.getDocument();
@@ -103,6 +105,8 @@ public class TaskManagerController {
         panel.add(hostField);
         panel.add(new JLabel("Port:"));
         panel.add(portField);
+        panel.add(new Jlabel("Prefix:"));
+        panel.add(prefixField);
 
         // Show the dialog
         JOptionPane.showMessageDialog(null, panel, "Connect to Messenger Server", JOptionPane.PLAIN_MESSAGE);
@@ -110,8 +114,9 @@ public class TaskManagerController {
         // Read the output
         String host = hostField.getText();
         int port = portField.getText().length() > 0 ? Integer.parseInt(portField.getText()) : 0;
+        String prefix = prefixField.getText();
 
         // Return the output
-        return new MessengerConnectionParams(host, port);
+        return new MessengerConnectionParams(host, port, prefix);
     }
 }
