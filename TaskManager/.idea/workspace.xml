@@ -28,9 +28,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/TaskManager-New/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-Server/src/main/java/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/TaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
