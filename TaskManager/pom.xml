@@ -13,6 +13,7 @@
         <module>Task-Client</module>
         <module>TaskManager-Client</module>
         <module>TaskManager-Server</module>
+        <module>TaskManager-New</module>
     </modules>
 
     <build>
