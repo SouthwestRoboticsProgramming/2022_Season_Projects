@@ -25,9 +25,9 @@ public class Demo extends PApplet {
     @Override
     public void setup() {
         msg = new MessengerClient("10.21.29.17", 8341, "Lidar-Visualizer");
-        msg.listen("Ready");
-        msg.listen("ScanStart");
-        msg.listen("Scan");
+        msg.listen("Lidar:Ready");
+        msg.listen("Lidar:ScanStart");
+        msg.listen("Lidar:Scan");
         msg.setCallback(this::messageCallback);
 
         scan = new HashSet<>();
@@ -37,14 +37,14 @@ public class Demo extends PApplet {
     private void messageCallback(String type, byte[] data) {
         System.out.println(type);
         switch (type) {
-            case "Ready":
-                msg.sendMessage("Start", new byte[0]);
+            case "Lidar:Ready":
+                msg.sendMessage("Lidar:Start", new byte[0]);
                 break;
-            case "ScanStart":
+            case "Lidar:ScanStart":
                 scan = newScan;
                 newScan = new HashSet<>();
                 break;
-            case "Scan":
+            case "Lidar:Scan":
                 DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
                 try {
                     int quality = in.readInt();
@@ -117,7 +117,7 @@ public class Demo extends PApplet {
 
     @Override
     public void keyPressed() {
-        msg.sendMessage("Stop", new byte[0]);
+        msg.sendMessage("Lidar:Stop", new byte[0]);
         exit();
     }
 

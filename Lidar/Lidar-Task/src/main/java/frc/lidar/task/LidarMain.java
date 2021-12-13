@@ -13,16 +13,8 @@ public class LidarMain {
         Lidar lidar = new Lidar();
         MessengerClient msg = new MessengerClient("localhost", 8341, "Lidar");
 
-        // Reset the lidar to make sure it's in the expected state
-        //lidar.reset();
-       // try {
-         //   Thread.sleep(10);
-        //} catch (InterruptedException e) {
-            // Ignore
-        //}
-
-        msg.listen("Start");
-        msg.listen("Stop");
+        msg.listen("Lidar:Start");
+        msg.listen("Lidar:Stop");
 
         System.out.println("Getting health of lidar");
         lidar.getHealth().thenAccept((health) -> {
@@ -32,7 +24,7 @@ public class LidarMain {
                 System.exit(-1);
             }
 
-            msg.sendMessage("Ready", new byte[0]);
+            msg.sendMessage("Lidar:Ready", new byte[0]);
         });
 
         lidar.setScanDataCallback((entry) -> {
@@ -45,7 +37,7 @@ public class LidarMain {
                 out.writeDouble(entry.getDistance());
 
                 synchronized (msg) {
-                    msg.sendMessage("Scan", b.toByteArray());
+                    msg.sendMessage("Lidar:Scan", b.toByteArray());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -53,18 +45,18 @@ public class LidarMain {
         });
         lidar.setScanStartCallback(() -> {
             synchronized (msg) {
-                msg.sendMessage("ScanStart", new byte[0]);
+                msg.sendMessage("Lidar:ScanStart", new byte[0]);
             }
         });
 
         msg.setCallback((name, data) -> {
             System.out.println("Lidar task: Got " + name);
             switch (name) {
-                case "Start":
+                case "Lidar:Start":
                     System.out.println("Starting scanning");
                     lidar.startScanning();
                     break;
-                case "Stop":
+                case "Lidar:Stop":
                     System.out.println("Stopping scanning");
                     lidar.stopScanning();
                     break;
