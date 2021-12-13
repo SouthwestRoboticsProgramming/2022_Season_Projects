@@ -68,6 +68,8 @@ public class Task {
     }
 
     private void deleteFile(File file) {
+        System.out.println("Deleting task '" + name + "'");
+
         File[] contents = file.listFiles();
         if (contents != null) {
             for (File f : contents) {
