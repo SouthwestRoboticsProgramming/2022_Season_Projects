@@ -1,6 +1,5 @@
 package frc.taskmanager;
 
-import frc.messenger.client.MessengerClient;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.StartedProcess;
 import org.zeroturnaround.exec.stream.LogOutputStream;
