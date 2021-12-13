@@ -149,7 +149,7 @@ class Vision:
     # Find an object using color and get it's properties
     def objectDetection(self,frame,cameraNumber):
         # Get posision of trackbars and assign them to variables
-        if self.experimental == True: 
+        if self.experimental: 
             h_min = cv2.getTrackbarPos("Hue Min","Track Bars " + str(self.instanceNumber))
             h_max = cv2.getTrackbarPos("Hue Max","Track Bars " + str(self.instanceNumber))
             s_min = cv2.getTrackbarPos("Saturation Min","Track Bars " + str(self.instanceNumber))
@@ -199,12 +199,12 @@ class Vision:
             angleX = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
             angleY = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
             angle2X = math.degrees(math.atan(((x) - (frame.shape[1]/2))/pixDistanceX))
+            cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
 
 
-            if self.experimental:
-                cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
-                cv2.imshow("Result " + str(cameraNumber) + " Instance " + str(self.instanceNumber),frameResult)
-                cv2.imshow("Binary " + str(cameraNumber) + " Instance " + str(self.instanceNumber),binary)
+        if self.experimental:
+            cv2.imshow("Result " + str(cameraNumber) + " Instance " + str(self.instanceNumber),frameResult)
+            cv2.imshow("Binary " + str(cameraNumber) + " Instance " + str(self.instanceNumber),binary)
 
 
         return(angleX,angleY,angle2X)
@@ -396,8 +396,12 @@ class Vision:
                 # Temporary #
                 print(accuracy)
 
-                #if self.experimental:
-                    #self.visualizer(xReal,yReal,d)
+                # Creating 'q' as the quit button for the webcam
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    capL.release()
+                    capR.release()
+                    return()
+
             elif retL:
                 print("I'm gonna use the left camera only")
                 capL.release()
@@ -415,30 +419,28 @@ class Vision:
                 cams = self.scanCameras()
                 print(cams)
                 return
+
+def stereoThread(instanceName, leftCamera, rightCamera):
+    vision = Vision(instanceName)
+    vision.run_stereo(leftCamera,rightCamera)
+
+def singleCamThread(instanceName, camera):
+    vision = Vision(instanceName)
+    vision.run_single_camera(camera)
                 
 
-            # Creating 'q' as the quit button for the webcam
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                capL.release()
-                capR.release()
-                return()
+
 
 
 # Multithreading
 
-vision1 = Vision(1)
-vision2 = Vision(2)
+# vision1 = Vision(1)
+# vision2 = Vision(2)
 
-# vision1.run_single_camera(0)
-# t1 = threading.Thread(target=vision1.run_stereo, args=(8,9,))
-# t2 = threading.Thread(target=vision2.run_single_camera, args=(0,))
-vision1.visualizer(-10,30,45)
+t2 = threading.Thread(target=stereoThread, args=("First Instance",0,2,))
+t2.start()
 
 
-# t1.start()
-
-
-cv2.waitKey(0)
 
 
 #stereo_vision = Vision()
