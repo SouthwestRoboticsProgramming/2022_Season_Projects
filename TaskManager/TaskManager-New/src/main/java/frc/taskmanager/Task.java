@@ -1,5 +1,6 @@
 package frc.taskmanager;
 
+import frc.messenger.client.MessengerClient;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.StartedProcess;
 import org.zeroturnaround.exec.stream.LogOutputStream;
@@ -103,7 +104,9 @@ public class Task {
                 e.printStackTrace();
             }
 
-            manager.getMessenger().sendMessage(type, b.toByteArray());
+            synchronized (manager.msg) {
+                manager.msg.sendMessage(type, b.toByteArray());
+            }
         }
     }
 }

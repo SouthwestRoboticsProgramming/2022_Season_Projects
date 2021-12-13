@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class TaskManager {
-    private final MessengerClient msg;
+    public final MessengerClient msg;
     private final Map<String, Task> tasks;
     private final File taskFolder;
 
@@ -180,7 +180,9 @@ public class TaskManager {
 
     public void run() {
         while (true) {
-            msg.read();
+            synchronized (msg) {
+                msg.read();
+            }
 
             try {
                 Thread.sleep(25);
