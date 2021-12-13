@@ -7,17 +7,21 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public class TaskManager {
-    private static final String START_TASK = "TaskManager:Start";
-    private static final String STOP_TASK = "TaskManager:Stop";
     private final MessengerClient msg;
 
     public TaskManager(String host, int port) {
         System.out.println("Connecting to Messenger server at " + host + ":" + port);
         msg = new MessengerClient(host, port, "TaskManager");
-        msg.listen(START_TASK);
-        msg.listen(STOP_TASK);
+        msg.listen(Messages.START_TASK);
+        msg.listen(Messages.STOP_TASK);
+        msg.listen(Messages.DELETE_TASK);
+        msg.listen(Messages.UPLOAD_TASK);
         msg.setCallback(this::messageCallback);
         System.out.println("Ready.");
+    }
+
+    public MessengerClient getMessenger() {
+        return msg;
     }
 
     private void handleStart(String task) {
@@ -28,10 +32,20 @@ public class TaskManager {
 
     }
 
+    private void handleDelete(String task) {
+
+    }
+
+    private void handleUpload(String task, byte[] payload) {
+
+    }
+
     private void messageCallback(String type, byte[] data) {
-        boolean isStart = type.equals(START_TASK);
-        boolean isStop = type.equals(STOP_TASK);
-        if (!isStart && !isStop) {
+        boolean isStart = type.equals(Messages.START_TASK);
+        boolean isStop = type.equals(Messages.STOP_TASK);
+        boolean isDelete = type.equals(Messages.DELETE_TASK);
+        boolean isUpload = type.equals(Messages.UPLOAD_TASK);
+        if (!isStart && !isStop && !isDelete && !isUpload) {
             return;
         }
 
@@ -48,8 +62,22 @@ public class TaskManager {
 
         if (isStart) {
             handleStart(task);
-        } else {
+        } else if (isStop) {
             handleStop(task);
+        } else if (isDelete) {
+            handleDelete(task);
+        } else {
+            byte[] payload;
+            try {
+                int len = d.readInt();
+                payload = new byte[len];
+                d.readFully(payload);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            handleUpload(task, payload);
         }
     }
 
