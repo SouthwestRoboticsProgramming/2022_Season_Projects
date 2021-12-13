@@ -28,9 +28,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Messenger/Messenger-Testing/src/main/java/frc/messenger/test/MessengerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Messenger/Messenger-Testing/src/main/java/frc/messenger/test/MessengerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager-New/src/main/java/frc/taskmanager/TaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/Python Task/clienttest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/Python Task/task.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/Python Task/taskclient.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +73,26 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
   </component>
-  <component name="RunManager" selected="Application.ControllerMain" />
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="frc.taskmanager.Main" />
+      <module name="TaskManager-New" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="frc.taskmanager.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -103,10 +125,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="574" y="119" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1639357371449" />
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1639178528748">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1639359199868">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1639178528748" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1639359199868" />
     <state width="1493" height="174" key="GridCell.Tab.0.bottom" timestamp="1639253987058">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
