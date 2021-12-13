@@ -5,6 +5,7 @@ import frc.messenger.client.MessengerClient;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -20,6 +21,8 @@ public class TaskManager {
         msg.listen(Messages.STOP_TASK);
         msg.listen(Messages.DELETE_TASK);
         msg.listen(Messages.UPLOAD_TASK);
+        msg.listen(Messages.GET_TASKS);
+        msg.listen(Messages.IS_TASK_RUNNING);
         msg.setCallback(this::messageCallback);
 
         System.out.println("Loading tasks");
@@ -43,7 +46,8 @@ public class TaskManager {
         return msg;
     }
 
-    private void handleStart(String taskName) {
+    private void handleStart(byte[] data) {
+        String taskName = decodeString(data);
         Task task = tasks.get(taskName);
         if (task == null) {
             System.out.println("Warning: Can't start nonexistent task '" + taskName + "'");
@@ -53,7 +57,8 @@ public class TaskManager {
         task.start();
     }
 
-    private void handleStop(String taskName) {
+    private void handleStop(byte[] data) {
+        String taskName = decodeString(data);
         Task task = tasks.get(taskName);
         if (task == null) {
             System.out.println("Warning: Can't stop nonexistent task '" + taskName + "'");
@@ -63,7 +68,8 @@ public class TaskManager {
         task.stop();
     }
 
-    private void handleDelete(String taskName) {
+    private void handleDelete(byte[] data) {
+        String taskName = decodeString(data);
         Task task = tasks.get(taskName);
         if (task == null) {
             System.out.println("Warning: Can't delete nonexistent task '" + taskName + "'");
@@ -74,7 +80,22 @@ public class TaskManager {
         tasks.remove(taskName);
     }
 
-    private void handleUpload(String task, byte[] payload) {
+    private void handleUpload(byte[] data) {
+        ByteArrayInputStream b = new ByteArrayInputStream(data);
+        DataInputStream d = new DataInputStream(b);
+
+        String task;
+        byte[] payload;
+        try {
+            task = d.readUTF();
+            int len = d.readInt();
+            payload = new byte[len];
+            d.readFully(payload);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
         // Delete if it already exists
         Task existing = tasks.get(task);
         if (existing != null) {
@@ -124,6 +145,48 @@ public class TaskManager {
         }
     }
 
+    private void handleGetTasks() {
+        Set<String> tasks = this.tasks.keySet();
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream d = new DataOutputStream(b);
+
+        try {
+            d.writeInt(tasks.size());
+            for (String str : tasks) {
+                d.writeUTF(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        msg.sendMessage(Messages.TASKS_RESPONSE, b.toByteArray());
+    }
+
+    private void handleIsRunning(byte[] data) {
+        String taskName = decodeString(data);
+        Task task = tasks.get(taskName);
+
+        boolean running = false;
+        if (task == null) {
+            System.out.println("Warning: Cannot get whether nonexistent task '" + taskName + "' is running, returning false");
+        } else {
+            running = task.isRunning();
+        }
+
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream d = new DataOutputStream(b);
+        try {
+            d.writeUTF(taskName);
+            d.writeBoolean(running);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        msg.sendMessage(Messages.RUNNING_RESPONSE, b.toByteArray());
+    }
+
     private File newFile(File destDir, ZipEntry entry) throws IOException {
         File destFile = new File(destDir, entry.getName());
 
@@ -138,44 +201,43 @@ public class TaskManager {
     }
 
     private void messageCallback(String type, byte[] data) {
-        boolean isStart = type.equals(Messages.START_TASK);
-        boolean isStop = type.equals(Messages.STOP_TASK);
-        boolean isDelete = type.equals(Messages.DELETE_TASK);
-        boolean isUpload = type.equals(Messages.UPLOAD_TASK);
-        if (!isStart && !isStop && !isDelete && !isUpload) {
-            return;
+        switch (type) {
+            case Messages.START_TASK:
+                handleStart(data);
+                break;
+            case Messages.STOP_TASK:
+                handleStop(data);
+                break;
+            case Messages.DELETE_TASK:
+                handleDelete(data);
+                break;
+            case Messages.UPLOAD_TASK:
+                handleUpload(data);
+                break;
+            case Messages.GET_TASKS:
+                handleGetTasks();
+                break;
+            case Messages.IS_TASK_RUNNING:
+                handleIsRunning(data);
+                break;
+            default:
+                System.out.println("Unknown message: " + type);
+                break;
         }
+    }
 
+    private String decodeString(byte[] data) {
         ByteArrayInputStream b = new ByteArrayInputStream(data);
         DataInputStream d = new DataInputStream(b);
 
-        String task;
+        String task = "Decode error";
         try {
             task = d.readUTF();
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
 
-        if (isStart) {
-            handleStart(task);
-        } else if (isStop) {
-            handleStop(task);
-        } else if (isDelete) {
-            handleDelete(task);
-        } else {
-            byte[] payload;
-            try {
-                int len = d.readInt();
-                payload = new byte[len];
-                d.readFully(payload);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            handleUpload(task, payload);
-        }
+        return task;
     }
 
     public void run() {

@@ -1,8 +1,5 @@
 package frc.taskmanager.controller;
 
-import frc.taskmanager.client.Coprocessor;
-import frc.taskmanager.client.Task;
-
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -37,7 +34,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class TaskViewPanel extends JPanel {
-    private final Coprocessor cp;
+    private final TaskManagerAPI cp;
     private final JList<String> taskList;
     private final DefaultListModel<String> listModel;
     private final JButton runToggle;
@@ -50,7 +47,7 @@ public class TaskViewPanel extends JPanel {
     private Task selectedTask = null;
     private boolean taskRunning = false;
 
-    public TaskViewPanel(Coprocessor cp) {
+    public TaskViewPanel(TaskManagerAPI cp) {
         super();
         this.cp = cp;
 
@@ -168,8 +165,8 @@ public class TaskViewPanel extends JPanel {
         }
         add(split, BorderLayout.CENTER);
 
-        Task.setDefaultStdOutCallback(this::onTaskStdOut);
-        Task.setDefaultStdErrCallback(this::onTaskStdErr);
+        cp.setStdOutCallback(this::onTaskStdOut);
+        cp.setStdErrCallback(this::onTaskStdErr);
 
         disableTaskView();
         delete.setEnabled(false);

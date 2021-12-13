@@ -12,12 +12,6 @@
     <artifactId>Controller</artifactId>
     <dependencies>
         <dependency>
-            <groupId>frc</groupId>
-            <artifactId>TaskManager-Client</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>1.6.1</version>

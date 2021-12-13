@@ -1,7 +1,6 @@
 package frc.taskmanager.controller;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
-import frc.taskmanager.client.Coprocessor;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,15 +13,14 @@ import javax.swing.WindowConstants;
 import javax.swing.text.PlainDocument;
 import java.awt.GridLayout;
 
-public class CoprocessorController {
+public class TaskManagerController {
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
 
     public void run(String host, int port) {
         JFrame frame = createWindow();
 
-        Coprocessor cp = new Coprocessor(host, port);
-        cp.connect();
+        TaskManagerAPI cp = new TaskManagerAPI(host, port);
 
         run_(frame, cp);
     }
@@ -36,24 +34,22 @@ public class CoprocessorController {
 
         JFrame frame = createWindow();
 
-        // Connect to the coprocessor
-        Coprocessor cp = null;
+        // Connect to the message server
+        TaskManagerAPI cp = null;
         while (cp == null) {
-            CoprocessorConnectionParams params = showConnectionPopup();
+            MessengerConnectionParams params = showConnectionPopup();
             String host = params.getHost();
             int port = params.getPort();
 
-            Coprocessor attempt = new Coprocessor(host, port);
             try {
-                attempt.connect();
-                cp = attempt;
+                cp = new TaskManagerAPI(host, port);
             } catch (Throwable e) {
                 System.err.println("Connection error:");
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null,
-                        "Failed to connect to the coprocessor at " + host + ":" + port +
+                        "Failed to connect to the Messenger Server at " + host + ":" + port +
                             ".\nMake sure it is turned on, that you are connected to the correct network, \n" +
-                            "and that the TaskManager server is running on the correct port. \n" +
+                            "and that the Messenger server is running on the correct port. \n" +
                             "You can check the controller log for a more detailed error report.",
                         "Error Connecting", JOptionPane.ERROR_MESSAGE);
             }
@@ -63,8 +59,8 @@ public class CoprocessorController {
     }
 
     // Main method
-    private void run_(JFrame frame, Coprocessor cp) {
-        System.out.println("Connected to coprocessor");
+    private void run_(JFrame frame, TaskManagerAPI cp) {
+        System.out.println("Connected to Messenger server");
 
         // Create view panel
         TaskViewPanel panel = new TaskViewPanel(cp);
@@ -82,7 +78,7 @@ public class CoprocessorController {
     // Creates the window that the controller will run in.
     private JFrame createWindow() {
         // Create window
-        JFrame frame = new JFrame("Coprocessor Controller");
+        JFrame frame = new JFrame("TaskManager Controller");
         frame.setSize(WIDTH, HEIGHT);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -92,7 +88,7 @@ public class CoprocessorController {
     }
 
     // Shows a popup window that asks for the coprocessor connection parameters.
-    private CoprocessorConnectionParams showConnectionPopup() {
+    private MessengerConnectionParams showConnectionPopup() {
         // Create the fields
         JTextField hostField = new JTextField();
         JTextField portField = new JTextField();
@@ -109,13 +105,13 @@ public class CoprocessorController {
         panel.add(portField);
 
         // Show the dialog
-        JOptionPane.showMessageDialog(null, panel, "Connect to Coprocessor", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(null, panel, "Connect to Messenger Server", JOptionPane.PLAIN_MESSAGE);
 
         // Read the output
         String host = hostField.getText();
         int port = portField.getText().length() > 0 ? Integer.parseInt(portField.getText()) : 0;
 
         // Return the output
-        return new CoprocessorConnectionParams(host, port);
+        return new MessengerConnectionParams(host, port);
     }
 }

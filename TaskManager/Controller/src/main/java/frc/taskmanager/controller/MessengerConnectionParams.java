@@ -2,11 +2,11 @@ package frc.taskmanager.controller;
 
 import java.util.Objects;
 
-public class CoprocessorConnectionParams {
+public class MessengerConnectionParams {
     private final String host;
     private final int port;
 
-    public CoprocessorConnectionParams(String host, int port) {
+    public MessengerConnectionParams(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -23,7 +23,7 @@ public class CoprocessorConnectionParams {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CoprocessorConnectionParams that = (CoprocessorConnectionParams) o;
+        MessengerConnectionParams that = (MessengerConnectionParams) o;
         return port == that.port &&
                 host.equals(that.host);
     }
@@ -35,7 +35,7 @@ public class CoprocessorConnectionParams {
 
     @Override
     public String toString() {
-        return "CoprocessorConnectionParams{" +
+        return "MessengerConnectionParams{" +
                 "host='" + host + '\'' +
                 ", port=" + port +
                 '}';

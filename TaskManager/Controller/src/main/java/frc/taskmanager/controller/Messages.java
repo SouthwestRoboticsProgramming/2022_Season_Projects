@@ -1,4 +1,4 @@
-package frc.taskmanager;
+package frc.taskmanager.controller;
 
 public final class Messages {
     public static final String START_TASK = "TaskManager:Start";

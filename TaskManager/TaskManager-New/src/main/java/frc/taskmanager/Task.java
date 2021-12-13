@@ -81,7 +81,7 @@ public class Task {
         file.delete();
     }
 
-    private boolean isRunning() {
+    public boolean isRunning() {
         return process != null && process.isAlive();
     }
 
