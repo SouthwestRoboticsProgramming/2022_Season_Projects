@@ -23,7 +23,7 @@ public final class TaskManagerConfiguration {
         if (!file.exists()) {
             System.out.println("Configuration file does not exist, creating one");
             try {
-                defaultConfig.store(new FileWriter(file));
+                defaultConfig.store(new FileWriter(file), "TaskManager configuration file");
             } catch (IOException e) {
                 e.printStackTrace();
             }

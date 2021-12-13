@@ -21,7 +21,7 @@ public class MessengerConnectionParams {
         return port;
     }
 
-    public String getPrefix() _{
+    public String getPrefix() {
         return prefix;
     }
 }

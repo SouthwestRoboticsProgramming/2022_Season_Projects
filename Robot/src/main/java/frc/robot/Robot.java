@@ -48,6 +48,8 @@ public final class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    msg.read();
+
     localizer.update();
 
     try {
@@ -57,7 +59,7 @@ public final class Robot extends TimedRobot {
       d.writeDouble(localizer.getY());
       d.writeDouble(localizer.getRotationRadians());
 
-      msg.sendMessage("Location", b.toByteArray());
+      msg.sendMessage("RoboRIO:Location", b.toByteArray());
     } catch (IOException e) {
       e.printStackTrace();
     }

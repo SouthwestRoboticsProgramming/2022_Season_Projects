@@ -9,7 +9,8 @@ public final class Main {
         TaskManager manager = new TaskManager(
             config.getMessengerHost(),
             config.getMessengerPort(),
-            config.getTaskFolder()
+            config.getTaskFolder(),
+            config.getMessagePrefix()
         );
         manager.run();
     }

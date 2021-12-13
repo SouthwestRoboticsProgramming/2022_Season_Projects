@@ -14,12 +14,13 @@ import java.util.*;
 public class Demo extends PApplet {
     private MessengerClient msg;
     private Set<ScanEntry> scan, newScan;
-    private float scale = 1;
+    private float scale = 0.5f;
     private float tx = 0, ty = 0;
+    private double rx, ry, rangle;
 
     @Override
     public void settings() {
-        size(800, 600, P2D);
+        size(1280, 720, P2D);
     }
 
     @Override
@@ -28,6 +29,7 @@ public class Demo extends PApplet {
         msg.listen("Lidar:Ready");
         msg.listen("Lidar:ScanStart");
         msg.listen("Lidar:Scan");
+        msg.listen("RoboRIO:Location");
         msg.setCallback(this::messageCallback);
 
         scan = new HashSet<>();
@@ -35,7 +37,7 @@ public class Demo extends PApplet {
     }
 
     private void messageCallback(String type, byte[] data) {
-        System.out.println(type);
+        //System.out.println(type);
         switch (type) {
             case "Lidar:Ready":
                 msg.sendMessage("Lidar:Start", new byte[0]);
@@ -44,11 +46,11 @@ public class Demo extends PApplet {
                 scan = newScan;
                 newScan = new HashSet<>();
                 break;
-            case "Lidar:Scan":
+            case "Lidar:Scan": {
                 DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
                 try {
                     int quality = in.readInt();
-                    double angle = in.readDouble();
+                    double angle = in.readDouble() - Math.toDegrees(rangle);
                     double distance = in.readDouble();
 
                     if (quality == 0 || distance == 0) break;
@@ -58,6 +60,19 @@ public class Demo extends PApplet {
                     e.printStackTrace();
                 }
                 break;
+            }
+            case "RoboRIO:Location": {
+                DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
+                try {
+                    rx = in.readDouble();
+                    ry = in.readDouble();
+                    rangle = in.readDouble();
+                    System.out.println(rangle);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
         }
     }
 
