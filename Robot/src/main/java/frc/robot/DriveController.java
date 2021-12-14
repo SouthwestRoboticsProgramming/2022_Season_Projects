@@ -10,7 +10,7 @@ public final class DriveController {
     }
 
     public void update() {
-        double driveSpeed = 0.3;
+        double driveSpeed = 0.7;
         
         double turn = input.getTurn();
         double drive = input.getDrive();
