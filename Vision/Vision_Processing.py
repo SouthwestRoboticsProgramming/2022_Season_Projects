@@ -2,12 +2,12 @@ import cv2
 import numpy as np
 import math
 import glob
-import taskclient as tc
 import struct
 import threading
 import time
+from messengerclient import MessengerClient
 
-#client = tc.TaskMessenger("localhost", 8264, "Vision_Prosessing")
+client = MessengerClient("localhost", 8341, "Vision")
 
 class Vision:
 
@@ -57,7 +57,7 @@ class Vision:
             cv2.createTrackbar("Value Min","Track Bars " + str(self.instanceNumber),self.v_min,255,self.empty)
             cv2.createTrackbar("Value Max","Track Bars " + str(self.instanceNumber),self.v_max,255,self.empty)
             cv2.createTrackbar("Thresh Low", "Track Bars " + str(self.instanceNumber), self.TLow , 255, self.empty)
-            cv2.createTrackbar("Exposure","Track Bars " + str(self.instanceNumber), self.exposure,10, self.empty)
+            cv2.createTrackbar("Exposure","Track Bars " + str(self.instanceNumber), self.exposure,200, self.empty)
 
     # Scans camera ports to find working ones
     def scanCameras(self):
@@ -200,6 +200,10 @@ class Vision:
             angleY = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
             angle2X = math.degrees(math.atan(((x) - (frame.shape[1]/2))/pixDistanceX))
             cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
+        else:
+            angleX = "Obstructed"
+            angleY = "Obstructed"
+            angle2X = "Obstructed"
 
 
         if self.experimental:
@@ -289,9 +293,12 @@ class Vision:
             print("hmmmmmmmmmm")
 
         while True:
+            global client
+            client.read()
+
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
                 # Constantly set the exposure of the camera to
-                cap.set(cv2.CAP_PROP_EXPOSURE, -cv2.getTrackbarPos("Exposure",  "Track Bars " + str(self.instanceNumber)))
+                cap.set(cv2.CAP_PROP_EXPOSURE, cv2.getTrackbarPos("Exposure",  "Track Bars " + str(self.instanceNumber)))
             # Turn raw camera input into readable frames
             ret, frame = cap.read()
 
@@ -300,6 +307,11 @@ class Vision:
             
             # Use ball detection function to find the angle to center and right side of the object in both cameras
             Xangle, Yangle, Xangle2 = self.objectDetection(sCam,camID)
+
+            if Xangle != "Obstructed":
+                print(Xangle)
+                data = struct.pack(">f", Xangle)
+                client.send_message("Vision:Xangle", data)
 
             # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -336,6 +348,9 @@ class Vision:
                 self.setFrameShape(sCamR)
             else:
                 print("Right camera not found")
+        counterStart = 1000
+        leftObstruct = counterStart
+        rightObstruct = counterStart
                 
 
         while True:
@@ -360,41 +375,63 @@ class Vision:
                 XangleL, YangleL, XangleL2 = self.objectDetection(sCamL,"Left")
                 XangleR, YangleR, XangleR2 = self.objectDetection(sCamR,"Right")
 
+                if XangleL == "Obstructed":
+                    leftObstruct -=1
+                else: leftObstruct = counterStart
+                if XangleR == "Obstructed":
+                    rightObstruct -=1
+                else: leftObstruct = counterStart
 
-                x,z = self.stereoVision(XangleL,XangleR)
-                x2,z2 = self.stereoVision(XangleL2,XangleR2)
 
 
-                if YangleL is not None and YangleR is not None:
-                    Yangle = (YangleL + YangleR)/2
-                    y = math.tan(math.radians(Yangle)*z)
-                else:
-                    y = 0
+
 
 
                 # Get the distance to the object in total using the distance formula
                 #   Note: all of the sub 2's are 0 because for now we assume that the camera is not moving
-                if x is not None:
-                    d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
-                    d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
-                else:
-                    d = 0
-                    d2 = 0
 
 
                 #disatnceWithY = math.sqrt(math.pow(0-x,2)+math.pow(0-y,2)+math.pow(0-z,2))
+                if XangleL != "Obstructed" and XangleL != None:
+                    x,z = self.stereoVision(XangleL,XangleR)
+                    x2,z2 = self.stereoVision(XangleL2,XangleR2)
 
-                centerAngle = abs(XangleL - XangleL2)
-                xReal, yReal,c = self.solveGlobal(d,d2,centerAngle)
+                    if x is not None:
+                        d = math.sqrt(math.pow(0-x,2) + math.pow(0-z,2))
+                        d2 = math.sqrt(math.pow(0-x2,2)+ math.pow(0-z2,2))
+                    else:
+                        d = 0
+                        d2 = 0
+
+                    centerAngle = abs(XangleL - XangleL2)
+                    xReal, yReal,c = self.solveGlobal(d,d2,centerAngle)
+
+                    Yangle = (YangleL + YangleR)/2
+                    y = math.tan(math.radians(Yangle)*z)
+
+                    accuracy = -10*abs(c-self.targetWidth)+100
+                    if c == 0 or accuracy < 1:
+                        accuracy = 0
 
 
-                accuracy = -10*abs(c-self.targetWidth)+100
-                if c == 0 or accuracy < 1:
-                    accuracy = 0
+                    # Temporary #
+                    print(accuracy)
 
 
-                # Temporary #
-                print(accuracy)
+
+                if leftObstruct < 1:
+                    print("Left camera obstructed")
+                    capL.release()
+                    capR.release()
+                    self.run_single_camera(camIDR)
+                    return
+
+                if leftObstruct < 1:
+                    print("Right camera obstructed")
+                    capL.release()
+                    capR.release()
+                    self.run_single_camera(camIDL)
+                    return
 
                 # Creating 'q' as the quit button for the webcam
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -437,10 +474,11 @@ def singleCamThread(instanceName, camera):
 # vision1 = Vision(1)
 # vision2 = Vision(2)
 
-t2 = threading.Thread(target=stereoThread, args=("First Instance",0,2,))
-t2.start()
+#t2 = threading.Thread(target=singleCamThread, args=("Laptop camera",-2,))
+#t2.start()
 
-
+vision1 = Vision(1)
+vision1.run_single_camera(2)
 
 
 #stereo_vision = Vision()
