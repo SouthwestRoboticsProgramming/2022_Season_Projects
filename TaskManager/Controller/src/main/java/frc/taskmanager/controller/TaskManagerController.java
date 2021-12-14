@@ -105,7 +105,7 @@ public class TaskManagerController {
         panel.add(hostField);
         panel.add(new JLabel("Port:"));
         panel.add(portField);
-        panel.add(new Jlabel("Prefix:"));
+        panel.add(new JLabel("Prefix:"));
         panel.add(prefixField);
 
         // Show the dialog
