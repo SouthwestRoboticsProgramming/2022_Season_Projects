@@ -129,7 +129,7 @@ class MessengerClient:
     def _available(self):
         # Checks if there is data available on the socket
 
-        readable = select.select([self.sock], [], [])[0]
+        readable = select.select([self.sock], [], [], 0)[0]
 
         for sock in readable:
             if sock == self.sock:
