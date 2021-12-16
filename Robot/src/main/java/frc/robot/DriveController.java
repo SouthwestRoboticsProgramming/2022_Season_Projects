@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.util.Vec2d;
+
 public final class DriveController {
     private final DriveTrain driveTrain;
     private final Input input;
@@ -9,7 +11,7 @@ public final class DriveController {
         this.input = input;
     }
 
-    public void update() {
+    public Vec2d update() {
         double driveSpeed = 0.3;
         
         double turn = input.getTurn();
@@ -17,6 +19,6 @@ public final class DriveController {
 
         double leftDrive = (drive + turn) * driveSpeed;
         double rightDrive = (drive - turn) * driveSpeed;
-        driveTrain.driveMotors(leftDrive, rightDrive);
+        return new Vec2d(leftDrive, rightDrive);
     }
 }

@@ -7,11 +7,11 @@ import threading
 import time
 from messengerclient import MessengerClient
 
-client = MessengerClient("localhost", 8341, "Vision")
+#client = MessengerClient("localhost", 8341, "Vision")
 
 class Vision:
 
-    experimental = True
+    experimental = False
 
     instanceNumber = None
 
@@ -293,8 +293,8 @@ class Vision:
             print("hmmmmmmmmmm")
 
         while True:
-            global client
-            client.read()
+            #global client
+            #client.read()
 
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
                 # Constantly set the exposure of the camera to
@@ -311,7 +311,7 @@ class Vision:
             if Xangle != "Obstructed":
                 print(Xangle)
                 data = struct.pack(">f", Xangle)
-                client.send_message("Vision:Xangle", data)
+                #client.send_message("Vision:Xangle", data)
 
             # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -478,6 +478,8 @@ def singleCamThread(instanceName, camera):
 #t2.start()
 
 vision1 = Vision(1)
+#cams = vision1.scanCameras()
+#print(cams)
 vision1.run_single_camera(2)
 
 

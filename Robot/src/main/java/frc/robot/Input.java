@@ -14,4 +14,8 @@ public class Input {
     public double getTurn() {
         return controller.getLeftStickX();
     }
+
+    public boolean pointAtTarget() {
+        return controller.getAButton();
+    }
 }
