@@ -34,6 +34,8 @@ public class Demo extends PApplet {
 
         scan = new HashSet<>();
         newScan = new HashSet<>();
+
+        ellipseMode(CENTER);
     }
 
     private void messageCallback(String type, byte[] data) {
@@ -116,6 +118,15 @@ public class Demo extends PApplet {
             vertex(x, y);
         }
         endShape(CLOSE);
+
+        noFill();
+        stroke(255);
+        ellipse(0, 0, 340, 340);
+
+        fill(255);
+        stroke(255);
+        rotate((float) -rangle - PI / 2);
+        triangle(-40, 200, 40, 200, 0, -200);
     }
 
     @Override
