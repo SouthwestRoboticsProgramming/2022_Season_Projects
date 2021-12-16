@@ -1,6 +1,8 @@
 package frc.robot;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,11 +27,12 @@ public final class Robot extends TimedRobot {
   private PathFollower pathFollower;
   private List<Point> path;
   private MessengerClient msg;
+  private Input input;
 
   @Override
   public void robotInit() {
     XboxController controller = new XboxController(0);
-    Input input = new Input(controller);
+      input = new Input(controller);
     
     driveTrain = new DriveTrain();
     driveController = new DriveController(driveTrain, input);
@@ -102,17 +105,17 @@ public final class Robot extends TimedRobot {
     //if (pathFollower.isDone()) {
     //  pathFollower.setPath(path);
       double gyroAngle = gyro.getAngle()%360;
-      visionDiff = gyroAngle + visionAngle;
+      double visionDiff = gyroAngle + visionAngle;
 
       if (visionDiff>5){
-        driveTrain.driveMotors(.3,-.3)
+        driveTrain.driveMotors(.3,-.3);
       } else if (visionDiff<-5){
-        driveTrain.driveMotors(-.3,.3)
+        driveTrain.driveMotors(-.3,.3);
       } else {
         driveTrain.driveMotors(.3, .3);
       }
     }
-  }
+
 
   private void messageCallback(String type, byte[] data) {
     if (type.equals("Vision:Xangle")) {
@@ -136,9 +139,9 @@ public final class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Vec2d drive = driveController.update();
 
-    if (input.pointAtTarget()) {
+    if (this.input.pointAtTarget()) {
       double gyroAngle = gyro.getAngle()%360;
-      visionDiff = gyroAngle + visionAngle;
+      double visionDiff = gyroAngle + visionAngle;
 
       if (visionDiff>5){
         driveTrain.driveMotors(drive.x + .2, drive.y - .2);
