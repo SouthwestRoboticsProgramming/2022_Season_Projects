@@ -32,7 +32,7 @@ public final class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     XboxController controller = new XboxController(0);
-      input = new Input(controller);
+    input = new Input(controller);
     
     driveTrain = new DriveTrain();
     driveController = new DriveController(driveTrain, input);
@@ -139,7 +139,7 @@ public final class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Vec2d drive = driveController.update();
 
-    if (this.input.pointAtTarget()) {
+    if (input.pointAtTarget()) {
       double gyroAngle = gyro.getAngle()%360;
       double visionDiff = gyroAngle + visionAngle;
 
