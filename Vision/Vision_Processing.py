@@ -63,6 +63,22 @@ class Vision:
             cv2.createTrackbar("Thresh Low", "Track Bars " + str(self.instanceNumber), self.TLow , 255, self.empty)
             cv2.createTrackbar("Exposure","Track Bars " + str(self.instanceNumber), self.exposure,200, self.empty)
 
+    def saveValues(self):
+        settings = open('Vision/config.txt','w')
+        values = [str(self.h_min)+"\n",str(self.h_max)+"\n",str(self.s_min)+"\n",str(self.s_max)+"\n",str(self.v_min)+"\n",str(self.v_max)+"\n",str(self.TLow)+"\n",str(self.exposure)]
+        settings.writelines(values)
+        settings.close()
+    def readValues(self):
+        settings = open('Vision/config.txt','r')
+        values = settings.readlines()
+        i=0
+        while i <= len(values)-1:
+            values[i] = values[i].strip()
+            i+=1
+        self.h_min, self.h_max, self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure = [int(i) for i in values]
+
+
+
     # Scans camera ports to find working ones
     def scanCameras(self):
         i = -10
@@ -501,9 +517,10 @@ def singleCamThread(instanceName, camera):
 #t2.start()
 
 vision1 = Vision(1)
-cams = vision1.scanCameras()
-print(cams)
-vision1.run_single_camera(-1)
+# cams = vision1.scanCameras()
+# print(cams)
+# vision1.run_single_camera(-1)
+vision1.readValues()
 
 
 #stereo_vision = Vision()
