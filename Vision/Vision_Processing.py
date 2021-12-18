@@ -11,7 +11,7 @@ from messengerclient import MessengerClient
 
 class Vision:
 
-    experimental = False
+    experimental = True
 
     instanceNumber = None
 
@@ -207,8 +207,10 @@ class Vision:
 
 
         if self.experimental:
-            cv2.imshow("Result " + str(cameraNumber) + " Instance " + str(self.instanceNumber),frameResult)
-            cv2.imshow("Binary " + str(cameraNumber) + " Instance " + str(self.instanceNumber),binary)
+            # cv2.imshow("Result " + str(cameraNumber) + " Instance " + str(self.instanceNumber),frameResult)
+            # cv2.imshow("Binary " + str(cameraNumber) + " Instance " + str(self.instanceNumber),binary)
+            binary3 = cv2.cvtColor(binary,cv2.COLOR_GRAY2BGR)
+            cv2.imshow("Binary3",binary3)
 
 
         return(angleX,angleY,angle2X)
@@ -291,6 +293,8 @@ class Vision:
             self.setFrameShape(frame)
         else:
             print("hmmmmmmmmmm")
+        prev_frame_time = 0
+        new_frame_time = 0
 
         while True:
             #global client
@@ -309,9 +313,15 @@ class Vision:
             Xangle, Yangle, Xangle2 = self.objectDetection(sCam,camID)
 
             if Xangle != "Obstructed":
-                print(Xangle)
+                #print(Xangle)
                 data = struct.pack(">f", Xangle)
                 #client.send_message("Vision:Xangle", data)
+
+            # Get fps of video feed with processing time
+            new_frame_time = time.time()
+            fps = 1/(new_frame_time-prev_frame_time)
+            prev_frame_time = new_frame_time
+            print(fps)
 
             # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -382,6 +392,9 @@ class Vision:
                     rightObstruct -=1
                 else: leftObstruct = counterStart
 
+                new_frame_time = 0
+                prev_frame_time = 0
+
 
 
 
@@ -416,6 +429,10 @@ class Vision:
 
                     # Temporary #
                     print(accuracy)
+                    
+                    new_frame_time = time.time()
+                    fps = 1/(new_frame_time-prev_frame_time)
+                    prev_frame_time = new_frame_time
 
 
 
@@ -480,7 +497,7 @@ def singleCamThread(instanceName, camera):
 vision1 = Vision(1)
 #cams = vision1.scanCameras()
 #print(cams)
-vision1.run_single_camera(2)
+vision1.run_stereo(-2,-2)
 
 
 #stereo_vision = Vision()
