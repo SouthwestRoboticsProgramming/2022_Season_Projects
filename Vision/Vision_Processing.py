@@ -207,7 +207,12 @@ class Vision:
             angle2X = "Obstructed"
 
 
-
+        if self.experimental:
+            # cv2.imshow("Result " + str(cameraNumber) + " Instance " + str(self.instanceNumber),frameResult)
+            # cv2.imshow("Binary " + str(cameraNumber) + " Instance " + str(self.instanceNumber),binary)
+            binary3 = cv2.cvtColor(binary,cv2.COLOR_GRAY2BGR)
+            stacked = np.hstack((binary3,frameResult))
+            cv2.imshow("Camera " + str(cameraNumber) + " Instance " + str(self.instanceNumber),stacked)
 
 
         return(angleX,angleY,angle2X)
