@@ -5,6 +5,7 @@ import glob
 import struct
 import threading
 import time
+import sched
 from messengerclient import MessengerClient
 
 
@@ -28,14 +29,14 @@ class Vision:
 
 
     # Default values for object detection (Also used for locked mode)
-    h_min = 20
-    h_max = 35
-    s_min = 104
+    h_min = 0
+    h_max = 255
+    s_min = 0
     s_max = 255
-    v_min = 41
-    v_max = 240
+    v_min = 0
+    v_max = 255
     TLow = 0
-    exposure = 5
+    exposure = 0
 
     pixDistanceX = None
     pixDistanceY = None
@@ -47,6 +48,7 @@ class Vision:
         pass
     
     def __init__(self,instanceName):
+        self.readValues()
 
         if self.experimental:
             
@@ -317,8 +319,10 @@ class Vision:
             print("Camera ID not found")
         prev_frame_time = 0
         new_frame_time = 0
+        count = 0
 
         while True:
+            count += 1
             if self.isclient:
                 global client
                 self.client.read()
@@ -370,14 +374,14 @@ class Vision:
 
         ret, frameL = capL.read()
         if ret:
-            sCamL, sCamL = self.calibrateCamera(frameL,frameL,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
-            self.setFrameShape(sCamL)
+            #sCamL, sCamL = self.calibrateCamera(frameL,frameL,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+            self.setFrameShape(frameL)
         else:
             print("Left camera not found")
             ret, frameR = capR.read()
             if ret:
-                sCamR, sCamR = self.calibrateCamera(frameR,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
-                self.setFrameShape(sCamR)
+                #sCamR, sCamR = self.calibrateCamera(frameR,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+                self.setFrameShape(frameR)
             else:
                 print("Right camera not found")
         counterStart = 1000
@@ -401,11 +405,11 @@ class Vision:
             if retL and retR:
 
                 # Calibrate every frame using the calibration profile
-                sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+                #sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
                 
                 # Use ball detection function to find the angle to center and right side of the object in both cameras
-                XangleL, YangleL, XangleL2 = self.objectDetection(sCamL,"Left")
-                XangleR, YangleR, XangleR2 = self.objectDetection(sCamR,"Right")
+                XangleL, YangleL, XangleL2 = self.objectDetection(frameL,"Left")
+                XangleR, YangleR, XangleR2 = self.objectDetection(frameR,"Right")
 
                 if XangleL == "Obstructed":
                     leftObstruct -=1
@@ -520,7 +524,7 @@ vision1 = Vision(1)
 # cams = vision1.scanCameras()
 # print(cams)
 # vision1.run_single_camera(-1)
-vision1.readValues()
+vision1.run_single_camera(-1)
 
 
 #stereo_vision = Vision()
