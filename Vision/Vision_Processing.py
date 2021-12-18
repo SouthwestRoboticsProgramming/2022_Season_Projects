@@ -7,11 +7,12 @@ import threading
 import time
 from messengerclient import MessengerClient
 
-#client = MessengerClient("localhost", 8341, "Vision")
+
 
 class Vision:
 
     experimental = True
+    isclient = False
 
     instanceNumber = None
 
@@ -38,6 +39,9 @@ class Vision:
 
     pixDistanceX = None
     pixDistanceY = None
+
+    if isclient:
+        client = MessengerClient("localhost", 8341, "Vision")
 
     def empty(self,a):
         pass
@@ -294,13 +298,14 @@ class Vision:
         if ret:
             self.setFrameShape(frame)
         else:
-            print("hmmmmmmmmmm")
+            print("Camera ID not found")
         prev_frame_time = 0
         new_frame_time = 0
 
         while True:
-            #global client
-            #client.read()
+            if self.isclient:
+                global client
+                self.client.read()
 
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
                 # Constantly set the exposure of the camera to
@@ -314,10 +319,9 @@ class Vision:
             # Use ball detection function to find the angle to center and right side of the object in both cameras
             Xangle, Yangle, Xangle2 = self.objectDetection(frame,camID)
 
-            #if Xangle != "Obstructed":
-                #print(Xangle)
-                #data = struct.pack(">f", Xangle)
-                #client.send_message("Vision:Xangle", data)
+            if Xangle != "Obstructed" and self.isclient:
+                data = struct.pack(">f", Xangle)
+                self.client.send_message("Vision:Xangle", data)
 
             # Get fps of video feed with processing time
             new_frame_time = time.time()
@@ -430,7 +434,7 @@ class Vision:
 
 
                     # Temporary #
-                    print(accuracy)
+                    #print(accuracy)
                     
                     new_frame_time = time.time()
                     fps = 1/(new_frame_time-prev_frame_time)
