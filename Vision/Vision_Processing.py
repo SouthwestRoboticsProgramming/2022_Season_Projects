@@ -66,6 +66,7 @@ class Vision:
         while i<=10:
             cap = cv2.VideoCapture(i)
             ret, frame = cap.read()
+            cap.release()
 
             if ret:
                 print("Camera port " + str(i) + " works!")
@@ -206,11 +207,7 @@ class Vision:
             angle2X = "Obstructed"
 
 
-        if self.experimental:
-            # cv2.imshow("Result " + str(cameraNumber) + " Instance " + str(self.instanceNumber),frameResult)
-            # cv2.imshow("Binary " + str(cameraNumber) + " Instance " + str(self.instanceNumber),binary)
-            binary3 = cv2.cvtColor(binary,cv2.COLOR_GRAY2BGR)
-            cv2.imshow("Binary3",binary3)
+
 
 
         return(angleX,angleY,angle2X)
@@ -286,7 +283,7 @@ class Vision:
         cap.set(cv2.CAP_PROP_AUTO_EXPOSURE,1)
         
         # Sets a calibration profile to calibrate the cameras on
-        calProfile = self.calibrateCameraInit()
+        #calProfile = self.calibrateCameraInit()
 
         ret, frame = cap.read()
         if ret:
@@ -307,14 +304,14 @@ class Vision:
             ret, frame = cap.read()
 
             # Calibrate every frame using the calibration profile
-            sCam, sCam = self.calibrateCamera(frame,frame,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+            #sCam, sCam = self.calibrateCamera(frame,frame,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
             
             # Use ball detection function to find the angle to center and right side of the object in both cameras
-            Xangle, Yangle, Xangle2 = self.objectDetection(sCam,camID)
+            Xangle, Yangle, Xangle2 = self.objectDetection(frame,camID)
 
-            if Xangle != "Obstructed":
+            #if Xangle != "Obstructed":
                 #print(Xangle)
-                data = struct.pack(">f", Xangle)
+                #data = struct.pack(">f", Xangle)
                 #client.send_message("Vision:Xangle", data)
 
             # Get fps of video feed with processing time
@@ -495,9 +492,9 @@ def singleCamThread(instanceName, camera):
 #t2.start()
 
 vision1 = Vision(1)
-#cams = vision1.scanCameras()
-#print(cams)
-vision1.run_stereo(-2,-2)
+cams = vision1.scanCameras()
+print(cams)
+vision1.run_single_camera(0)
 
 
 #stereo_vision = Vision()
