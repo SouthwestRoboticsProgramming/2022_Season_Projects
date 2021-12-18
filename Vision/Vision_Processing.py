@@ -499,7 +499,7 @@ def singleCamThread(instanceName, camera):
 vision1 = Vision(1)
 cams = vision1.scanCameras()
 print(cams)
-vision1.run_single_camera(0)
+vision1.run_single_camera(-1)
 
 
 #stereo_vision = Vision()
