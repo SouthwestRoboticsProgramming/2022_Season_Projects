@@ -5,13 +5,15 @@ import glob
 import struct
 import threading
 import time
+import sched
 from messengerclient import MessengerClient
 
-#client = MessengerClient("localhost", 8341, "Vision")
+
 
 class Vision:
 
     experimental = True
+    isclient = False
 
     instanceNumber = None
 
@@ -27,22 +29,26 @@ class Vision:
 
 
     # Default values for object detection (Also used for locked mode)
-    h_min = 20
-    h_max = 35
-    s_min = 104
+    h_min = 0
+    h_max = 255
+    s_min = 0
     s_max = 255
-    v_min = 41
-    v_max = 240
+    v_min = 0
+    v_max = 255
     TLow = 0
-    exposure = 5
+    exposure = 0
 
     pixDistanceX = None
     pixDistanceY = None
+
+    if isclient:
+        client = MessengerClient("localhost", 8341, "Vision")
 
     def empty(self,a):
         pass
     
     def __init__(self,instanceName):
+        self.readValues()
 
         if self.experimental:
             
@@ -59,6 +65,22 @@ class Vision:
             cv2.createTrackbar("Thresh Low", "Track Bars " + str(self.instanceNumber), self.TLow , 255, self.empty)
             cv2.createTrackbar("Exposure","Track Bars " + str(self.instanceNumber), self.exposure,200, self.empty)
 
+    def saveValues(self):
+        settings = open('Vision/config.txt','w')
+        values = [str(self.h_min)+"\n",str(self.h_max)+"\n",str(self.s_min)+"\n",str(self.s_max)+"\n",str(self.v_min)+"\n",str(self.v_max)+"\n",str(self.TLow)+"\n",str(self.exposure)]
+        settings.writelines(values)
+        settings.close()
+    def readValues(self):
+        settings = open('config.txt','r')
+        values = settings.readlines()
+        i=0
+        while i <= len(values)-1:
+            values[i] = values[i].strip()
+            i+=1
+        self.h_min, self.h_max, self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure = [int(i) for i in values]
+
+
+
     # Scans camera ports to find working ones
     def scanCameras(self):
         i = -10
@@ -66,6 +88,7 @@ class Vision:
         while i<=10:
             cap = cv2.VideoCapture(i)
             ret, frame = cap.read()
+            cap.release()
 
             if ret:
                 print("Camera port " + str(i) + " works!")
@@ -287,19 +310,22 @@ class Vision:
         cap.set(cv2.CAP_PROP_AUTO_EXPOSURE,1)
         
         # Sets a calibration profile to calibrate the cameras on
-        calProfile = self.calibrateCameraInit()
+        #calProfile = self.calibrateCameraInit()
 
         ret, frame = cap.read()
         if ret:
             self.setFrameShape(frame)
         else:
-            print("hmmmmmmmmmm")
+            print("Camera ID not found")
         prev_frame_time = 0
         new_frame_time = 0
+        count = 0
 
         while True:
-            #global client
-            #client.read()
+            count += 1
+            if self.isclient:
+                global client
+                self.client.read()
 
             if self.experimental: # Allows values to be changed using sliders, also allows windows to be shown.
                 # Constantly set the exposure of the camera to
@@ -308,15 +334,14 @@ class Vision:
             ret, frame = cap.read()
 
             # Calibrate every frame using the calibration profile
-            sCam, sCam = self.calibrateCamera(frame,frame,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+            #sCam, sCam = self.calibrateCamera(frame,frame,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
             
             # Use ball detection function to find the angle to center and right side of the object in both cameras
-            Xangle, Yangle, Xangle2 = self.objectDetection(sCam,camID)
+            Xangle, Yangle, Xangle2 = self.objectDetection(frame,camID)
 
-            if Xangle != "Obstructed":
-                #print(Xangle)
+            if Xangle != "Obstructed" and self.isclient:
                 data = struct.pack(">f", Xangle)
-                #client.send_message("Vision:Xangle", data)
+                self.client.send_message("Vision:Xangle", data)
 
             # Get fps of video feed with processing time
             new_frame_time = time.time()
@@ -349,14 +374,14 @@ class Vision:
 
         ret, frameL = capL.read()
         if ret:
-            sCamL, sCamL = self.calibrateCamera(frameL,frameL,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
-            self.setFrameShape(sCamL)
+            #sCamL, sCamL = self.calibrateCamera(frameL,frameL,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+            self.setFrameShape(frameL)
         else:
             print("Left camera not found")
             ret, frameR = capR.read()
             if ret:
-                sCamR, sCamR = self.calibrateCamera(frameR,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
-                self.setFrameShape(sCamR)
+                #sCamR, sCamR = self.calibrateCamera(frameR,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+                self.setFrameShape(frameR)
             else:
                 print("Right camera not found")
         counterStart = 1000
@@ -380,11 +405,11 @@ class Vision:
             if retL and retR:
 
                 # Calibrate every frame using the calibration profile
-                sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
+                #sCamL, sCamR = self.calibrateCamera(frameL,frameR,calProfile[0],calProfile[1],calProfile[2],calProfile[3])
                 
                 # Use ball detection function to find the angle to center and right side of the object in both cameras
-                XangleL, YangleL, XangleL2 = self.objectDetection(sCamL,"Left")
-                XangleR, YangleR, XangleR2 = self.objectDetection(sCamR,"Right")
+                XangleL, YangleL, XangleL2 = self.objectDetection(frameL,"Left")
+                XangleR, YangleR, XangleR2 = self.objectDetection(frameR,"Right")
 
                 if XangleL == "Obstructed":
                     leftObstruct -=1
@@ -429,7 +454,7 @@ class Vision:
 
 
                     # Temporary #
-                    print(accuracy)
+                    #print(accuracy)
                     
                     new_frame_time = time.time()
                     fps = 1/(new_frame_time-prev_frame_time)
@@ -492,13 +517,14 @@ def singleCamThread(instanceName, camera):
 # vision1 = Vision(1)
 # vision2 = Vision(2)
 
-#t2 = threading.Thread(target=singleCamThread, args=("Laptop camera",-2,))
-#t2.start()
+t2 = threading.Thread(target=singleCamThread, args=("Laptop camera",-2,))
+t2.start()
 
-vision1 = Vision(1)
-#cams = vision1.scanCameras()
-#print(cams)
-vision1.run_stereo(-2,-2)
+#vision1 = Vision(1)
+# cams = vision1.scanCameras()
+# print(cams)
+# vision1.run_single_camera(-1)
+#vision1.run_single_camera(-1)
 
 
 #stereo_vision = Vision()
