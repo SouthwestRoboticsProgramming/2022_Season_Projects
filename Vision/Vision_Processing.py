@@ -71,7 +71,7 @@ class Vision:
         settings.writelines(values)
         settings.close()
     def readValues(self):
-        settings = open('Vision/config.txt','r')
+        settings = open('config.txt','r')
         values = settings.readlines()
         i=0
         while i <= len(values)-1:
@@ -517,14 +517,14 @@ def singleCamThread(instanceName, camera):
 # vision1 = Vision(1)
 # vision2 = Vision(2)
 
-#t2 = threading.Thread(target=singleCamThread, args=("Laptop camera",-2,))
-#t2.start()
+t2 = threading.Thread(target=singleCamThread, args=("Laptop camera",-2,))
+t2.start()
 
-vision1 = Vision(1)
+#vision1 = Vision(1)
 # cams = vision1.scanCameras()
 # print(cams)
 # vision1.run_single_camera(-1)
-vision1.run_single_camera(-1)
+#vision1.run_single_camera(-1)
 
 
 #stereo_vision = Vision()
