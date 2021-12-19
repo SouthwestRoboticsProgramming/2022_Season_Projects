@@ -2,11 +2,7 @@
     margin: 0;
     padding: 0;
 }
-.header{
-    min-height: 100vh;
-    width: 100%;
-    background-color: #510679;
-    background-position: center;
-    background-size:cover;
-    position:relative;
+
+h1{
+    color: orange;
 }
