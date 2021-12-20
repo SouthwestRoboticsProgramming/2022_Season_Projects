@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap');
+
 *{
     margin: 0;
     padding: 0;
@@ -13,11 +16,17 @@ a {text-decoration: none;
     border-bottom: 1px solid greenyellow
 }
 
+.team-number {
+    font-family: 'Bebas Neue', cursive;
+    color: white;
+}
+
 .navbar{
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
+    background-color: #510679;
 }
 
 .nav-logo{
@@ -51,9 +60,11 @@ a {text-decoration: none;
 }
 
 .nav-link {
-    font-size: 1.6rem;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
     font-weight: 400;
-    color: #000000ff;;
+    color: white;
+    padding-left: 1.5rem;
 }
 
 .nav-link:hover {
@@ -64,6 +75,10 @@ a {text-decoration: none;
     font-size: 2.1rem;
     font-weight: 500;
     color: orange;
+}
+
+#go-home {
+    padding-left: 0;
 }
 
 @media only screen and (max-width: 768px) {
