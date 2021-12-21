@@ -14,8 +14,10 @@ class Vision:
 
     experimental = True
     isclient = False
+    saveVideo = False
 
     instanceNumber = None
+    savedVideo = None
 
     baseline = 7.38 # Distance between cameras (Units here affect distance units)
     alpha = 59.7 # Horizontal FOV in degrees
@@ -49,10 +51,10 @@ class Vision:
     
     def __init__(self,instanceName):
         self.readValues()
+        self.instanceNumber = instanceName
 
         if self.experimental:
             
-            self.instanceNumber = instanceName
             # Create sliders
             cv2.namedWindow("Track Bars " + str(self.instanceNumber))
             cv2.resizeWindow("Track Bars " + str(self.instanceNumber), 1000,500)
@@ -64,6 +66,10 @@ class Vision:
             cv2.createTrackbar("Value Max","Track Bars " + str(self.instanceNumber),self.v_max,255,self.empty)
             cv2.createTrackbar("Thresh Low", "Track Bars " + str(self.instanceNumber), self.TLow , 255, self.empty)
             cv2.createTrackbar("Exposure","Track Bars " + str(self.instanceNumber), self.exposure,200, self.empty)
+        
+        if self.saveValues:
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            self.savedVideo = cv2.VideoWriter("/Vision/SavedGames/" + str(instanceName)+"_"+str(time.time), fourcc, 30,(320,240))
 
     def saveValues(self):
         settings = open('Vision/config.txt','w')
@@ -71,7 +77,7 @@ class Vision:
         settings.writelines(values)
         settings.close()
     def readValues(self):
-        settings = open('config.txt','r')
+        settings = open('Vision/config.txt','r')
         values = settings.readlines()
         i=0
         while i <= len(values)-1:
@@ -228,13 +234,15 @@ class Vision:
             angleY = "Obstructed"
             angle2X = "Obstructed"
 
+        binary3 = cv2.cvtColor(binary,cv2.COLOR_GRAY2BGR)
+        stacked = np.hstack((binary3,frameResult))
 
         if self.experimental:
             # cv2.imshow("Result " + str(cameraNumber) + " Instance " + str(self.instanceNumber),frameResult)
             # cv2.imshow("Binary " + str(cameraNumber) + " Instance " + str(self.instanceNumber),binary)
-            binary3 = cv2.cvtColor(binary,cv2.COLOR_GRAY2BGR)
-            stacked = np.hstack((binary3,frameResult))
             cv2.imshow("Camera " + str(cameraNumber) + " Instance " + str(self.instanceNumber),stacked)
+        if self.saveVideo:
+            self.savedVideo.write(stacked)
 
 
         return(angleX,angleY,angle2X)
@@ -347,7 +355,7 @@ class Vision:
             new_frame_time = time.time()
             fps = 1/(new_frame_time-prev_frame_time)
             prev_frame_time = new_frame_time
-            print(fps)
+            #print(fps)
 
             # Creating 'q' as the quit button for the webcam
             if cv2.waitKey(1) & 0xFF == ord('q'):
