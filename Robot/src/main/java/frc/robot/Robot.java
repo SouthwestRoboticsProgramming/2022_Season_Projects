@@ -1,6 +1,8 @@
 package frc.robot;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import frc.lib.ADIS16448_IMU.IMUAxis;
 import frc.messenger.client.MessengerClient;
 import frc.robot.path.PathFollower;
 import frc.robot.path.Point;
+import frc.robot.util.Vec2d;
 
 public final class Robot extends TimedRobot {
   private DriveTrain driveTrain;
@@ -24,11 +27,12 @@ public final class Robot extends TimedRobot {
   private PathFollower pathFollower;
   private List<Point> path;
   private MessengerClient msg;
+  private Input input;
 
   @Override
   public void robotInit() {
     XboxController controller = new XboxController(0);
-    Input input = new Input(controller);
+    input = new Input(controller);
     
     driveTrain = new DriveTrain();
     driveController = new DriveController(driveTrain, input);
@@ -44,6 +48,8 @@ public final class Robot extends TimedRobot {
     path.add(new Point(0, 0));
 
     msg = new MessengerClient(Constants.RPI_ADDRESS, Constants.RPI_PORT, "RoboRIO");
+    msg.listen("Vision:Xangle");
+    msg.setCallback(this::messageCallback);
   }
 
   @Override
@@ -91,11 +97,38 @@ public final class Robot extends TimedRobot {
     //pathFollower.setPath(path);
   }
 
+  private double visionAngle = 0;
+
   @Override
   public void autonomousPeriodic() {
     //pathFollower.update();
-    if (pathFollower.isDone()) {
-      pathFollower.setPath(path);
+    //if (pathFollower.isDone()) {
+    //  pathFollower.setPath(path);
+      double gyroAngle = gyro.getAngle()%360;
+      double visionDiff = gyroAngle + visionAngle;
+
+      if (visionDiff>5){
+        driveTrain.driveMotors(.3,-.3);
+      } else if (visionDiff<-5){
+        driveTrain.driveMotors(-.3,.3);
+      } else {
+        driveTrain.driveMotors(.3, .3);
+      }
+    }
+
+
+  private void messageCallback(String type, byte[] data) {
+    if (type.equals("Vision:Xangle")) {
+      try {
+      ByteArrayInputStream b = new ByteArrayInputStream(data);
+      DataInputStream in = new DataInputStream(b);
+
+      visionAngle = in.readDouble();
+
+      in.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -104,7 +137,22 @@ public final class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    driveController.update();
+    Vec2d drive = driveController.update();
+
+    if (input.pointAtTarget()) {
+      double gyroAngle = gyro.getAngle()%360;
+      double visionDiff = gyroAngle + visionAngle;
+
+      if (visionDiff>5){
+        driveTrain.driveMotors(drive.x + .2, drive.y - .2);
+      } else if (visionDiff<-5){
+        driveTrain.driveMotors(drive.x - .2, drive.y + .2);
+      } else {
+        driveTrain.driveMotors(drive.x, drive.y);
+      }
+    } else {
+      driveTrain.driveMotors(drive.x, drive.y);
+    }
   }
 
   @Override
