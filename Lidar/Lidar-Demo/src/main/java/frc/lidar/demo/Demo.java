@@ -13,10 +13,20 @@ import java.util.*;
 
 public class Demo extends PApplet {
     private MessengerClient msg;
-    private Set<ScanEntry> scan, newScan;
+    private Set<Point> scan, newScan;
     private float scale = 0.5f;
     private float tx = 0, ty = 0;
     private double rx, ry, rangle;
+
+    private static class Point {
+        float x;
+        float y;
+
+        public Point(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
 
     @Override
     public void settings() {
@@ -57,7 +67,10 @@ public class Demo extends PApplet {
 
                     if (quality == 0 || distance == 0) break;
 
-                    newScan.add(new ScanEntry(quality, angle, distance));
+                    float x = (float) (Math.cos(-Math.toRadians(angle)) * distance) - (float) rx * 1000;
+                    float y = (float) (Math.sin(-Math.toRadians(angle)) * distance) - (float) ry * 1000;
+
+                    newScan.add(new Point(x, y));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -69,7 +82,6 @@ public class Demo extends PApplet {
                     rx = in.readDouble();
                     ry = in.readDouble();
                     rangle = in.readDouble();
-                    System.out.println(rangle);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -85,7 +97,7 @@ public class Demo extends PApplet {
         background(0);
         translate(width / 2f, height / 2f);
 
-        scale(scale);
+        scale(scale, -scale);
         translate(tx, ty);
 
         stroke(64);
@@ -97,27 +109,25 @@ public class Demo extends PApplet {
         stroke(255, 0, 0);
         strokeWeight(8 / scale);
 
-        List<ScanEntry> scanList = new ArrayList<>(scan);
-        scanList.sort(Comparator.comparingDouble(ScanEntry::getAngle));
+        List<Point> scanList = new ArrayList<>(scan);
+        scanList.sort(Comparator.comparingDouble((p) -> {
+            return Math.atan2(p.y, p.x);
+        }));
 
         beginShape(POINTS);
-        for (ScanEntry entry : scanList) {
-            float x = (float) (Math.cos(Math.toRadians(entry.getAngle())) * entry.getDistance());
-            float y = (float) (Math.sin(Math.toRadians(entry.getAngle())) * entry.getDistance());
-
-            vertex(x, y);
+        for (Point entry : scanList) {
+            vertex(entry.x, entry.y);
         }
         endShape();
 
         strokeWeight(3 / scale);
-        beginShape();
-        for (ScanEntry entry : scanList) {
-            float x = (float) (Math.cos(Math.toRadians(entry.getAngle())) * entry.getDistance());
-            float y = (float) (Math.sin(Math.toRadians(entry.getAngle())) * entry.getDistance());
+//        beginShape();
+//        for (Point entry : scanList) {
+//            vertex(entry.x, entry.y);
+//        }
+//        endShape(CLOSE);
 
-            vertex(x, y);
-        }
-        endShape(CLOSE);
+        translate((float) rx * 1000, (float) ry * 1000);  // Convert from meters to millimeters
 
         noFill();
         stroke(255);
@@ -125,8 +135,10 @@ public class Demo extends PApplet {
 
         fill(255);
         stroke(255);
-        rotate((float) -rangle - PI / 2);
+        rotate((float) rangle + PI / 2);
         triangle(-40, 200, 40, 200, 0, -200);
+
+        System.out.println(rx + " " + ry);
     }
 
     @Override
