@@ -29,3 +29,6 @@ A library that allows the robot to autonomously calculate paths through the envi
 
 ### Robot
 A simplified version of the mini robot code for testing things.
+
+### SwerveRobot
+Code for the swerve module prototype robot.
