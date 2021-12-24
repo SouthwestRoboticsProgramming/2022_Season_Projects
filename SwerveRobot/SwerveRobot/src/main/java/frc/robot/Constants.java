@@ -12,4 +12,17 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+
+// All distance measurements should be in meters
+public final class Constants {
+    
+    public static final int MAIN_DRIVER_CONTROLLER_ID = 0;
+
+    public static final int SIM_BACK_LEFT_ID = 11;
+	public static final int SIM_BACK_RIGHT_ID = 12;
+	public static final int SIM_FRONT_LEFT_ID = 10;
+	public static final int SIM_FRONT_RIGHT_ID = 9;
+    
+
+
+}
