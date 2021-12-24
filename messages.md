@@ -27,6 +27,17 @@ Runs on the Raspberry Pi.
 | `Lidar:ScanStart` | No data | Indicates that a new round of scanning has started. |
 | `Lidar:Scan` | `int quality`: Quality of the measurement from 0 to 15<br/>`double angle`: Angle in counterclockwise radians<br/>`double distance`: Distance from the lidar in millimeters<br/>A quality or distance of 0 indicates an invalid scan. | One measurement from the lidar sensor. |
 
+### Vision
+Runs on the Jetson Nano.
+
+###### Messages Read
+No messages read
+
+###### Messages Sent
+| Message | Data format | Description |
+| --- | --- | --- |
+| `Vision:Xangle` | `float angle`: Angle to the object detected by vision | The angle to the object detected by vision. |
+
 ### TaskManager
 Runs on all processors that need task management. (Raspberry Pi and Jetson Nano)
 
