@@ -21,6 +21,7 @@ public class SwerveModule {
 
     private double currentAngle = 0;
     private double targetAngle = 0;
+    private boolean flipDriveAmt = false;
 
     public SwerveModule(int drivePort, int turnPort) {
         driveMotor = new WPI_TalonSRX(drivePort);
@@ -61,13 +62,25 @@ public class SwerveModule {
 
     public void drive(double amount) {
         amount = Utils.clamp(amount, -1, 1);
+        if (flipDriveAmt) {
+            amount = -amount;
+        }
+        
         //driveMotor.set(ControlMode.PercentOutput, amount);
     }
 
     public void update() {
         // TODO: Calculate currentAngle from encoder measurements
 
-        double amount = turnPID.calculate(currentAngle, targetAngle);
+        double oppositeAngle = Utils.normalizeAngle(targetAngle + Math.PI);
+
+        double normalDiff = Utils.normalizeAngle(currentAngle - targetAngle);
+        double oppositeDiff = Utils.normalizeAngle(currentAngle - oppositeAngle);
+
+        flipDriveAmt = normalDiff < oppositeDiff;
+        double target = flipDriveAmt ? targetAngle : oppositeAngle;
+
+        double amount = turnPID.calculate(currentAngle, target);
         amount = Utils.clamp(amount, -1, 1);
         //turnMotor.set(ControlMode.PercentOutput, amount);
     }
