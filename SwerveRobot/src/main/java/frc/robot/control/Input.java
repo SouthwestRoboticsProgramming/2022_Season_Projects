@@ -14,4 +14,8 @@ public class Input {
     public double getDriveY() {
         return controller.getLeftStickY();
     }
+
+    public double getRot() {
+        return controller.getRightStickX();
+    }
 }
