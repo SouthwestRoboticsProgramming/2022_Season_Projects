@@ -2,14 +2,14 @@ package frc.robot;
 
 public final class Constants {
     // TODO: Get these values from the robot
-    public static final int DRIVE_PORT_1 = -1;
-    public static final int DRIVE_PORT_2 = -1;
-    public static final int DRIVE_PORT_3 = -1;
-    public static final int DRIVE_PORT_4 = -1;
-    public static final int TURN_PORT_1 = -1;
-    public static final int TURN_PORT_2 = -1;
-    public static final int TURN_PORT_3 = -1;
-    public static final int TURN_PORT_4 = -1;
+    public static final int DRIVE_PORT_1 = 8;
+    public static final int DRIVE_PORT_2 = 7;
+    public static final int DRIVE_PORT_3 = 5;
+    public static final int DRIVE_PORT_4 = 6;
+    public static final int TURN_PORT_1 = 11;
+    public static final int TURN_PORT_2 = 10;
+    public static final int TURN_PORT_3 = 9;
+    public static final int TURN_PORT_4 = 12;
 
     public static final double JOYSTICK_DEAD_ZONE = 0.1;
 
