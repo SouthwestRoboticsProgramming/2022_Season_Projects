@@ -25,6 +25,7 @@ public class SwerveDriveController {
 
         // Find the angle of the joystick
         double angle = Math.atan2(driveY, driveX);
+        System.out.println(angle);
 
         // Turn the wheels towards the angle
         drive.setWheelTargetAngle(angle);

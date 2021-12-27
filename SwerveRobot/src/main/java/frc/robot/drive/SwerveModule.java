@@ -66,7 +66,7 @@ public class SwerveModule {
             amount = -amount;
         }
         
-        //driveMotor.set(ControlMode.PercentOutput, amount);
+        driveMotor.set(ControlMode.PercentOutput, amount);
     }
 
     public void update() {
@@ -82,6 +82,6 @@ public class SwerveModule {
 
         double amount = turnPID.calculate(currentAngle, target);
         amount = Utils.clamp(amount, -1, 1);
-        //turnMotor.set(ControlMode.PercentOutput, amount);
+        turnMotor.set(ControlMode.PercentOutput, amount);
     }
 }
