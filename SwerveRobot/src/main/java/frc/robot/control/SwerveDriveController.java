@@ -13,8 +13,12 @@ public class SwerveDriveController {
     public SwerveDriveController(SwerveDrive drive, Input input) {
         this.drive = drive;
         this.input = input;
-        this.drive.setWheelTargetAngle(Constants.STARTING_WHEEL_ANGLE);
-        this.drive.update();
+    }
+
+    public void swerveInit(){
+        double startingAngle = Constants.STARTING_WHEEL_ANGLE;
+        drive.setWheelTargetAngle(startingAngle);
+        drive.update();
     }
 
     public void update() {

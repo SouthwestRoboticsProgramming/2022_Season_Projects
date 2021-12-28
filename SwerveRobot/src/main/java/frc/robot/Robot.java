@@ -16,6 +16,7 @@ public class Robot extends TimedRobot {
 
     drive = new SwerveDrive();
     driveController = new SwerveDriveController(drive, input);
+    driveController.swerveInit();
   }
 
   @Override
