@@ -4,6 +4,8 @@ import frc.robot.drive.SwerveDrive;
 
 import static frc.robot.Constants.JOYSTICK_DEAD_ZONE;
 
+import frc.robot.Constants;
+
 public class SwerveDriveController {
     private final SwerveDrive drive;
     private final Input input;
@@ -11,6 +13,8 @@ public class SwerveDriveController {
     public SwerveDriveController(SwerveDrive drive, Input input) {
         this.drive = drive;
         this.input = input;
+        this.drive.setWheelTargetAngle(Constants.STARTING_WHEEL_ANGLE);
+        this.drive.update();
     }
 
     public void update() {
@@ -28,7 +32,7 @@ public class SwerveDriveController {
         //System.out.println(angle);
 
         // Turn the wheels towards the angle
-        // DON'T LEAVE THIS COMMENTED OUT YOU BAFFOON drive.setWheelTargetAngle(angle);
+        drive.setWheelTargetAngle(angle);
 
         if (drive.wheelsAtTargetAngle()) {
             // If at the angle, drive

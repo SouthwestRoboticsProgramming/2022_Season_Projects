@@ -23,4 +23,5 @@ public final class Constants {
     public static final double WHEEL_TURN_KD = 0.025;
 
     public static final double WHEEL_TURN_TOLERANCE = 10; // In degrees
+	public static final double STARTING_WHEEL_ANGLE = 0;
 }

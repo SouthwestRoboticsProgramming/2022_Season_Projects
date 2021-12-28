@@ -73,12 +73,9 @@ public class SwerveModule {
     }
 
     public void update() {
-        // TODO: Calculate currentAngle from encoder measurements
-        double currentTicks = turnMotor.getSelectedSensorPosition();
-        //System.out.println(currentTicks);
 
-        double absValue = canCoder.getPosition();
-        System.out.println(absValue);
+        double rotPos = canCoder.getPosition();
+        currentAngle = Math.toRadians(rotPos);
 
         double oppositeAngle = Utils.normalizeAngle(targetAngle + Math.PI);
 
@@ -90,6 +87,6 @@ public class SwerveModule {
 
         double amount = turnPID.calculate(currentAngle, target);
         amount = Utils.clamp(amount, -1, 1);
-        //turnMotor.set(ControlMode.PercentOutput, amount);
+        turnMotor.set(ControlMode.PercentOutput, amount);
     }
 }
