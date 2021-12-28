@@ -11,7 +11,7 @@ public final class Constants {
     public static final int TURN_PORT_3 = 9;
     public static final int TURN_PORT_4 = 12;
 
-    public static final double JOYSTICK_DEAD_ZONE = 0.01;
+    public static final double JOYSTICK_DEAD_ZONE = 0.05;
 	public static final int DRIVE_CONTROLLER = 0;
 
     public static final double WHEEL_TURN_KP = 0.25;

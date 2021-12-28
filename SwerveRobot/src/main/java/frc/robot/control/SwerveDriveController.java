@@ -16,10 +16,9 @@ public class SwerveDriveController {
     public void update() {
         double driveX = input.getDriveX();
         double driveY = input.getDriveY();
-        System.out.println(driveY);
 
         // Don't do anything if the control is within the dead zone
-        if (driveX < JOYSTICK_DEAD_ZONE && driveY < JOYSTICK_DEAD_ZONE) {
+        if (Math.abs(driveX) < JOYSTICK_DEAD_ZONE && Math.abs(driveY) < JOYSTICK_DEAD_ZONE) {
             // Make sure the wheels are not driving
             drive.driveWheels(0);
         }
@@ -29,7 +28,7 @@ public class SwerveDriveController {
         //System.out.println(angle);
 
         // Turn the wheels towards the angle
-        drive.setWheelTargetAngle(angle);
+        // DON'T LEAVE THIS COMMENTED OUT YOU BAFFOON drive.setWheelTargetAngle(angle);
 
         if (drive.wheelsAtTargetAngle()) {
             // If at the angle, drive
@@ -38,5 +37,7 @@ public class SwerveDriveController {
             // Otherwise, don't try to drive if the wheels aren't ready
             drive.driveWheels(0);
         }
+
+        drive.update();
     }
 }
