@@ -15,10 +15,10 @@ public class SwerveDrive {
     private final SwerveModule w1, w2, w3, w4;
 
     public SwerveDrive() {
-        w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1);
-        w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2);
-        w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3);
-        w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4);
+        w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1, 0);
+        w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2, 0);
+        w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3, 0);
+        w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4, 0);
     }
 
     public void setWheelTargetAngle(double angle) {

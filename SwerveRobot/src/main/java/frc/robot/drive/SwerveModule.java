@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.util.Utils;
@@ -17,15 +18,17 @@ import static frc.robot.Constants.*;
 public class SwerveModule {
     private final WPI_TalonSRX driveMotor;
     private final WPI_TalonSRX turnMotor;
+    private final CANCoder canCoder;
     private final PIDController turnPID;
 
     private double currentAngle = 0;
     private double targetAngle = 0;
     private boolean flipDriveAmt = false;
 
-    public SwerveModule(int drivePort, int turnPort) {
+    public SwerveModule(int drivePort, int turnPort, int canPort) {
         driveMotor = new WPI_TalonSRX(drivePort);
         turnMotor = new WPI_TalonSRX(turnPort);
+        canCoder = new CANCoder(canPort);
 
         TalonSRXConfiguration config = new TalonSRXConfiguration();
         config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
