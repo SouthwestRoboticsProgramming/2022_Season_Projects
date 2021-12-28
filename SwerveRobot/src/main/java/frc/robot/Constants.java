@@ -10,7 +10,11 @@ public final class Constants {
     public static final int TURN_PORT_2 = 10;
     public static final int TURN_PORT_3 = 9;
     public static final int TURN_PORT_4 = 12;
-
+    public static final int CAN_PORT_1 = 2;
+    public static final int CAN_PORT_2 = 4;
+    public static final int CAN_PORT_3 = 3;
+    public static final int CAN_PORT_4 = 1;
+    
     public static final double JOYSTICK_DEAD_ZONE = 0.05;
 	public static final int DRIVE_CONTROLLER = 0;
 
