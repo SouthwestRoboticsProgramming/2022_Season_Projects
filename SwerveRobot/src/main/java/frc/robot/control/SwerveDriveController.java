@@ -15,11 +15,6 @@ public class SwerveDriveController {
         this.input = input;
     }
 
-    public void swerveInit(){
-        double startingAngle = Constants.STARTING_WHEEL_ANGLE;
-        drive.setWheelTargetAngle(startingAngle);
-        drive.update();
-    }
 
     public void update() {
         double driveX = input.getDriveX();
@@ -29,6 +24,9 @@ public class SwerveDriveController {
         if (Math.abs(driveX) < JOYSTICK_DEAD_ZONE && Math.abs(driveY) < JOYSTICK_DEAD_ZONE) {
             // Make sure the wheels are not driving
             drive.driveWheels(0);
+            // Set each of the wheels to starting value
+            drive.setWheelTargetAngle(Constants.STARTING_WHEEL_ANGLE);
+            drive.update();
         }
 
         // Find the angle of the joystick

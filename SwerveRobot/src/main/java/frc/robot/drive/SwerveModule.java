@@ -69,13 +69,14 @@ public class SwerveModule {
             amount = -amount;
         }
         
-        //driveMotor.set(ControlMode.PercentOutput, amount);
+        driveMotor.set(ControlMode.PercentOutput, amount);
     }
 
     public void update() {
 
         double rotPos = canCoder.getPosition();
-        currentAngle = Math.toRadians(rotPos);
+        System.out.println(Math.toDegrees(Utils.normalizeAngle(Math.toRadians(currentAngle))));
+        currentAngle = Utils.normalizeAngle(Math.toRadians(rotPos));
 
         double oppositeAngle = Utils.normalizeAngle(targetAngle + Math.PI);
 
@@ -83,7 +84,7 @@ public class SwerveModule {
         double oppositeDiff = Utils.normalizeAngle(currentAngle - oppositeAngle);
 
         flipDriveAmt = normalDiff < oppositeDiff;
-        double target = flipDriveAmt ? targetAngle : oppositeAngle;
+        double target = targetAngle;//flipDriveAmt ? targetAngle : oppositeAngle;
 
         double amount = turnPID.calculate(currentAngle, target);
         amount = Utils.clamp(amount, -1, 1);
