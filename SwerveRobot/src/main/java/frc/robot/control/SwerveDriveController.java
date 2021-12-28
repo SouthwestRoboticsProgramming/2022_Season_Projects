@@ -16,6 +16,7 @@ public class SwerveDriveController {
     public void update() {
         double driveX = input.getDriveX();
         double driveY = input.getDriveY();
+        System.out.println(driveY);
 
         // Don't do anything if the control is within the dead zone
         if (driveX < JOYSTICK_DEAD_ZONE && driveY < JOYSTICK_DEAD_ZONE) {
@@ -25,7 +26,7 @@ public class SwerveDriveController {
 
         // Find the angle of the joystick
         double angle = Math.atan2(driveY, driveX);
-        System.out.println(angle);
+        //System.out.println(angle);
 
         // Turn the wheels towards the angle
         drive.setWheelTargetAngle(angle);

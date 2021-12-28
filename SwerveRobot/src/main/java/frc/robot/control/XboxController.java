@@ -35,7 +35,7 @@ public final class XboxController {
     }
 
     public double getLeftStickY() {
-        return joystick.getRawAxis(1);
+        return -joystick.getRawAxis(1);
     }
 
     public double getRightStickX() {
@@ -43,7 +43,7 @@ public final class XboxController {
     }
 
     public double getRightStickY() {
-        return joystick.getRawAxis(5);
+        return -joystick.getRawAxis(5);
     }
 
     public double getLeftTrigger() {
