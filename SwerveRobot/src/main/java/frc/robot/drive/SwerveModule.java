@@ -74,6 +74,8 @@ public class SwerveModule {
 
     public void update() {
         // TODO: Calculate currentAngle from encoder measurements
+        double currentTicks = turnMotor.getSelectedSensorPosition();
+        System.out.println(currentTicks);
 
         double oppositeAngle = Utils.normalizeAngle(targetAngle + Math.PI);
 
