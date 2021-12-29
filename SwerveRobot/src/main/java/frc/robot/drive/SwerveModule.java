@@ -30,7 +30,7 @@ public class SwerveModule {
 
     public SwerveModule(int drivePort, int turnPort, int canPort) {
         // TEMPORARY
-        printAngle = turnPort == TURN_PORT_1;
+        printAngle = turnPort == TURN_PORT_4;
 
         driveMotor = new WPI_TalonSRX(drivePort);
         turnMotor = new WPI_TalonSRX(turnPort);
@@ -53,12 +53,13 @@ public class SwerveModule {
         driveMotor.setSelectedSensorPosition(0, 0, 30);
         driveMotor.stopMotor();
 
-        turnMotor.setNeutralMode(NeutralMode.Brake);
+        //turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setSelectedSensorPosition(0, 0, 30);
         turnMotor.stopMotor();
 
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
+        turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
     }
 
     public void setTargetAngle(double angle) {
@@ -93,10 +94,19 @@ public class SwerveModule {
         flipDriveAmt = normalDiff < oppositeDiff;
         double target = targetAngle;//flipDriveAmt ? targetAngle : oppositeAngle;
 
+        // System.out.print("Target angle: ");
+        // System.out.print(target);
+        
+        
         double amount = turnPID.calculate(currentAngle, target);
         amount = Utils.clamp(amount, -1, 1);
-        //turnMotor.set(ControlMode.PercentOutput, amount);
+        //double amount = 0.05 * Math.signum(Utils.normalizeAngle(target-currentAngle));
+        turnMotor.set(ControlMode.PercentOutput, amount);
 
-        turnMotor.set(ControlMode.PercentOutput, 0.25);
+        //turnMotor.set(ControlMode.PercentOutput, 0.25);
+    }
+
+    public void disable() {
+        turnPID.reset();
     }
 }

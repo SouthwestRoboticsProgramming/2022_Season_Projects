@@ -22,10 +22,10 @@ public class SwerveDrive {
     }
 
     public void setWheelTargetAngle(double angle) {
-        w1.setTargetAngle(angle);
-        w2.setTargetAngle(angle);
-        w3.setTargetAngle(angle);
-        w4.setTargetAngle(angle);
+        w1.setTargetAngle(angle + STARTING_POS_1);
+        w2.setTargetAngle(angle + STARTING_POS_2);
+        w3.setTargetAngle(angle + STARTING_POS_3);
+        w4.setTargetAngle(angle + STARTING_POS_4);
     }
 
     public boolean wheelsAtTargetAngle() {
@@ -47,5 +47,12 @@ public class SwerveDrive {
         w2.update();
         w3.update();
         w4.update();
+    }
+
+    public void disable() {
+        w1.disable();
+        w2.disable();
+        w3.disable();
+        w4.disable();
     }
 }
