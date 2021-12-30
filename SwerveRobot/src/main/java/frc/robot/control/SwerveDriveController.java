@@ -21,6 +21,7 @@ public class SwerveDriveController {
         double driveY = input.getDriveY();
 
 
+        double angle = Math.atan2(driveY, driveX);
         double driveAmount = Math.sqrt(driveX * driveX + driveY * driveY);
         // Don't do anything if the control is within the dead zone
         if (Math.abs(driveAmount) < JOYSTICK_DEAD_ZONE) {
@@ -28,14 +29,14 @@ public class SwerveDriveController {
             drive.driveWheels(0);
             // Set each of the wheels to starting value
             drive.setWheelTargetAngle(Constants.STARTING_WHEEL_ANGLE);
+        } else {
+            drive.setWheelTargetAngle(angle);
         }
 
         // Find the angle of the joystick
-        double angle = Math.atan2(driveY, driveX);
-        System.out.println(driveAmount);
+        //System.out.println(driveAmount);
 
         // Turn the wheels towards the angle
-        drive.setWheelTargetAngle(angle);
 
         if (drive.wheelsAtTargetAngle()) {
             // If at the angle, check if the stick is in the deadzone

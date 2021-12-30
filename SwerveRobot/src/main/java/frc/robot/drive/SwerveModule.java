@@ -30,7 +30,10 @@ public class SwerveModule {
 
     public SwerveModule(int drivePort, int turnPort, int canPort) {
         // TEMPORARY
-        printAngle = turnPort == TURN_PORT_4;
+        // printAngle = turnPort == TURN_PORT_4;
+        // printAngle = turnPort == TURN_PORT_3;
+        // printAngle = turnPort == TURN_PORT_2;
+        printAngle = turnPort == TURN_PORT_1;
 
         driveMotor = new WPI_TalonSRX(drivePort);
         turnMotor = new WPI_TalonSRX(turnPort);
@@ -81,7 +84,7 @@ public class SwerveModule {
         currentAngle = Utils.normalizeAngle(Math.toRadians(rotPos));
 
         if (printAngle) {
-            //System.out.println(Math.toDegrees(Utils.normalizeAngle(currentAngle)));
+            System.out.println(rotPos);
         }
 
         double target = targetAngle;
