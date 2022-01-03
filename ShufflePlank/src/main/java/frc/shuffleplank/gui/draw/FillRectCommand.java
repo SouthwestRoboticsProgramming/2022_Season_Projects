@@ -1,13 +1,14 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui.draw;
 
+import frc.shuffleplank.gui.draw.DrawCommand;
 import processing.core.PApplet;
 
-public class DrawRectCommand implements DrawCommand {
+public class FillRectCommand implements DrawCommand {
     private final float x, y;
     private final float w, h;
     private final int col;
 
-    public DrawRectCommand(float x, float y, float w, float h, int col) {
+    public FillRectCommand(float x, float y, float w, float h, int col) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -17,8 +18,8 @@ public class DrawRectCommand implements DrawCommand {
 
     @Override
     public void draw(PApplet p) {
-        p.noFill();
-        p.stroke(col);
+        p.noStroke();
+        p.fill(col);
         p.rect(x, y, w, h);
     }
 }

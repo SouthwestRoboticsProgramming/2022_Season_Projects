@@ -1,17 +1,16 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui.draw;
 
 import processing.core.PApplet;
 
-public class FillRectCommand implements DrawCommand {
+public class DrawTextCommand implements DrawCommand {
+    private final String str;
     private final float x, y;
-    private final float w, h;
     private final int col;
 
-    public FillRectCommand(float x, float y, float w, float h, int col) {
+    public DrawTextCommand(String str, float x, float y, int col) {
+        this.str = str;
         this.x = x;
         this.y = y;
-        this.w = w;
-        this.h = h;
         this.col = col;
     }
 
@@ -19,6 +18,6 @@ public class FillRectCommand implements DrawCommand {
     public void draw(PApplet p) {
         p.noStroke();
         p.fill(col);
-        p.rect(x, y, w, h);
+        p.text(str, x, y);
     }
 }

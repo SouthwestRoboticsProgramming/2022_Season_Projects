@@ -1,5 +1,6 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui.draw;
 
+import frc.shuffleplank.ShufflePlank;
 import processing.core.PApplet;
 
 import java.util.ArrayList;

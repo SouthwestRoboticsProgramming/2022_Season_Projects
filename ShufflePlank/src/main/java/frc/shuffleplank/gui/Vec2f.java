@@ -1,4 +1,4 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui;
 
 public class Vec2f {
     public float x;

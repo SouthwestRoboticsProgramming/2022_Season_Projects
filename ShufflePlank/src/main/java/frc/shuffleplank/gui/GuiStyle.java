@@ -1,4 +1,6 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui;
+
+import frc.shuffleplank.ShufflePlank;
 
 public class GuiStyle {
     public float headerSize = 20;

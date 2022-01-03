@@ -1,4 +1,4 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui.draw;
 
 import processing.core.PApplet;
 

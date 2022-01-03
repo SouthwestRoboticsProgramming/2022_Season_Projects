@@ -1,4 +1,9 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui;
+
+import frc.shuffleplank.gui.event.Event;
+import frc.shuffleplank.gui.event.MouseMovedEvent;
+import frc.shuffleplank.gui.event.MousePressedEvent;
+import frc.shuffleplank.gui.event.MouseReleasedEvent;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

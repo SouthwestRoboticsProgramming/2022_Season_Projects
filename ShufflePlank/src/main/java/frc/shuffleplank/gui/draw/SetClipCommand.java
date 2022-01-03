@@ -1,5 +1,6 @@
-package frc.shuffleplank;
+package frc.shuffleplank.gui.draw;
 
+import frc.shuffleplank.gui.draw.DrawCommand;
 import processing.core.PApplet;
 
 public class SetClipCommand implements DrawCommand {

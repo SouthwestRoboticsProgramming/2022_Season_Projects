@@ -1,5 +1,6 @@
 package frc.shuffleplank;
 
+import frc.shuffleplank.gui.GuiContext;
 import processing.core.PApplet;
 import processing.core.PFont;
 
