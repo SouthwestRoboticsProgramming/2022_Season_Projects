@@ -3,6 +3,8 @@ package frc.shuffleplank;
 import processing.core.PApplet;
 import processing.core.PFont;
 
+import java.io.IOException;
+
 public final class ShufflePlank extends PApplet {
     public static ShufflePlank instance;
 
@@ -23,8 +25,12 @@ public final class ShufflePlank extends PApplet {
     public void setup() {
         gui = new GuiContext();
 
-        PFont font = loadFont("data/PTSans-Regular-14.vlw");
-        textFont(font);
+        try {
+            PFont font = new PFont(getClass().getResourceAsStream("/PTSans-Regular-14.vlw"));
+            textFont(font);
+        } catch (IOException e) {
+            System.err.println("Failed to load custom font. Default font will be used.");
+        }
     }
 
     @Override
