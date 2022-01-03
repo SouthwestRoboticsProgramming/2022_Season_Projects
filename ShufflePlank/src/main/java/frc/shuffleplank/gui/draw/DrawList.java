@@ -16,6 +16,8 @@ public class DrawList {
     public void drawLine(float x1, float y1, float x2, float y2, int col) { cmds.add(new DrawLineCommand(x1, y1, x2, y2, col)); }
     public void drawRect(float x, float y, float w, float h, int col) { cmds.add(new DrawRectCommand(x, y, w, h, col)); }
     public void fillRect(float x, float y, float w, float h, int col) { cmds.add(new FillRectCommand(x, y, w, h, col)); }
+    public void drawRoundRect(float x, float y, float w, float h, float round, int col) { cmds.add(new DrawRoundRectCommand(x, y, w, h, round, col)); }
+    public void fillRoundRect(float x, float y, float w, float h, float round, int col) { cmds.add(new FillRoundRectCommand(x, y, w, h, round, col)); }
     public void setClip(float x, float y, float w, float h) { cmds.add(new SetClipCommand(x, y, w, h)); }
     public void noClip() { cmds.add(new SetClipCommand(0, 0, ShufflePlank.instance.width, ShufflePlank.instance.height)); }
     public void drawText(String str, float x, float y, int c) { cmds.add(new DrawTextCommand(str, x, y, c)); }

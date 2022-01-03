@@ -118,14 +118,21 @@ public class GuiContext {
         float h = win.h;
 
         // Draw header
-        d.fillRect(x, y, w, style.headerSize, isWindowFocused(win) ? style.headerActiveColor : style.headerColor);
-        d.drawRect(x, y, w, style.headerSize, style.borderColor);
+        //d.fillRect(x, y, w, style.headerSize, isWindowFocused(win) ? style.headerActiveColor : style.headerColor);
+        //d.drawRect(x, y, w, style.headerSize, style.borderColor);
+
+        float r = style.windowRounding;
+        d.fillRoundRect(x, y, w, style.headerSize + r, r, isWindowFocused(win) ? style.headerActiveColor : style.headerColor);
         drawTextVertCenter(title, x + style.padding, y + style.headerSize / 2.0f, style.textColor);
         y += style.headerSize;
 
         // Draw background
-        d.fillRect(x, y, w, h, style.backgroundColor);
-        d.drawRect(x, y, w, h, style.borderColor);
+        d.fillRect(x, y, w, r, style.backgroundColor);
+        d.fillRoundRect(x, y, w, h, r, style.backgroundColor);
+
+        // Draw border
+        d.drawRoundRect(x, y - style.headerSize, w, h + style.headerSize, r, style.borderColor);
+        d.drawLine(x, y, x + w - 0.5f, y, style.borderColor);
 
         // Truncate position to avoid clipping the outer pixels
         posX = (int) (x + style.padding);
@@ -135,7 +142,7 @@ public class GuiContext {
 
         // Ensure nothing is rendered outside of the content region
         // Extra pixel is given to not clip borders
-        d.setClip(posX, posY, maxX - posX + 1, maxY - posY + 1);
+        d.setClip(posX - 1, posY - 1, maxX - posX + 1, maxY - posY + 1);
     }
 
     public void end() {
@@ -147,14 +154,15 @@ public class GuiContext {
             currentWindow.y += headerDrag.y;
 
             // Drag bottom right corner to resize
-            Vec2f resizeDrag = input.getDragInRect(maxX, maxY, 10, 10);
+            float s = style.resizeGrabSize;
+            Vec2f resizeDrag = input.getDragInRect(maxX + style.padding - s, maxY + style.padding - s, s, s);
             currentWindow.w += resizeDrag.x;
             currentWindow.h += resizeDrag.y;
         }
 
         // Ensure window is within size constraints
-        currentWindow.w = clamp(currentWindow.w, 10, displayWidth);
-        currentWindow.h = clamp(currentWindow.h, 10, displayHeight - style.headerSize);
+        currentWindow.w = clamp(currentWindow.w, style.windowRounding * 2, displayWidth);
+        currentWindow.h = clamp(currentWindow.h, style.windowRounding * 2, displayHeight - style.headerSize);
 
         // Ensure window is fully on the screen
         currentWindow.x = clamp(currentWindow.x, 0, displayWidth - currentWindow.w);
@@ -237,8 +245,8 @@ public class GuiContext {
         int fill = clicked ? style.buttonPressColor : (hovered ? style.buttonHoverColor : style.buttonColor);
 
         DrawList d = currentWindow.draw;
-        d.fillRect(posX, posY, w, h, fill);
-        d.drawRect(posX, posY, w, h, style.buttonBorderColor);
+        d.fillRoundRect(posX, posY, w, h, style.buttonRounding, fill);
+        d.drawRoundRect(posX, posY, w, h, style.buttonRounding, style.buttonBorderColor);
 
         float labelWidth = textWidth(label);
         drawTextVertCenter(label, posX + w / 2.0f - labelWidth / 2.0f, posY + h / 2.0f, style.textColor);

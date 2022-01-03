@@ -5,10 +5,13 @@ import frc.shuffleplank.ShufflePlank;
 public class GuiStyle {
     public float headerSize = 20;
     public float padding = 10;
+    public float resizeGrabSize = 10;
     public float lineSpacing = 5;
     public float separatorSize = 10;
     public float buttonContentPadding = 3;
     public float indentAmt = 10;
+    public float windowRounding = 15;
+    public float buttonRounding = 6;
 
     public int borderColor       = ShufflePlank.makeColor(0.5f,  0.505f,  0.51f);
     public int headerColor       = ShufflePlank.makeColor(0.1f,  0.105f,  0.11f);
