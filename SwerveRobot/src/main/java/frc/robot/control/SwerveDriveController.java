@@ -16,6 +16,8 @@ public class SwerveDriveController {
     }
 
     public void swerveInit(){
+        drive.zeroGyroscope();
+        
         double startingAngle = Constants.STARTING_WHEEL_ANGLE;
         drive.setWheelTargetAngle(startingAngle);
         drive.update();
