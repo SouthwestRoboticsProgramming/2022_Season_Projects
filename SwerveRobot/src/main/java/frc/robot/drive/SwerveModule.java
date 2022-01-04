@@ -25,7 +25,16 @@ public class SwerveModule {
     private double targetAngle = 0;
     private boolean flipDriveAmt = false;
 
+    // TEMPORARY
+    private boolean printAngle;
+
     public SwerveModule(int drivePort, int turnPort, int canPort) {
+        // TEMPORARY
+        // printAngle = turnPort == TURN_PORT_4;
+        // printAngle = turnPort == TURN_PORT_3;
+        // printAngle = turnPort == TURN_PORT_2;
+        printAngle = turnPort == TURN_PORT_1;
+
         driveMotor = new WPI_TalonSRX(drivePort);
         turnMotor = new WPI_TalonSRX(turnPort);
         canCoder = new CANCoder(canPort);
@@ -47,12 +56,13 @@ public class SwerveModule {
         driveMotor.setSelectedSensorPosition(0, 0, 30);
         driveMotor.stopMotor();
 
-        turnMotor.setNeutralMode(NeutralMode.Brake);
+        //turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setSelectedSensorPosition(0, 0, 30);
         turnMotor.stopMotor();
 
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
+        turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
     }
 
     public void setTargetAngle(double angle) {
@@ -65,28 +75,33 @@ public class SwerveModule {
 
     public void drive(double amount) {
         amount = Utils.clamp(amount, -1, 1);
-        if (flipDriveAmt) {
-            amount = -amount;
-        }
         
-        //driveMotor.set(ControlMode.PercentOutput, amount);
+        driveMotor.set(ControlMode.PercentOutput, amount);
     }
 
     public void update() {
-
         double rotPos = canCoder.getPosition();
-        currentAngle = Math.toRadians(rotPos);
+        currentAngle = Utils.normalizeAngle(Math.toRadians(rotPos));
 
-        double oppositeAngle = Utils.normalizeAngle(targetAngle + Math.PI);
+        if (printAngle) {
+            System.out.println(rotPos);
+        }
 
-        double normalDiff = Utils.normalizeAngle(currentAngle - targetAngle);
-        double oppositeDiff = Utils.normalizeAngle(currentAngle - oppositeAngle);
+        double target = targetAngle;
 
-        flipDriveAmt = normalDiff < oppositeDiff;
-        double target = flipDriveAmt ? targetAngle : oppositeAngle;
-
+        // System.out.print("Target angle: ");
+        // System.out.print(target);
+        
+        
         double amount = turnPID.calculate(currentAngle, target);
         amount = Utils.clamp(amount, -1, 1);
+        //double amount = 0.05 * Math.signum(Utils.normalizeAngle(target-currentAngle));
         turnMotor.set(ControlMode.PercentOutput, amount);
+
+        //turnMotor.set(ControlMode.PercentOutput, 0.25);
+    }
+
+    public void disable() {
+        turnPID.reset();
     }
 }

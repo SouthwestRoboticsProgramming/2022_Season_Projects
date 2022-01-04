@@ -16,7 +16,6 @@ public class Robot extends TimedRobot {
 
     drive = new SwerveDrive();
     driveController = new SwerveDriveController(drive, input);
-    driveController.swerveInit();
   }
 
   @Override
@@ -37,7 +36,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    drive.disable();
+  }
 
   @Override
   public void disabledPeriodic() {}
