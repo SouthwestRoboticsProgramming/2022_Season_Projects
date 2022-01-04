@@ -34,6 +34,8 @@ public final class ShufflePlank extends PApplet {
         }
     }
 
+    boolean[] checkbox = {false};
+
     @Override
     public void draw() {
         background(0, 0, 0);
@@ -55,6 +57,9 @@ public final class ShufflePlank extends PApplet {
                 gui.spacing();
                 gui.text("The button is not pressed");
             }
+            gui.separator();
+            gui.text("A checkbox:");
+            gui.checkbox(checkbox);
             gui.end();
 
             gui.begin("Performance");

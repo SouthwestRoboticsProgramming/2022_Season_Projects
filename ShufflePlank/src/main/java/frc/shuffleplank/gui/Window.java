@@ -10,6 +10,7 @@ public class Window {
     public float h;
     public String name;
     public DrawList draw;
+    public GuiStorage storage;
 
     public Window(String name) {
         this.name = name;
@@ -17,5 +18,6 @@ public class Window {
         y = ShufflePlank.instance.random(10, ShufflePlank.instance.height);
         w = 200;
         h = 250;
+        storage = new GuiStorage();
     }
 }

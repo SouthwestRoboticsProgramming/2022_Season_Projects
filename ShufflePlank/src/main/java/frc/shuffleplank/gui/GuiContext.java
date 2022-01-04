@@ -53,6 +53,16 @@ public class GuiContext {
                     text("Position: (" + nf(win.x, 0, 1) + ", " + nf(win.y, 0, 1) + ")");
                     text("Size: (" + nf(win.w, 0, 1) + ", " + nf(win.h, 0, 1) + ")");
                     text("Draw commands: " + win.draw.cmds.size());
+                    if (win.storage.size() > 0) {
+                        text("Storage:");
+                        indent();
+                        {
+                            for (Map.Entry<Object, Object> entry : win.storage.entrySet()) {
+                                text(entry.getKey().toString() + " -> " + entry.getValue().toString());
+                            }
+                        }
+                        unindent();
+                    }
                 }
                 unindent();
             }
@@ -240,9 +250,10 @@ public class GuiContext {
         float h = textHeight() + style.buttonContentPadding * 2;
 
         boolean hovered = hoveredWindow == currentWindow && input.mouseInRect(posX, posY, w, h);
-        boolean clicked = hovered && input.mouseDown;
+        boolean clicked = hovered && input.mouseClicked;
+        boolean pressed = clicked || (hovered && input.mouseDown);
 
-        int fill = clicked ? style.buttonPressColor : (hovered ? style.buttonHoverColor : style.buttonColor);
+        int fill = pressed ? style.buttonPressColor : (hovered ? style.buttonHoverColor : style.buttonColor);
 
         DrawList d = currentWindow.draw;
         d.fillRoundRect(posX, posY, w, h, style.buttonRounding, fill);
@@ -252,6 +263,32 @@ public class GuiContext {
         drawTextVertCenter(label, posX + w / 2.0f - labelWidth / 2.0f, posY + h / 2.0f, style.textColor);
 
         posY += h + style.lineSpacing;
+
+        return clicked;
+    }
+
+    public boolean checkbox(boolean[] checked) {
+        float s = style.checkboxPadding * 2 + textHeight();
+
+        boolean hovered = hoveredWindow == currentWindow && input.mouseInRect(posX, posY, s, s);
+        boolean clicked = hovered && input.mouseClicked;
+        boolean pressed = clicked || (hovered && input.mouseDown);
+
+        if (clicked) {
+            checked[0] = !checked[0];
+        }
+
+        int fill = pressed ? style.checkboxPressColor : (hovered ? style.checkboxHoverColor : style.checkboxColor);
+
+        DrawList d = currentWindow.draw;
+        d.fillRoundRect(posX, posY, s, s, style.buttonRounding, fill);
+        d.drawRoundRect(posX, posY, s, s, style.buttonRounding, style.checkboxBorderColor);
+
+        if (checked[0]) {
+            // Draw the check
+            d.drawLine(posX + s * 0.2f, posY + s * 0.5f, posX + s * 0.33f, posY + s * 0.8f, style.checkboxCheckColor);
+            d.drawLine(posX + s * 0.33f, posY + s * 0.8f, posX + s * 0.8f, posY + s * 0.2f, style.checkboxCheckColor);
+        }
 
         return clicked;
     }

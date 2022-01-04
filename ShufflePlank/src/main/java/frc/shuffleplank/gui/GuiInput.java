@@ -15,16 +15,14 @@ public class GuiInput {
     public float lastMouseX;
     public float lastMouseY;
     public boolean mouseDown = false;
-    private boolean cancelMouseDownNextFrame = false;
+    public boolean mouseClicked = false;
 
     public GuiInput() {
         eventQueue = new ArrayDeque<Event>();
     }
 
     public void update() {
-        if (cancelMouseDownNextFrame) {
-            mouseDown = false;
-        }
+        mouseClicked = false;
         lastMouseX = mouseX;
         lastMouseY = mouseY;
 
@@ -35,12 +33,10 @@ public class GuiInput {
                 mouseX = e.x;
                 mouseY = e.y;
             } else if (event instanceof MousePressedEvent) {
-                cancelMouseDownNextFrame = false;
+                mouseClicked = true;
                 mouseDown = true;
             } else if (event instanceof MouseReleasedEvent) {
-                // Delay mouse releases by one frame to ensure that presses shorter than a frame will be handled
-                if (mouseDown)
-                    cancelMouseDownNextFrame = true;
+                mouseDown = false;
             }
         }
     }
