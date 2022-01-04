@@ -69,11 +69,11 @@ public class SwerveDrive {
             && w4.isAtTargetAngle();
     }
 
-    public double getAccelerometer() {
+    public double[] getAccelerometer() {
         double[] velocity = new double[3];
-        velocity[0] = navx.getWorldAccelX();
-        velocity[1] = navx.getWorldAccelY();
-        velocity[2] = navx.getRate(); //FIXME Check if this doesn't work, if it doesn't try this: https://github.com/kauailabs/navxmxp/issues/69
+        velocity[0] = navx.getVelocityX(); // May not work, experimental
+        velocity[1] = navx.getVelocityY(); // May not work, experimental
+        velocity[2] = Math.toRadians(navx.getRate()); //FIXME Check if this doesn't work, if it doesn't try this: https://github.com/kauailabs/navxmxp/issues/69
         return velocity;
     }
 
