@@ -22,17 +22,14 @@ public class SwerveDrive {
      */
     private final SwerveModule w1, w2, w3, w4;
     private final AHRS navx;
-    private final ChassisSpeeds chassisSpeeds;
     private double currentAngle; // In radians
 
     public SwerveDrive() {
-        w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1, CAN_PORT_1);
-        w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2, CAN_PORT_2);
-        w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3, CAN_PORT_3);
-        w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4, CAN_PORT_4);
+        w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1, CAN_PORT_1, OFFSET_1);
+        w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2, CAN_PORT_2, OFFSET_2);
+        w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3, CAN_PORT_3, OFFSET_3);
+        w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4, CAN_PORT_4, OFFSET_4);
         navx = new AHRS(SPI.Port.kMXP, (byte) 200);
-        chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0); // Sets the default speed of the robot to zero
-        currentAngle = 0;
     }
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -46,10 +43,6 @@ public class SwerveDrive {
         new Translation2d(-WHEEL_SPACING_FRONT_BACK / 2.0, -WHEEL_SPACING_LEFT_RIGHT / 2.0)
     );
 
-    public void setTargetRelative(x,y,relativeAngle) {
-        chassisSeeds.fromFieldRelativeSpeeds(x,y,currentAngle + relativeAngle, currentAngle)
-    }
-
     public void zeroGyroscope() {
         navx.zeroYaw();
     }
@@ -59,20 +52,6 @@ public class SwerveDrive {
             return Rotation2d.fromDegrees(navx.getAngle());
         }
         return Rotation2d.fromDegrees(360.0 - navx.getYaw());
-    }
-
-    public void setWheelTargetAngle(double angle) {
-        w1.setTargetAngle(angle + OFFSET_1);
-        w2.setTargetAngle(angle + OFFSET_2);
-        w3.setTargetAngle(angle + OFFSET_3);
-        w4.setTargetAngle(angle + OFFSET_4);
-    }
-
-    public boolean wheelsAtTargetAngle() {
-        return w1.isAtTargetAngle()
-            && w2.isAtTargetAngle()
-            && w3.isAtTargetAngle()
-            && w4.isAtTargetAngle();
     }
 
     public double[] getVelocity() {
@@ -90,20 +69,23 @@ public class SwerveDrive {
         w4.drive(amount);
     }
 
-    public void update() {
+    public void update(ChassisSpeeds chassisSpeeds) {
 
         // Get current position and state of robot
-        currentAngle = getGyroscopeRotation();
+        currentAngle = navx.getAngle();
+        System.out.println("Current angle in SwerveDrive.java: " + currentAngle);
+        
+        
 
-        // Calculate the movements
-        setTargetRelative(/*Put stuff in here */);
+        // Calculate the movementschassisSpeeds
+        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
 
 
-        w1.update();
-        w2.update();
-        w3.update();
-        w4.update();
+        w1.update(moduleStates[2]);
+        w2.update(moduleStates[0]);
+        w3.update(moduleStates[1]);
+        w4.update(moduleStates[3]);
 
     }
 

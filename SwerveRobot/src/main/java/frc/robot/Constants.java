@@ -19,6 +19,7 @@ public final class Constants {
     public static final double OFFSET_2 = -0.11; //FIXME
     public static final double OFFSET_3 = 1.58; //FIXME
     public static final double OFFSET_4 = 1.26; //FIXME
+    public static final boolean CANCODER_DIRECTION = true; // False = Counterclockwise   True = Clockwise
     
     public static final double JOYSTICK_DEAD_ZONE = 0.1;
 	public static final int DRIVE_CONTROLLER = 0;
@@ -37,4 +38,5 @@ public final class Constants {
 
     public static final double MAX_VOLTAGE = 12.0; // FIXME Might not be useful
     public static final double MAX_VELOCITY = 0; //FIXME // Meters per second
+    public static final double MAX_ROTATION_SPEED = 0; // FIXME // Radians per second
 }
