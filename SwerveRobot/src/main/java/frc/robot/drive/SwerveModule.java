@@ -36,6 +36,9 @@ public class SwerveModule {
         canCoder = new CANCoder(canPort);
         canOffset = cancoderOffset;
 
+        //Temporary
+        printDebugging = turnPort == TURN_PORT_1;
+
         TalonSRXConfiguration config = new TalonSRXConfiguration();
         config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
         config.neutralDeadband = 0.001;
@@ -88,38 +91,29 @@ public class SwerveModule {
 
         // Turn to target angle
         double turnAmount = turnPID.calculate(currentAngle,targetAngle.getDegrees());
-        
+        turnAmount = clamp(turnAmount,0.0,1.0); //FIXME Check if this works
 
-
-
-
-
-
+        // Drive the target speed
+        double driveAmount = targetSpeed / MAX_VELOCITY;
 
         // Spin the motors
         turnMotor.set(ControlMode.PercentOutput, turnAmount);
+        driveMotor.set(ControlMode.PercentOutput, driveAmount);
 
 
-
-
-
-
-        // if (printAngle) {
-        //     System.out.println(rotPos);
-        // }
-
-        // double target = targetAngle;
-
-        // // System.out.print("Target angle: ");
-        // // System.out.print(target);
-        
-        
-        // double amount = turnPID.calculate(currentAngle, target);
-        // amount = Utils.clamp(amount, -1, 1);
-        // //double amount = 0.05 * Math.signum(Utils.normalizeAngle(target-currentAngle));
-        // turnMotor.set(ControlMode.PercentOutput, amount);
-
-        //turnMotor.set(ControlMode.PercentOutput, 0.25);
+        // Temporary
+        if (printDebugging) {
+            System.out.println(" ***** Debugging Swerve Module 1 ***** ")
+            System.out.println("Current module angle: " + currentAngle);
+            System.out.println("Target module angle: " + targetAngle);
+            System.out.println("Target drive speed: " + targetSpeed);
+            System.out.println("Percent output turn motor: " + 100 * turnAmount + "%");
+            System.out.println("Percent ouptut drive motor: " + 100 * driveAmount);
+            System.out.println(" ************************************* ");
+            System.out.println();
+            System.out.println();
+            System.out.println();
+        }
     }
 
     public void disable() {

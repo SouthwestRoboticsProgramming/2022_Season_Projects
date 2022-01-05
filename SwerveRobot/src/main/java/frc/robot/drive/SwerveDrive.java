@@ -73,7 +73,14 @@ public class SwerveDrive {
 
         // Get current position and state of robot
         currentAngle = navx.getAngle();
-        System.out.println("Current angle in SwerveDrive.java: " + currentAngle);
+
+
+        // TEMPORARY
+        System.out.println(" ***** Debugging Swerve Drive ***** ");
+        System.out.println("Gyroscope angle: " + currentAngle);
+        System.out.println(" ********************************** ");
+        System.out.println();
+
         
         
 
