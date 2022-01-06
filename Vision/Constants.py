@@ -1,0 +1,6 @@
+class Constants:
+    EXPERIMENTAL = True
+    SHOW_VISUALIZERS = False
+
+    USBCAMERA_ALPHA = "FIXME"
+    USBCAMERA_BETA = "FIXME"
