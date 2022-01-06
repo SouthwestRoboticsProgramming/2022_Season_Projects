@@ -87,10 +87,11 @@ public class SwerveModule {
 
         // Turn to target angle
         double turnAmount = turnPID.calculate(currentAngle,targetAngle.getDegrees());
-        turnAmount = MathUtil.clamp(turnAmount,0.0,1.0);
+        turnAmount = MathUtil.clamp(turnAmount,-1.0,1.0);
 
         // Drive the target speed
         double driveAmount = targetSpeed / MAX_VELOCITY;
+        driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
 
         // Spin the motors
         turnMotor.set(ControlMode.PercentOutput, turnAmount);
@@ -101,10 +102,10 @@ public class SwerveModule {
         if (printDebugging) {
             System.out.println(" ***** Debugging Swerve Module 1 ***** ");
             System.out.println("Current module angle: " + currentAngle);
-            System.out.println("Target module angle: " + targetAngle);
+            System.out.println("Target module angle: " + targetAngle.getDegrees());
             System.out.println("Target drive speed: " + targetSpeed);
             System.out.println("Percent output turn motor: " + 100 * turnAmount + "%");
-            System.out.println("Percent ouptut drive motor: " + 100 * driveAmount);
+            System.out.println("Percent ouptut drive motor: " + 100 * driveAmount + "%");
             System.out.println(" ************************************* ");
             System.out.println();
             System.out.println();

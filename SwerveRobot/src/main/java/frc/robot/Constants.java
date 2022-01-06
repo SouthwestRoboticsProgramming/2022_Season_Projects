@@ -37,6 +37,6 @@ public final class Constants {
     public static final double WHEEL_SPACING_LEFT_RIGHT = 1.0; // FIXME
 
     public static final double MAX_VOLTAGE = 12.0; // FIXME Might not be useful
-    public static final double MAX_VELOCITY = 0; //FIXME // Meters per second
-    public static final double MAX_ROTATION_SPEED = 0; // FIXME // Radians per second
+    public static final double MAX_VELOCITY = 16.0; //FIXME // Meters per second
+    public static final double MAX_ROTATION_SPEED = 14.0; // FIXME // Radians per second
 }

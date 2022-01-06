@@ -30,6 +30,18 @@ public class SwerveDriveController {
         double driveY = input.getDriveY();
         double rot = input.getRot();
 
+        if (Math.abs(driveX) < Constants.JOYSTICK_DEAD_ZONE) {
+            driveX = 0;
+        }
+
+        if (Math.abs(driveY) < Constants.JOYSTICK_DEAD_ZONE) {
+            driveY = 0;
+        }
+        if (Math.abs(rot) < Constants.JOYSTICK_DEAD_ZONE) {
+            rot = 0;
+        }
+
+
         Rotation2d currentAngle = drive.getGyroscopeRotation();
 
         double fieldRelativeX = driveX * Constants.MAX_VELOCITY;
