@@ -45,11 +45,11 @@ public class SwerveDriveController {
         System.out.println(" ***** Debugging Controller ***** ");
         System.out.println("Drive X: " + driveX);
         System.out.println("Drive Y: " + driveY);
-        System.out.println("Drive Rotation: " + rot);
+        System.out.println("Drive rotation: " + rot);
         System.out.println("Gyro angle: " + currentAngle);
         System.out.println("Field relative X: " + fieldRelativeX);
         System.out.println("Field relative Y: " + fieldRelativeY);
         System.out.println("Target rotation speed: " + targetRot);
-        System.out.println(" ******************************** ")
+        System.out.println(" ******************************** ");
     }
 }

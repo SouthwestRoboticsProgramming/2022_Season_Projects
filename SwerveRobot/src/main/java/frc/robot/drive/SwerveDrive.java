@@ -62,29 +62,20 @@ public class SwerveDrive {
         return velocity;
     }
 
-    public void driveWheels(double amount) {
-        w1.drive(amount);
-        w2.drive(amount);
-        w3.drive(amount);
-        w4.drive(amount);
-    }
-
     public void update(ChassisSpeeds chassisSpeeds) {
 
         // Get current position and state of robot
         currentAngle = navx.getAngle();
 
 
-        // TEMPORARY
+        // TEMPORARY, TODO: Remove
         System.out.println(" ***** Debugging Swerve Drive ***** ");
         System.out.println("Gyroscope angle: " + currentAngle);
         System.out.println(" ********************************** ");
         System.out.println();
 
         
-        
-
-        // Calculate the movementschassisSpeeds
+        // Calculate the movements of each indevidual module
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
 

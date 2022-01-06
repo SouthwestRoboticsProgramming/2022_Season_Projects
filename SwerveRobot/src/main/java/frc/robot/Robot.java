@@ -13,7 +13,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     input = new Input();
-
     drive = new SwerveDrive();
     driveController = new SwerveDriveController(drive, input);
   }

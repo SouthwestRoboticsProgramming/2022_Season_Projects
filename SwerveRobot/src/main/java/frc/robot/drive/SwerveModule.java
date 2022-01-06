@@ -12,8 +12,8 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
-import frc.robot.util.Utils;
 
 import static frc.robot.Constants.*;
 
@@ -27,7 +27,10 @@ public class SwerveModule {
     private final double canOffset;
     private final PIDController turnPID;
 
+    // TEMPORARY, TODO: REMOVE
+    private boolean printDebugging;
 
+    
 
     public SwerveModule(int drivePort, int turnPort, int canPort ,double cancoderOffset) {
 
@@ -36,7 +39,7 @@ public class SwerveModule {
         canCoder = new CANCoder(canPort);
         canOffset = cancoderOffset;
 
-        //Temporary
+        // TEMPORARY
         printDebugging = turnPort == TURN_PORT_1;
 
         TalonSRXConfiguration config = new TalonSRXConfiguration();
@@ -74,13 +77,6 @@ public class SwerveModule {
         canCoder.configAllSettings(config);
     }
 
-
-    public void drive(double amount) {
-        amount = Utils.clamp(amount, -1, 1);
-        
-        driveMotor.set(ControlMode.PercentOutput, amount);
-    }
-
     public void update(SwerveModuleState swerveModuleState) {
 
         Rotation2d canRotation = new Rotation2d(canCoder.getAbsolutePosition());
@@ -91,7 +87,7 @@ public class SwerveModule {
 
         // Turn to target angle
         double turnAmount = turnPID.calculate(currentAngle,targetAngle.getDegrees());
-        turnAmount = clamp(turnAmount,0.0,1.0); //FIXME Check if this works
+        turnAmount = MathUtil.clamp(turnAmount,0.0,1.0);
 
         // Drive the target speed
         double driveAmount = targetSpeed / MAX_VELOCITY;
@@ -103,7 +99,7 @@ public class SwerveModule {
 
         // Temporary
         if (printDebugging) {
-            System.out.println(" ***** Debugging Swerve Module 1 ***** ")
+            System.out.println(" ***** Debugging Swerve Module 1 ***** ");
             System.out.println("Current module angle: " + currentAngle);
             System.out.println("Target module angle: " + targetAngle);
             System.out.println("Target drive speed: " + targetSpeed);
