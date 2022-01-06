@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import edu.wpi.first.wpilibj.controller.ArmFeedForward;
 import frc.robot.Constants;
 
 import static frc.robot.Constants.*;
@@ -26,6 +27,7 @@ public class SwerveModule {
     private final CANCoder canCoder;
     private final double canOffset;
     private final PIDController turnPID;
+    private final ArmFeedForward turnFeed;
 
     // TEMPORARY, TODO: REMOVE
     private boolean printDebugging;
@@ -66,6 +68,8 @@ public class SwerveModule {
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
         turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
+
+        turnFeed = new ArmFeedForward(); // FIXME Figure this out
     }
 
     public void canCoderConfig() {
