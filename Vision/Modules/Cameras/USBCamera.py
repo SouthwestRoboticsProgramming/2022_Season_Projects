@@ -1,11 +1,46 @@
 
 
+
+
+import Constants
+
 class USBCamera:
 
     camID = None
+    calibrationProfile = None
+    cap = None
 
-    def __init__(self,camID):
+    horizontalFOV = None
+    verticalFOV = None
+
+    def __init__(self,camID,cameraType):
         self.camID = camID
+        self.cap = cv2.VideoCapture(camID)
+        self.calibrationProfile = calibrationProfile(cameraType)
+        self.horizontalFOV = Constants.USBCAMERA_ALPHA
+        self.verticalFOV = Constants.USBCAMERA_BETA
+
+        # Test the camera and set up some one-time values
+        ret, frame = self.cap.read()
+
+        if ret:
+            self.setPixelDistance(frame)
+        else:
+            if Constants.EXPERIMENTAL:
+                print("Camera ID " + str(camID) + " not found")
+
+    
+    def turnOffAuto(self):
+        cap.set(cv2.CAP_PROP_AUTO_WB,0)
+        cap.set(cv2.CAP_PROP_AUTOFOCUS,0)
+        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
+
+
+    def getFrame():
+
+
+        return(frame)
+        
 
     def calibrationProfile(self,calibrationImageName):
     checkerboard = (6,9) # Dimentions of checkerboard in boxes
@@ -123,3 +158,7 @@ class USBCamera:
 
 
         return(angleX,angleY,angle2X,stacked)
+
+    def setPixelDistance(self,frame):
+        self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.horizontalFOV)))
+        self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.verticalFOV)))
