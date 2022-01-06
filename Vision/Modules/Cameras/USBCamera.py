@@ -1,86 +1,92 @@
-
+import cv2
+import math
+import numpy as np
+import glob
 
 class USBCamera:
 
     camID = None
+    h_min = None
+    h_max = None
+    s_min = None
+    s_max = None
+    v_min = None
+    v_max = None
+    TLow = None
 
-    def __init__(self,camID):
+    def __init__(self,camID,settings):
         self.camID = camID
+        self.h_min = settings[0]
+        self.h_max = settings[1]
+        self.s_min = settings[2]
+        self.s_max = settings[3]
+        self.v_min = settings[4]
+        self.v_max = settings[5]
+        self.TLow = settings[6]
 
     def calibrationProfile(self,calibrationImageName):
-    checkerboard = (6,9) # Dimentions of checkerboard in boxes
-    criteria = (cv2.TermCriteria_EPS + cv2.TermCriteria_MAX_ITER, 30, 0.001)
+        checkerboard = (6,9) # Dimentions of checkerboard in boxes
+        criteria = (cv2.TermCriteria_EPS + cv2.TermCriteria_MAX_ITER, 30, 0.001)
 
-    # Create a vecotr to store vecots of 3D points for each checkerboard image
-    objpoints = []
-    # Vector to store 2D points
-    imgpoints = []
+        # Create a vecotr to store vecots of 3D points for each checkerboard image
+        objpoints = []
+        # Vector to store 2D points
+        imgpoints = []
 
-    objp = np.zeros((1, checkerboard[0] * checkerboard[1], 3), np.float32)
-    objp[0,:,:2] = np.mgrid[0:checkerboard[0],0:checkerboard[1]].T.reshape(-1,2)
+        objp = np.zeros((1, checkerboard[0] * checkerboard[1], 3), np.float32)
+        objp[0,:,:2] = np.mgrid[0:checkerboard[0],0:checkerboard[1]].T.reshape(-1,2)
 
-    images = glob.glob('Vision/checkerboards/'+ string(calibrationImageName) +'.jpg')
-    for fname in images:
-        img = cv2.imread(fname)
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        # Find the corners
-        ret, corners = cv2.findChessboardCorners(gray,checkerboard,cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
-        # If criterion is met, refine the corners
-        if ret == True:
-            objpoints.append(objp)
-            corners2 = cv2.cornerSubPix(gray, corners, (11,11),(-1,-1),criteria)
+        images = glob.glob('Vision/checkerboards/'+ str(calibrationImageName) +'.jpg')
+        for fname in images:
+            img = cv2.imread(fname)
+            gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+            # Find the corners
+            ret, corners = cv2.findChessboardCorners(gray,checkerboard,cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
+            # If criterion is met, refine the corners
+            if ret == True:
+                objpoints.append(objp)
+                corners2 = cv2.cornerSubPix(gray, corners, (11,11),(-1,-1),criteria)
 
-            imgpoints.append(corners2)
-            
+                imgpoints.append(corners2)
+                
 
-            img = cv2.drawChessboardCorners(img, checkerboard,corners2,ret)
+                img = cv2.drawChessboardCorners(img, checkerboard,corners2,ret)
 
-    h,w = img.shape[:2]
+        h,w = img.shape[:2]
 
-    ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
+        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
-    newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
+        newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
 
-    dst = cv2.undistort(img,mtx,dist,None,newcameramtx)
+        dst = cv2.undistort(img,mtx,dist,None,newcameramtx)
 
-    x,y,w,h = roi
-    dst = dst[y:y+h,x:x+w]
+        x,y,w,h = roi
+        dst = dst[y:y+h,x:x+w]
 
 
 
-    return(mtx,dist,newcameramtx,roi)
+        return(mtx,dist,newcameramtx,roi)
 
 
 
     def calibrateCamera(self,frame,mtx,dist,newcameramtx,roi):
-    undestoredFrame = cv2.undistort(frame,mtx,dist,None,newcameramtx)
+        undestortedFrame = cv2.undistort(frame,mtx,dist,None,newcameramtx)
 
-    x,y,w,h = roi
-    undestoredCam1 = undestoredCam1[y:y+h,x:x+w]
-    return(undestoredFrame)
+        x,y,w,h = roi
+        undestortedFrame = undestortedFrame[y:y+h,x:x+w]
+        return(undestortedFrame)
 
 
     def objectDetection(self,frame,cameraName):
         # Get posision of trackbars and assign them to variables
-        if self.experimental: 
-            h_min = cv2.getTrackbarPos("Hue Min","Track Bars " + str(self.instanceNumber))
-            h_max = cv2.getTrackbarPos("Hue Max","Track Bars " + str(self.instanceNumber))
-            s_min = cv2.getTrackbarPos("Saturation Min","Track Bars " + str(self.instanceNumber))
-            s_max = cv2.getTrackbarPos("Saturation Max","Track Bars " + str(self.instanceNumber))
-            v_min = cv2.getTrackbarPos("Value Min","Track Bars " + str(self.instanceNumber))
-            v_max = cv2.getTrackbarPos("Value Max","Track Bars " + str(self.instanceNumber))
-            TLow = cv2.getTrackbarPos("Thresh Low", "Track Bars " + str(self.instanceNumber))
-            THigh = 255
-        else:
-            h_min = self.h_min
-            h_max = self.h_max
-            s_min = self.s_min
-            s_max = self.s_max
-            v_min = self.v_min
-            v_max = self.v_max
-            TLow = self.TLow
-            THigh = 255
-
+        h_min = self.h_min
+        h_max = self.h_max
+        s_min = self.s_min
+        s_max = self.s_max
+        v_min = self.v_min
+        v_max = self.v_max
+        TLow = self.TLow
+        THigh = 255
 
         # Mask off the object that we want to detect
         lower = np.array([h_min,s_min,v_min])
