@@ -1,4 +1,4 @@
-import USBCamera
+from Cameras.USBCamera import  USBCamera
 import math
 
 class StereoModule:
@@ -8,8 +8,8 @@ class StereoModule:
     baseline = None # Distance between cameras. Whatever unit you measure this in will be the unit that everything is measured in
 
     def __init__(self,camIDL,camIDR,baseline):
-        self.leftCamera = USBCamera.USBCamera(camIDL)
-        self.rightCamera = USBCamera.USBCamera(camIDR)
+        self.leftCamera = USBCamera(camIDL)
+        self.rightCamera = USBCamera(camIDR)
         self.baseline = baseline
 
         if self.leftCamera == False: return("Left")

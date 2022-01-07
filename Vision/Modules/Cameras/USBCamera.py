@@ -2,6 +2,7 @@ import cv2
 import math
 import numpy as np
 import glob
+import Constants
 
 class USBCamera:
 

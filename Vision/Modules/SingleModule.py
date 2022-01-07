@@ -1,11 +1,11 @@
-import USBCamera
+from Cameras.USBCamera import USBCamera
 
 class SingleModule:
 
     camera = None
 
     def __init__(self,camID):
-        self.camera = USBCamera.USBCamera(camID)
+        self.camera = USBCamera(camID)
 
         # Turn off auto settings for greater control
         self.camera.turnOffAuto()
