@@ -13,6 +13,9 @@ class USBCamera:
     horizontalFOV = None
     verticalFOV = None
 
+    cap = None
+    calibration = None
+
     h_min = None
     h_max = None
     s_min = None
@@ -21,7 +24,7 @@ class USBCamera:
     v_max = None
     TLow = None
 
-    def __init__(self,camID,settings):
+    def __init__(self,camID,cameraType,settings):
         self.camID = camID
         self.h_min = settings[0]
         self.h_max = settings[1]
@@ -30,12 +33,6 @@ class USBCamera:
         self.v_min = settings[4]
         self.v_max = settings[5]
         self.TLow = settings[6]
-    calibration = None
-    cap = None
-
-
-    def __init__(self,camID,cameraType):
-        self.camID = camID
         self.cap = cv2.VideoCapture(camID)
         self.calibration = self.calibrationProfile(cameraType)
         self.horizontalFOV = Constants.USBCAMERA_ALPHA
@@ -50,6 +47,7 @@ class USBCamera:
             if Constants.EXPERIMENTAL:
                 print("Camera ID " + str(camID) + " not found")
 
+
     
     def turnOffAuto(self):
         self.cap.set(cv2.CAP_PROP_AUTO_WB,0)
@@ -57,11 +55,13 @@ class USBCamera:
         self.cap.set(cv2.CAP_PROP_AUTO_EXPOSURE,0)
 
 
+
     def getFrame():
 
 
         return(frame)
         
+
 
     def calibrationProfile(self,calibrationImageName):
         checkerboard = (6,9) # Dimentions of checkerboard in boxes
@@ -108,12 +108,19 @@ class USBCamera:
 
 
 
+    def setPixelDistance(self,frame):
+        self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.horizontalFOV)))
+        self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.verticalFOV)))
+
+
+
     def calibrateCamera(self,frame,mtx,dist,newcameramtx,roi):
         undestortedFrame = cv2.undistort(frame,mtx,dist,None,newcameramtx)
 
         x,y,w,h = roi
         undestortedFrame = undestortedFrame[y:y+h,x:x+w]
         return(undestortedFrame)
+
 
 
     def objectDetection(self,frame,cameraName):
@@ -168,7 +175,3 @@ class USBCamera:
 
 
         return(angleX,angleY,angle2X,stacked)
-
-    def setPixelDistance(self,frame):
-        self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.horizontalFOV)))
-        self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.verticalFOV)))
