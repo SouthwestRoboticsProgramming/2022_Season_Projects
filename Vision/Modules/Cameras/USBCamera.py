@@ -23,6 +23,7 @@ class USBCamera:
     v_min = None
     v_max = None
     TLow = None
+    exposure = None
 
     def __init__(self,camID,cameraType,settings):
         self.camID = camID
@@ -37,6 +38,7 @@ class USBCamera:
         self.calibration = self.calibrationProfile(cameraType)
         self.horizontalFOV = Constants.USBCAMERA_ALPHA
         self.verticalFOV = Constants.USBCAMERA_BETA
+        self.Exposure = 0
 
         # Test the camera and set up some one-time values
         ret, frame = self.cap.read()
@@ -48,6 +50,22 @@ class USBCamera:
                 print("Camera ID " + str(camID) + " not found")
 
 
+    def getFrame(self):
+        # TODO: Use global client (Choosing to send data to client is in Constants)
+        calibrationProfile = self.calibration
+
+        ret, uncalibratedFrame = self.cap.read()
+        
+        if ret:
+            frame = self.calibrateCamera(uncalibratedFrame,calibrationProfile)
+        else:
+            assert ret != True, "Camera " + str(self.camID) + " not found"
+
+
+        return(frame)
+
+    def setExposure(self,exposure):
+        self.exposure = exposure
     
     def turnOffAuto(self):
         self.cap.set(cv2.CAP_PROP_AUTO_WB,0)
@@ -56,10 +74,9 @@ class USBCamera:
 
 
 
-    def getFrame():
-
-
-        return(frame)
+    def setPixelDistance(self,frame):
+        self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.horizontalFOV)))
+        self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.verticalFOV)))
         
 
 
@@ -108,13 +125,16 @@ class USBCamera:
 
 
 
-    def setPixelDistance(self,frame):
-        self.pixDistanceX = (.5*frame.shape[1])/(math.tan(math.radians(.5*self.horizontalFOV)))
-        self.pixDistanceY = (.5*frame.shape[0])/(math.tan(math.radians(.5*self.verticalFOV)))
 
 
 
-    def calibrateCamera(self,frame,mtx,dist,newcameramtx,roi):
+    def calibrateCamera(self,frame,calibrationProfile):
+
+        mtx = calibrationProfile[0]
+        dist = calibrationProfile[1]
+        newcameramtx = calibrationProfile[2]
+        roi = calibrationProfile[3]
+
         undestortedFrame = cv2.undistort(frame,mtx,dist,None,newcameramtx)
 
         x,y,w,h = roi
@@ -123,7 +143,7 @@ class USBCamera:
 
 
 
-    def objectDetection(self,frame,cameraName):
+    def objectDetection(self,frame):
         # Get posision of trackbars and assign them to variables
         h_min = self.h_min
         h_max = self.h_max
@@ -174,4 +194,4 @@ class USBCamera:
         stacked = np.hstack((binary3Channel,frameResult))
 
 
-        return(angleX,angleY,angle2X,stacked)
+        return(angleX,angle2X,angleY,stacked)
