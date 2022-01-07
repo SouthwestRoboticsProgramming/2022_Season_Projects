@@ -3,10 +3,6 @@ import math
 import numpy as np
 import glob
 
-
-
-import Constants
-
 class USBCamera:
 
     camID = None
@@ -48,6 +44,7 @@ class USBCamera:
         else:
             if Constants.EXPERIMENTAL:
                 print("Camera ID " + str(camID) + " not found")
+            return(False)
 
 
     def getFrame(self):
@@ -59,7 +56,7 @@ class USBCamera:
         if ret:
             frame = self.calibrateCamera(uncalibratedFrame,calibrationProfile)
         else:
-            assert ret != True, "Camera " + str(self.camID) + " not found"
+            frame = ret
 
 
         return(frame)

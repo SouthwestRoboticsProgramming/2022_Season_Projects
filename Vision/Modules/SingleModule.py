@@ -2,18 +2,21 @@ import USBCamera
 
 class SingleModule:
 
-    usbCamera = None
+    camera = None
 
     def __init__(self,camID):
-        self.usbCamera = USBCamera(camID)
+        self.camera = USBCamera.USBCamera(camID)
 
         # Turn off auto settings for greater control
-        self.usbCamera.turnOffAuto()
+        self.camera.turnOffAuto()
 
-    def getAngles(self,exposure):
-        self.usbCamera.setExposure(exposure)
-        frame = self.usbCamera.getFrame()
-        Xangle, Xangle2, Yangle, outputFrame = self.usbCamera.objectDetection(frame)
+    def getMeasurements(self,exposure):
+        self.camera.setExposure(exposure)
+        frame = self.camera.getFrame()
+        if frame != False:
+            Xangle, Xangle2, Yangle, outputFrame = self.camera.objectDetection(frame)
+        else:
+            Xangle, Xangle2, Yangle, outputFrame = False
         return(Xangle, Xangle2, Yangle, outputFrame)
 '''
     def run_single_camera(self,camID):
