@@ -2,7 +2,7 @@ import cv2
 import math
 import numpy as np
 import glob
-import Constants
+from Vision import Constants
 
 class USBCamera:
 
@@ -193,3 +193,18 @@ class USBCamera:
 
 
         return(angleX,angle2X,angleY,stacked)
+
+
+    def updateSettings(settings):
+        self.h_min = settings[0]
+        self.h_max = settings[1]
+        self.s_min = settings[2]
+        self.s_max = settings[3]
+        self.v_min = settings[4]
+        self.v_max = settings[5]
+        self.TLow = settings[6]
+        self.cap = cv2.VideoCapture(camID)
+        self.calibration = self.calibrationProfile(cameraType)
+        self.horizontalFOV = Constants.USBCAMERA_ALPHA
+        self.verticalFOV = Constants.USBCAMERA_BETA
+        self.Exposure = 0

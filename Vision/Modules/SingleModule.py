@@ -5,19 +5,32 @@ class SingleModule:
     camera = None
 
     def __init__(self,camID):
-        self.camera = USBCamera(camID)
+
+        self.camera = USBCamera(camID,litleCamera,self.readValues())
 
         # Turn off auto settings for greater control
         self.camera.turnOffAuto()
 
-    def getMeasurements(self,exposure):
-        self.camera.setExposure(exposure)
+    def getMeasurements(self,settings):
+        self.camera.updateSettings(settings)
+        self.camera.setExposure(settings[7])
         frame = self.camera.getFrame()
         if frame != False:
             Xangle, Xangle2, Yangle, outputFrame = self.camera.objectDetection(frame)
         else:
-            Xangle, Xangle2, Yangle, outputFrame = False
+            Xangle, Xangle2, Yangle = False
+            outputFrame = frame
         return(Xangle, Xangle2, Yangle, outputFrame)
+
+    def readValues(self):
+        settings = open('Vision/config.txt','r')
+        values = settings.readlines()
+        i=0
+        while i <= len(values)-1:
+            values[i] = values[i].strip()
+            i+=1
+        settings = [int(i) for i in values]
+    return(settings)
 '''
     def run_single_camera(self,camID):
 

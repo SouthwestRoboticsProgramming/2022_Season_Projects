@@ -1,5 +1,6 @@
 from Cameras.USBCamera import  USBCamera
 import math
+import numpy as np
 
 class StereoModule:
 
@@ -8,8 +9,8 @@ class StereoModule:
     baseline = None # Distance between cameras. Whatever unit you measure this in will be the unit that everything is measured in
 
     def __init__(self,camIDL,camIDR,baseline):
-        self.leftCamera = USBCamera(camIDL)
-        self.rightCamera = USBCamera(camIDR)
+        self.leftCamera = USBCamera(camIDL,littleCamera,self.readValues())
+        self.rightCamera = USBCamera(camIDR,littleCamera,self.readValues())
         self.baseline = baseline
 
         if self.leftCamera == False: return("Left")
@@ -19,9 +20,11 @@ class StereoModule:
         self.rightCamera.turnOffAuto()
 
     
-    def getMeasurements(self,exposure):
-        self.leftCamera.setExposure(exposure)
-        self.rightCamera.setExposure(exposure)
+    def getMeasurements(self,settings):
+        self.leftCamera.setExposure(settings[7])
+        self.leftCamera.updateSettings(settings)
+        self.rightCamera.setExposure(settings[7])
+        self.rightCamera.updateSettings(settings)
 
         frameL = self.leftCamera.getFrame()
         frameR = self.rightCamera.getFrame()
@@ -29,8 +32,8 @@ class StereoModule:
         if frameL == False: return("Left")
         if frameR == False: return("Right")
 
-        XangleL, XangleL2, YangleL = self.leftCamera.objectDetection(frameL)
-        XangleR, XangleR2, YangleR = self.rightCamera.objectDetection(frameR)
+        XangleL, XangleL2, YangleL, stackedL = self.leftCamera.objectDetection(frameL)
+        XangleR, XangleR2, YangleR, stackedR = self.rightCamera.objectDetection(frameR)
 
         if XangleL == "Obstructed" and XangleR == "Obstructed": return("Both_Obstructed")
         if XangleL == "Obstructed": return("Left_Obstructed")
@@ -51,10 +54,11 @@ class StereoModule:
 
         localPose = (x,y,z)
         globalPose = (xGlobal,zGlobal)
+        outputFrame = np.vstack(stackedL,stackedR)
 
         # TODO: Obstruction (If I want to)
 
-        return(globalPose,localPose)
+        return(globalPose,localPose,outputFrame)
 
     
     def checkCameras(self):
@@ -91,3 +95,13 @@ class StereoModule:
         return(x,y,c)
 
     # TODO: Add accuracy with variable percentage
+
+    def readValues(self):
+        settings = open('Vision/config.txt','r')
+        values = settings.readlines()
+        i=0
+        while i <= len(values)-1:
+            values[i] = values[i].strip()
+            i+=1
+        settings = [int(i) for i in values]
+        return(settings)
