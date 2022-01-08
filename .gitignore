@@ -1,3 +1,10 @@
 *out
 *target
 *.DS_Store
+Vision/__pycache__/VisionThreads.cpython-38.pyc
+Vision/Modules/__pycache__/__init__.cpython-38.pyc
+.gitignore
+.gitignore
+Vision/Modules/__pycache__/SingleModule.cpython-38.pyc
+Vision/Modules/Cameras/__pycache__/USBCamera.cpython-38.pyc
+Vision/Modules/Cameras/__pycache__/__init__.cpython-38.pyc
