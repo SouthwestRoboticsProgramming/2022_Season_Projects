@@ -1,5 +1,6 @@
 import cv2
-from Modules import SingleModule.SingleModule
+from Modules.SingleModule import SingleModule
+from Modules.StereoModule import StereoModule
 from Constants import Constants
 
 class VisionThreads:

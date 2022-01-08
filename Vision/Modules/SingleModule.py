@@ -6,7 +6,7 @@ class SingleModule:
 
     def __init__(self,camID):
 
-        self.camera = USBCamera(camID,litleCamera,self.readValues())
+        self.camera = USBCamera(camID,"litleCamera",self.readValues())
 
         # Turn off auto settings for greater control
         self.camera.turnOffAuto()
@@ -30,7 +30,7 @@ class SingleModule:
             values[i] = values[i].strip()
             i+=1
         settings = [int(i) for i in values]
-    return(settings)
+        return(settings)
 '''
     def run_single_camera(self,camID):
 

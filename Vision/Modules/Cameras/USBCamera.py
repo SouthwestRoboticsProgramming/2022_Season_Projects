@@ -2,7 +2,7 @@ import cv2
 import math
 import numpy as np
 import glob
-from Vision import Constants
+import Constants
 
 class USBCamera:
 
@@ -93,18 +93,26 @@ class USBCamera:
         images = glob.glob('Vision/checkerboards/'+ str(calibrationImageName) +'.jpg')
         for fname in images:
             img = cv2.imread(fname)
-            gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-            # Find the corners
-            ret, corners = cv2.findChessboardCorners(gray,checkerboard,cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
-            # If criterion is met, refine the corners
-            if ret == True:
-                objpoints.append(objp)
-                corners2 = cv2.cornerSubPix(gray, corners, (11,11),(-1,-1),criteria)
+            if img is not None:
+                gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+                # Find the corners
+                ret, corners = cv2.findChessboardCorners(gray,checkerboard,cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
+                # If criterion is met, refine the corners
+                if ret:
+                    objpoints.append(objp)
+                    corners2 = cv2.cornerSubPix(gray, corners, (11,11),(-1,-1),criteria)
 
-                imgpoints.append(corners2)
+                    imgpoints.append(corners2)
+                    
+
+                    img = cv2.drawChessboardCorners(img, checkerboard,corners2,ret)
+                else:
+                    print("No corners found")
+                    # TODO: Figure out what to do if there are no corners in the image
+            else:
+                print("No image found")
+                # TODO: Figure out what to do if there isn't an image to calibrate on.
                 
-
-                img = cv2.drawChessboardCorners(img, checkerboard,corners2,ret)
 
         h,w = img.shape[:2]
 
@@ -195,7 +203,7 @@ class USBCamera:
         return(angleX,angle2X,angleY,stacked)
 
 
-    def updateSettings(settings):
+    def updateSettings(self,settings):
         self.h_min = settings[0]
         self.h_max = settings[1]
         self.s_min = settings[2]
@@ -203,8 +211,4 @@ class USBCamera:
         self.v_min = settings[4]
         self.v_max = settings[5]
         self.TLow = settings[6]
-        self.cap = cv2.VideoCapture(camID)
-        self.calibration = self.calibrationProfile(cameraType)
-        self.horizontalFOV = Constants.USBCAMERA_ALPHA
-        self.verticalFOV = Constants.USBCAMERA_BETA
-        self.Exposure = 0
+        self.Exposure = settings[7]
