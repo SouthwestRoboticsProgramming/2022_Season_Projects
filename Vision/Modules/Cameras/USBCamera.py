@@ -2,7 +2,15 @@ import cv2
 import math
 import numpy as np
 import glob
-import Constants
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+parentOfParent = os.path.dirname(parent)
+sys.path.append(parent)
+sys.path.append(parentOfParent)
+from Constants import Constants
 
 class USBCamera:
 
@@ -58,6 +66,7 @@ class USBCamera:
             frame = self.calibrateCamera(uncalibratedFrame,calibrationProfile)
         else:
             frame = ret
+        print(frame)
 
 
         return(frame)
@@ -190,7 +199,7 @@ class USBCamera:
             angleX = math.degrees(math.atan(((x+.5*w) - (frame.shape[1]/2))/pixDistanceX))
             angleY = math.degrees(math.atan(((y+.5*h) - (frame.shape[0]/2))/pixDistanceY))
             angle2X = math.degrees(math.atan(((x) - (frame.shape[1]/2))/pixDistanceX))
-            cv2.rectangle(frameResult,(x,y),( x + w,y + h ),self.boundingColor,3)
+            cv2.rectangle(frameResult,(x,y),( x + w,y + h ),Constants.BOUNDING_COLOR,3)
         else:
             angleX = "Obstructed"
             angleY = "Obstructed"
@@ -212,3 +221,6 @@ class USBCamera:
         self.v_max = settings[5]
         self.TLow = settings[6]
         self.Exposure = settings[7]
+
+    def release(self):
+        self.cap.release()

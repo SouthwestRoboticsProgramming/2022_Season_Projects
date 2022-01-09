@@ -1,4 +1,4 @@
-from Cameras.USBCamera import  USBCamera
+from .Cameras import  USBCamera
 import math
 import numpy as np
 
@@ -105,3 +105,7 @@ class StereoModule:
             i+=1
         settings = [int(i) for i in values]
         return(settings)
+
+    def release(self):
+        self.leftCamera.release()
+        self.rightCamera.release()

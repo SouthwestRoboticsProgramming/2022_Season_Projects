@@ -1,12 +1,9 @@
 import VisionThreads
-import Constants
+from Constants import Constants
 import threading
 
 if __name__ == "__main__":
-    threadOne = VisionThreads("Test")
-    
-
-    t1 = threading.Thread(target=threadOne.singleCamModule, args=Constants.MODULE_1_CAMID)
+    t1 = threading.Thread(target=VisionThreads.singleCamModule, args=("Testname",0))
 
     t1.start()
 
