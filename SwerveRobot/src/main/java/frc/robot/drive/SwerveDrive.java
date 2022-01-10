@@ -2,11 +2,13 @@ package frc.robot.drive;
 
 import static frc.robot.Constants.*;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 
@@ -22,15 +24,9 @@ public class SwerveDrive {
      */
     private final SwerveModule w1, w2, w3, w4;
     private final AHRS navx;
+    private final SwerveDriveOdometry odometry;
     private double currentAngle; // In radians
-
-    public SwerveDrive() {
-        w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1, CAN_PORT_1, OFFSET_1);
-        w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2, CAN_PORT_2, OFFSET_2);
-        w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3, CAN_PORT_3, OFFSET_3);
-        w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4, CAN_PORT_4, OFFSET_4);
-        navx = new AHRS(SPI.Port.kMXP, (byte) 200);
-    }
+    private Pose2d currentPose;
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
         // Front Left
@@ -43,8 +39,22 @@ public class SwerveDrive {
         new Translation2d(-WHEEL_SPACING_FRONT_BACK / 2.0, -WHEEL_SPACING_LEFT_RIGHT / 2.0)
     );
 
+    public SwerveDrive() {
+        w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1, CAN_PORT_1, OFFSET_1);
+        w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2, CAN_PORT_2, OFFSET_2);
+        w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3, CAN_PORT_3, OFFSET_3);
+        w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4, CAN_PORT_4, OFFSET_4);
+        navx = new AHRS(SPI.Port.kMXP, (byte) 200);
+        odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d());
+
+    }
+
     public void zeroGyroscope() {
         navx.zeroYaw();
+    }
+
+    public void setPosition(Pose2d position){
+        odometry.resetPosition(position, navx.getRotation2d());
     }
 
     public Rotation2d getGyroscopeRotation() {
@@ -66,19 +76,19 @@ public class SwerveDrive {
 
         // Get current position and state of robot
         currentAngle = navx.getAngle();
-
-
+        
+        
         // TEMPORARY, TODO: Remove
         System.out.println(" ***** Debugging Swerve Drive ***** ");
         System.out.println("Gyroscope angle: " + currentAngle);
         System.out.println(" ********************************** ");
         System.out.println();
-
+        
         
         // Calculate the movements of each indevidual module
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
-
-
+        
+        currentPose = odometry.update(navx.getRotation2d(), moduleStates);
 
         w1.update(moduleStates[2]);
         w2.update(moduleStates[0]);
