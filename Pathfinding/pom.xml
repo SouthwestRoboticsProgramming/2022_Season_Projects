@@ -12,6 +12,7 @@
     <modules>
         <module>Pathfinding-Lib</module>
         <module>Pathfinding-Demo</module>
+        <module>Pathfinding-Task</module>
     </modules>
 
     <build>

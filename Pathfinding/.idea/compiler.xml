@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Pathfinding-Demo" />
         <module name="Pathfinding-Lib" />
+        <module name="Pathfinding-Task" />
       </profile>
     </annotationProcessing>
   </component>
