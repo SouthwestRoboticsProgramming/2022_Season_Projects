@@ -1,4 +1,4 @@
-from Cameras.USBCamera import USBCamera
+from .Cameras import USBCamera
 
 class SingleModule:
 
@@ -6,7 +6,7 @@ class SingleModule:
 
     def __init__(self,camID):
 
-        self.camera = USBCamera(camID,"litleCamera",self.readValues())
+        self.camera = USBCamera(camID,"WIN_20211116_16_05_41_Pro",self.readValues())
 
         # Turn off auto settings for greater control
         self.camera.turnOffAuto()
@@ -15,11 +15,12 @@ class SingleModule:
         self.camera.updateSettings(settings)
         self.camera.setExposure(settings[7])
         frame = self.camera.getFrame()
-        if frame != False:
-            Xangle, Xangle2, Yangle, outputFrame = self.camera.objectDetection(frame)
+        if frame is not False:
+            Xangle, Xangle2, Yangle, outputFrame = self.camera.circleDetection(frame)
         else:
             Xangle, Xangle2, Yangle = False
             outputFrame = frame
+
         return(Xangle, Xangle2, Yangle, outputFrame)
 
     def readValues(self):
@@ -31,6 +32,10 @@ class SingleModule:
             i+=1
         settings = [int(i) for i in values]
         return(settings)
+
+    def release(self):
+        self.camera.release()
+        return
 '''
     def run_single_camera(self,camID):
 

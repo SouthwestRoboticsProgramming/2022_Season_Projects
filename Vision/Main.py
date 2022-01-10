@@ -1,12 +1,9 @@
 import VisionThreads
-import Constants
+from Constants import Constants
 import threading
 
 if __name__ == "__main__":
-    threadOne = VisionThreads("Test")
-    
-
-    t1 = threading.Thread(target=threadOne.singleCamModule, args=Constants.MODULE_1_CAMID)
+    t1 = threading.Thread(target=VisionThreads.singleCamModule, args=("Testname",0))
 
     t1.start()
 
@@ -500,11 +497,7 @@ class Vision:
                     self.run_single_camera(camIDL)
                     return
 
-                # Creating 'q' as the quit button for the webcam
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    capL.release()
-                    capR.release()
-                    return()
+
 
             elif retL:
                 print("I'm gonna use the left camera only")
