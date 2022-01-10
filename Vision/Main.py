@@ -2,10 +2,15 @@ import VisionThreads
 from Constants import Constants
 import threading
 
-if __name__ == "__main__":
-    t1 = threading.Thread(target=VisionThreads.singleCamModule, args=("Testname",0))
+def main():
+    t1 = VisionThreads.getSingleCamThread("TestTwo",0)
 
     t1.start()
+
+
+if __name__ == "__main__":
+    main()
+
 
 # For reference
 

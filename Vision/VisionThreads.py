@@ -1,4 +1,5 @@
 import cv2
+import threading
 from Modules import StereoModule
 from Modules import SingleModule
 from Constants import Constants
@@ -95,12 +96,20 @@ class VisionThreads:
         # This function doens't do anything but is required for creating trackbars
         pass
 
-def singleCamModule(instanceName,camID):
+def getSingleCamThread(instanceName,camID):
+    thread = threading.Thread(target=_runSingleCamModule,args=(instanceName,camID))
+    return(thread)
+
+def getStereoThread(instanceName,camIDL,camIDR,baseline,settings):
+    thread = threading.Thread(target=_runStereoModule,args=(instanceName,camIDL,camIDR,baseline,settings))
+    return(thread)
+
+def _runSingleCamModule(instanceName,camID):
     module = VisionThreads(instanceName)
     module._singleCamModule(camID)
     return
 
-def stereoModule(instanceName,camIDL,camIDR,baseline,settings):
+def _runStereoModule(instanceName,camIDL,camIDR,baseline,settings):
     module = VisionThreads(instanceName)
     module._singleCamModule(camIDL,camIDR,baseline,settings)
     return
