@@ -21,6 +21,7 @@ class VisionThreads:
         self.instanceName = instanceName
 
     def _singleCamModule(self,camID):
+        self.readValues()
         if Constants.EXPERIMENTAL:
             self._createTrackbars()
 
@@ -91,6 +92,15 @@ class VisionThreads:
             self.v_max = cv2.getTrackbarPos("Value Max",str(self.instanceName) + " Track Bars")
             self.TLow = cv2.getTrackbarPos("Thresh Low", str(self.instanceName) + " Track Bars")
             self.exposure = cv2.getTrackbarPos("Exposure",str(self.instanceName) + " Track Bars")
+
+    def readValues(self):
+        lines = open('Vision/config.txt','r')
+        values = lines.readlines()
+        i=0
+        while i <= len(values)-1:
+            values[i] = values[i].strip()
+            i+=1
+        self.h_min, self.h_max, self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure = [int(i) for i in values]
 
     def _empty(self,a):
         # This function doens't do anything but is required for creating trackbars
