@@ -79,7 +79,7 @@ class VisionThreads:
             cv2.createTrackbar("Value Min",str(self.instanceName) + " Track Bars",self.v_min,255,self._empty)
             cv2.createTrackbar("Value Max",str(self.instanceName) + " Track Bars",self.v_max,255,self._empty)
             cv2.createTrackbar("Thresh Low", str(self.instanceName) + " Track Bars", self.TLow , 255, self._empty)
-            cv2.createTrackbar("Exposure",str(self.instanceName) + " Track Bars", self.exposure,200, self._empty)
+            cv2.createTrackbar("Exposure",str(self.instanceName) + " Track Bars", self.exposure,1000, self._empty)
 
     def _getTrackbars(self):
             self.h_min = cv2.getTrackbarPos("Hue Min",str(self.instanceName) + " Track Bars")

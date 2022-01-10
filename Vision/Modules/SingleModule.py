@@ -16,7 +16,7 @@ class SingleModule:
         self.camera.setExposure(settings[7])
         frame = self.camera.getFrame()
         if frame is not False:
-            Xangle, Xangle2, Yangle, outputFrame = self.camera.objectDetection(frame)
+            Xangle, Xangle2, Yangle, outputFrame = self.camera.circleDetection(frame)
         else:
             Xangle, Xangle2, Yangle = False
             outputFrame = frame
