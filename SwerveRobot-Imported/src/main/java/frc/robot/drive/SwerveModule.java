@@ -24,7 +24,6 @@ import static frc.robot.Constants.*;
 // so it probably doesn't work.
 // Wheel movements are commented out to prevent accidentally damaging the modules
 public class SwerveModule {
-    private static final double WHEEL_TURN_KF = 0;
     private final WPI_TalonSRX driveMotor;
     private final WPI_TalonSRX turnMotor;
     private final CANCoder canCoder;
@@ -65,14 +64,13 @@ public class SwerveModule {
         driveMotor.setSelectedSensorPosition(0, 0, 30);
         driveMotor.stopMotor();
 
-        //turnMotor.setNeutralMode(NeutralMode.Brake);
+        turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setSelectedSensorPosition(0, 0, 30);
         turnMotor.stopMotor();
 
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
         turnPID.enableContinuousInput(-180, 180);
-        turnPID.setTolerance(WHEEL_TURN_TOLERANCE);
-        //turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
+        turnPID.setTolerance(WHEEL_TOLERANCE.getDegrees());
 
         turnFeed = new SimpleMotorFeedforward(1, 0);
 
