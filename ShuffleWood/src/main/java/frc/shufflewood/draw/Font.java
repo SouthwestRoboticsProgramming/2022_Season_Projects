@@ -1,5 +1,7 @@
-package frc.shufflewood;
+package frc.shufflewood.draw;
 
+import frc.shufflewood.Vec2f;
+import frc.shufflewood.draw.DrawList;
 import processing.core.PApplet;
 import processing.core.PImage;
 

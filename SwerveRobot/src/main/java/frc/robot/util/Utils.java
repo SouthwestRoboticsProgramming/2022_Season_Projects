@@ -12,6 +12,11 @@ public final class Utils {
         return -Math.PI + ((Math.PI * 2 + ((angle + Math.PI) % (Math.PI * 2))) % (Math.PI * 2));
     }
 
+    // Makes the angle be in the interval [-180, 180)
+    public static double normalizeAngleDegrees(double angle) {
+        return -180 + ((180 * 2 + ((angle + 180) % (180 * 2))) % (180 * 2));
+    }
+
     private Utils() {
         throw new AssertionError();
     }

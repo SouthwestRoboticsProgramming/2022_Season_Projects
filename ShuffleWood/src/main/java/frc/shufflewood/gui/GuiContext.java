@@ -1,23 +1,29 @@
-package frc.shufflewood;
+package frc.shufflewood.gui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import frc.shufflewood.draw.DrawList;
+import frc.shufflewood.draw.Font;
+import frc.shufflewood.Rectangle;
+import frc.shufflewood.Vec2f;
+import frc.shufflewood.gui.filter.AnyFilter;
+import frc.shufflewood.gui.filter.IntegerFilter;
+import frc.shufflewood.gui.filter.TextFilter;
 import processing.core.PApplet;
 import processing.core.PImage;
 
 public final class GuiContext {
-    private final PApplet app;
+    final PApplet app;
     private DrawList draw;
     
     private GuiInput input;
     private GuiStyle style;
     
     private Map<String, GuiWindow> windows;
+    private Set<String> unusedWindows;
     private List<GuiWindow> focusStack;
     private GuiWindow currentWindow;
+    private GuiWindow hoveredWindow;
     
     private float contentMinX, contentMinY;
     private float contentMaxX, contentMaxY;
@@ -36,31 +42,40 @@ public final class GuiContext {
         input = new GuiInput();
         
         windows = new HashMap<>();
+        unusedWindows = new HashSet<>();
         focusStack = new ArrayList<>();
         
         style = new GuiStyle(app);
     }
     
     public void beginFrame() {
+        for (String key : unusedWindows) {
+            GuiWindow win = windows.remove(key);
+            if (win != null)
+                focusStack.remove(win);
+        }
+        unusedWindows.clear();
+        unusedWindows.addAll(windows.keySet());
+
         input.update();
         draw = new DrawList(app, style.font);
     }
     
     public void endFrame() {
+        hoveredWindow = null;
+        for (int i = focusStack.size() - 1; i >= 0; i--) {
+            GuiWindow win = focusStack.get(i);
+            if (input.rectHovered(win.x, win.y, win.width, win.height + style.headerSize)) {
+                hoveredWindow = win;
+                break;
+            }
+        }
+
         // Focus clicked window
         if (input.mouseDown || input.mouseClicked) {
-            GuiWindow hovered = null;
-            for (int i = focusStack.size() - 1; i >= 0; i--) {
-                GuiWindow win = focusStack.get(i);
-                if (input.rectHovered(win.x, win.y, win.width, win.height + style.headerSize)) {
-                    hovered = win;
-                    break;
-                }
-            }
-
-            if (hovered != null) {
-                focusStack.remove(hovered);
-                focusStack.add(hovered);
+            if (hoveredWindow != null) {
+                focusStack.remove(hoveredWindow);
+                focusStack.add(hoveredWindow);
             }
         }
     }
@@ -68,6 +83,8 @@ public final class GuiContext {
     // ---- Windows ----
     
     public void begin(String title) {
+        unusedWindows.remove(title);
+
         GuiWindow win = windows.get(title);
         if (win == null) {
             win = new GuiWindow();
@@ -90,7 +107,7 @@ public final class GuiContext {
         contentMinX = win.x + style.padding;
         contentMinY = win.y + style.headerSize + style.padding;
         contentMaxX = win.x + win.width - style.padding;
-        contentMaxY = win.y + win.height - style.padding;
+        contentMaxY = win.y + style.headerSize + win.height - style.padding;
         
         posX = contentMinX;
         posY = contentMinY;
@@ -104,7 +121,7 @@ public final class GuiContext {
         DrawList draw = win.draw;
 
         // Header
-        draw.fillRoundRect(win.x, win.y, win.width, style.headerSize + style.windowRounding, style.windowRounding, style.headerColor);
+        draw.fillRoundRect(win.x, win.y, win.width, style.headerSize + style.windowRounding, style.windowRounding, isFocused() ? style.headerFocusedColor : style.headerColor);
         draw.drawText(win.title, win.x + win.width / 2f, win.y + style.headerSize / 2f, style.textColor, 0.5f, 0.5f);
 
         // Body
@@ -114,15 +131,35 @@ public final class GuiContext {
         // Border
         draw.drawRoundRect(win.x, win.y, win.width, win.height + style.headerSize, style.windowRounding, style.borderColor);
         draw.drawLine(win.x, win.y + style.headerSize, win.x + win.width, win.y + style.headerSize, style.borderColor);
+
+        draw.clip(contentMinX - 2, contentMinY - 2, contentMaxX + 2, contentMaxY + 2);
     }
     
     public void end() {
         GuiWindow win = currentWindow;
+        win.draw.noClip();
 
         // Drag header
-        Vec2f d = input.rectDrag(win.x, win.y, win.width, style.headerSize);
-        win.x += d.x;
-        win.y += d.y;
+        if (isFocused()) {
+            Vec2f d = input.rectDrag(win.x, win.y, win.width, style.headerSize);
+            win.x += d.x;
+            win.y += d.y;
+        }
+    }
+
+    public void setWindowPos(float x, float y) {
+        currentWindow.x = x;
+        currentWindow.y = y;
+    }
+
+    public void setWindowCenterPos(float x, float y) {
+        currentWindow.x = x - currentWindow.width / 2;
+        currentWindow.y = y - currentWindow.height / 2;
+    }
+
+    public void setWindowSize(float width, float height) {
+        currentWindow.width = width;
+        currentWindow.height = height;
     }
     
     // ---- Widgets ----
@@ -199,6 +236,8 @@ public final class GuiContext {
                 posX + style.treeArrowSize, posY,
                 style.treeArrowColor
             );
+
+            indent(style.treeArrowSize + style.widgetPadding);
         } else {
             draw.fillTriangle(
                 posX, posY,
@@ -216,12 +255,12 @@ public final class GuiContext {
 
     public boolean treePush(String label) { return treePush(label, label); }
     public boolean treePush(String label, Object id) {
-        boolean[] open = currentWindow.storage.getOrSet(id, new boolean[] { false });
+        boolean[] open = currentWindow.storage.getOrSet(id, () -> new boolean[] { false });
         return treePushState(label, open);
     }
 
     public void treePop() {
-
+        unindent(style.treeArrowSize + style.widgetPadding);
     }
 
     public void image(PImage image) { image(image, image.width, image.height); }
@@ -238,6 +277,89 @@ public final class GuiContext {
         endWidget();
     }
 
+    // Built-in text filters
+    private static final TextFilter FILTER_ANY = new AnyFilter();
+    private static final TextFilter FILTER_INT = new IntegerFilter();
+
+    private static class TextEditState {
+        boolean editing;
+        StringBuffer editBuffer;
+        int cursorPos;
+
+        private TextEditState() {
+            editing = false;
+            editBuffer = new StringBuffer();
+            cursorPos = 0;
+        }
+    }
+
+    public void editString(StringBuffer str) { editString(str, str, FILTER_ANY); }
+    public void editString(StringBuffer buf, Object id) { editString(buf, id, FILTER_ANY); }
+    public void editString(StringBuffer buf, Object id, TextFilter filter) {
+        beginWidget();
+
+        TextEditState state = currentWindow.storage.getOrSet(id, TextEditState::new);
+        String str = state.editing ? state.editBuffer.toString() : buf.toString();
+
+        widgetWidth = getAvailWidth();
+        widgetHeight = style.font.getHeight() + style.textEditContentPadding * 2;
+
+        boolean hovered = isItemHovered();
+        boolean clicked = isItemClicked();
+        boolean clickedOutside = isClickedOutsideItem();
+
+        if (state.editing) {
+            state.editBuffer.append(input.getTextInput());
+        }
+        boolean allowed = filter.isAllowed(state.editBuffer.toString());
+
+        if (clicked) {
+            state.editing = true;
+            state.editBuffer.replace(0, state.editBuffer.length(), "");
+            state.cursorPos = 0;
+        } else if (state.editing && clickedOutside) {
+            state.editing = false;
+            if (allowed && state.editBuffer.length() != 0) {
+                buf.replace(0, buf.length(), state.editBuffer.toString());
+            }
+        }
+
+        // Determine background and border colors
+        int backgroundColor, borderColor;
+        if (state.editing) {
+             if (allowed) {
+                 borderColor = style.textEditBorderColor;
+                 backgroundColor = style.textEditActiveColor;
+             } else {
+                 borderColor = style.textEditFilteredBorderColor;
+                 backgroundColor = style.textEditFilteredColor;
+             }
+        } else {
+            borderColor = style.textEditBorderColor;
+
+            if (hovered) {
+                backgroundColor = style.textEditHoverColor;
+            } else {
+                backgroundColor = style.textEditColor;
+            }
+        }
+
+        DrawList draw = currentWindow.draw;
+        draw.fillRect(posX, posY, widgetWidth, widgetHeight, backgroundColor);
+        draw.drawRect(posX, posY, widgetWidth, widgetHeight, borderColor);
+        draw.drawText(str, posX + style.textEditContentPadding, posY + widgetHeight / 2, style.textColor, 0.5f);
+
+        endWidget();
+    }
+
+    public void editInt(int[] value) { editInt(value, value); }
+    public void editInt(int[] value, Object id) { editInt(value, id, FILTER_INT); }
+    public void editInt(int[] value, Object id, TextFilter filter) {
+        StringBuffer buf = new StringBuffer(String.valueOf(value[0]));
+        editString(buf, id, filter);
+        value[0] = Integer.parseInt(buf.toString());
+    }
+
     // ---- Internal widget utilities ----
 
     private float getAvailWidth() {
@@ -245,16 +367,22 @@ public final class GuiContext {
     }
 
     private boolean isItemHovered() {
-        return input.rectHovered(posX, posY, widgetWidth, widgetHeight);
+        return hoveredWindow == currentWindow && input.rectHovered(posX, posY, widgetWidth, widgetHeight);
     }
 
     private boolean isItemPressed() {
-        return input.rectPressed(posX, posY, widgetWidth, widgetHeight);
+        return isFocused() && input.rectPressed(posX, posY, widgetWidth, widgetHeight);
     }
 
     private boolean isItemClicked() {
-        return input.rectClicked(posX, posY, widgetWidth, widgetHeight);
+        return isFocused() && input.rectClicked(posX, posY, widgetWidth, widgetHeight);
     }
+
+    private boolean isClickedOutsideItem() {
+        return !isFocused() || input.clickedOutsideRect(posX, posY, widgetWidth, widgetHeight);
+    }
+
+    private boolean isFocused() { return focusStack.get(focusStack.size() - 1) == currentWindow; }
     
     // ---- Layout ----
     
@@ -273,6 +401,13 @@ public final class GuiContext {
     public void unindent(float amount) {
         lineBeginX -= amount;
     }
+
+    // Tables
+    public void beginTable(float... columnWeights) {}
+    public void endTable() {}
+    public void tableNextCell() {}
+    public void tableNextRow() {}
+    public void tableHeaderRow() {}
     
     // Internal
     private void beginWidget() {

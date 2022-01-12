@@ -1,8 +1,9 @@
-package frc.shufflewood;
+package frc.shufflewood.draw;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import frc.shufflewood.Vec2f;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
@@ -15,6 +16,9 @@ public final class DrawList {
         float u, v;
         int color;
         PImage texture;
+        // TEMPORARY
+        float cx, cy, cw, ch;
+        boolean isClip;
         
         private Vertex(float x, float y, float u, float v, int color, PImage texture) {
             this.x = x;
@@ -23,6 +27,15 @@ public final class DrawList {
             this.v = v;
             this.color = color;
             this.texture = texture;
+        }
+
+        private Vertex(DrawList draw) {
+            // TEMPORARY
+            cx = draw.clipMinX;
+            cy = draw.clipMinY;
+            cw = draw.clipMaxX - draw.clipMinX;
+            ch = draw.clipMaxY - draw.clipMinY;
+            isClip = true;
         }
     }
 
@@ -40,11 +53,18 @@ public final class DrawList {
     private final List<Vertex> vertices;
     private final PApplet app;
     private final Font font;
+
+    private float clipMinX, clipMinY;
+    private float clipMaxX, clipMaxY;
     
     public DrawList(PApplet app, Font font) {
         vertices = new ArrayList<>();
         this.app = app;
         this.font = font;
+
+        clipMinX = clipMinY = 0;
+        clipMaxX = app.width;
+        clipMaxY = app.height;
     }
     
     public void drawLine(float x1, float y1, float x2, float y2, int color) {
@@ -85,6 +105,23 @@ public final class DrawList {
     }
     
     public void fillRect(float x, float y, float w, float h, int color) {
+        if (x > clipMaxX || y > clipMaxY || x + w < clipMinX || y + h < clipMinY) return;
+
+        if (x < clipMinX) {
+            w -= clipMinX - x;
+            x = clipMinX;
+        }
+        if (y < clipMinY) {
+            h -= clipMinY - y;
+            y = clipMinY;
+        }
+        if (x + w > clipMaxX) {
+            w = clipMaxX - x;
+        }
+        if (y + h > clipMaxY) {
+            h = clipMaxY - y;
+        }
+
         fillTriangle(x, y, x + w, y, x + w, y + h, color);
         fillTriangle(x, y, x + w, y + h, x, y + h, color);
     }
@@ -130,6 +167,9 @@ public final class DrawList {
     }
 
     private void polygonVtx(float x, float y) {
+        //x = Util.clamp(x, clipMinX, clipMaxX);
+        //y = Util.clamp(y, clipMinY, clipMaxY);
+
         if (!polyFirstSet) {
             polyFirstX = x;
             polyFirstY = y;
@@ -193,6 +233,23 @@ public final class DrawList {
     }
     
     public void fillTexturedRect(float x, float y, float w, float h, int u1, int v1, int u2, int v2, PImage texture, int tint) {
+        if (x > clipMaxX || y > clipMaxY || x + w < clipMinX || y + h < clipMinY) return;
+
+//        if (x < clipMinX) {
+//            w -= clipMinX - x;
+//            x = clipMinX;
+//        }
+//        if (y < clipMinY) {
+//            h -= clipMinY - y;
+//            y = clipMinY;
+//        }
+//        if (x + w > clipMaxX) {
+//            w = clipMaxX - x;
+//        }
+//        if (y + h > clipMaxY) {
+//            h = clipMaxY - y;
+//        }
+
         // Triangle 1
         textureVtx(x,     y,     u1, v1, tint, texture);
         textureVtx(x + w, y,     u2, v1, tint, texture);
@@ -219,6 +276,14 @@ public final class DrawList {
         PImage texture = vertices.get(0).texture;
         app.beginShape(PConstants.TRIANGLES);
         for (Vertex v : vertices) {
+            // TEMPORARY
+            if (v.isClip) {
+                app.endShape();
+                app.clip(v.cx, v.cy, v.cw, v.ch);
+                app.beginShape(PConstants.TRIANGLES);
+                continue;
+            }
+
             if (v.texture != texture) {
                 app.endShape();
                 app.beginShape(PConstants.TRIANGLES);
@@ -231,6 +296,26 @@ public final class DrawList {
             app.vertex(v.x, v.y, v.u, v.v);
         }
         app.endShape();
+    }
+
+    public void clip(float minX, float minY, float maxX, float maxY) {
+        clipMinX = minX;
+        clipMinY = minY;
+        clipMaxX = maxX;
+        clipMaxY = maxY;
+
+        // TEMPORARY
+        vertices.add(new Vertex(this));
+    }
+
+    public void noClip() {
+        clipMinX = 0;
+        clipMinY = 0;
+        clipMaxX = app.width;
+        clipMaxY = app.height;
+
+        // TEMPORARY
+        vertices.add(new Vertex(this));
     }
     
     private void colorVtx(float x, float y, int color) {

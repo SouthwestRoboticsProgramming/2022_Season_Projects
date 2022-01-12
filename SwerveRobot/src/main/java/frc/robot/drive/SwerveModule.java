@@ -9,12 +9,13 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpiutil.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.MathUtil;
 //import edu.wpi.first.wpilibj.controller.ArmFeedforward;
 import frc.robot.Constants;
+import frc.robot.util.Utils;
 
 import static frc.robot.Constants.*;
 
@@ -48,7 +49,7 @@ public class SwerveModule {
         config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
         config.neutralDeadband = 0.001;
         config.slot0.kF = 0;
-        config.slot0.kP = 0;
+        config.slot0.kP = 1;
         config.slot0.kI = 0;
         config.slot0.kD = 0;
         config.slot0.closedLoopPeakOutput = 1;
@@ -62,11 +63,12 @@ public class SwerveModule {
         driveMotor.stopMotor();
 
         //turnMotor.setNeutralMode(NeutralMode.Brake);
+        turnMotor.setInverted(true);
         turnMotor.setSelectedSensorPosition(0, 0, 30);
         turnMotor.stopMotor();
 
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
-        turnPID.enableContinuousInput(-Math.PI, Math.PI);
+        turnPID.enableContinuousInput(-180, 180);
         turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
 
         //turnFeed = new ArmFeedforward(cancoderOffset, cancoderOffset, cancoderOffset); // TODO: Figure this out
@@ -81,16 +83,32 @@ public class SwerveModule {
         canCoder.configAllSettings(config);
     }
 
+    public void spin(double amount) {
+        turnMotor.set(ControlMode.PercentOutput, amount);
+    }
+
+    public double getEncoder() {
+        return 360 - canCoder.getAbsolutePosition();
+    }
+
+    public double getTarget() {
+        return targetAngle;
+    }
+
+    private double targetAngle = 0;
+
     public void update(SwerveModuleState swerveModuleState) {
 
-        Rotation2d canRotation = new Rotation2d(canCoder.getAbsolutePosition());
+        Rotation2d canRotation = new Rotation2d(getEncoder());
         SwerveModuleState moduleState = SwerveModuleState.optimize(swerveModuleState, canRotation);
-        double currentAngle = canCoder.getAbsolutePosition();
+        double currentAngle = getEncoder();
+        double normalAngle = Utils.normalizeAngleDegrees(currentAngle);
         Rotation2d targetAngle = moduleState.angle;
+        this.targetAngle = targetAngle.getDegrees();
         double targetSpeed = moduleState.speedMetersPerSecond;
 
         // Turn to target angle
-        double turnAmount = turnPID.calculate(currentAngle,targetAngle.getDegrees());
+        double turnAmount = turnPID.calculate(normalAngle,targetAngle.getDegrees());
         turnAmount = MathUtil.clamp(turnAmount,-1.0,1.0);
 
         // Drive the target speed
@@ -98,22 +116,22 @@ public class SwerveModule {
         driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
 
         // Spin the motors
-        turnMotor.set(ControlMode.PercentOutput, turnAmount);
+        turnMotor.set(ControlMode.Position, targetAngle.getDegrees());
         driveMotor.set(ControlMode.PercentOutput, driveAmount);
 
 
         // Temporary
         if (printDebugging) {
-            System.out.println(" ***** Debugging Swerve Module 1 ***** ");
-            System.out.println("Current module angle: " + currentAngle);
-            System.out.println("Target module angle: " + targetAngle.getDegrees());
-            System.out.println("Target drive speed: " + targetSpeed);
-            System.out.println("Percent output turn motor: " + 100 * turnAmount + "%");
-            System.out.println("Percent ouptut drive motor: " + 100 * driveAmount + "%");
-            System.out.println(" ************************************* ");
-            System.out.println();
-            System.out.println();
-            System.out.println();
+            // System.out.println(" ***** Debugging Swerve Module 1 ***** ");
+            // System.out.println("Current module angle: " + currentAngle);
+            // System.out.println("Target module angle: " + targetAngle.getDegrees());
+            // System.out.println("Target drive speed: " + targetSpeed);
+            // System.out.println("Percent output turn motor: " + 100 * turnAmount + "%");
+            // System.out.println("Percent ouptut drive motor: " + 100 * driveAmount + "%");
+            // System.out.println(" ************************************* ");
+            // System.out.println();
+            // System.out.println();
+            // System.out.println();
         }
     }
 
