@@ -9,12 +9,14 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpiutil.math.MathUtil;
-//import edu.wpi.first.wpilibj.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.MathUtil;
+//import edu.wpi.first.math.controller.ArmFeedforward;
 import frc.robot.Constants;
+import frc.robot.util.Utils;
 
 import static frc.robot.Constants.*;
 
@@ -22,11 +24,13 @@ import static frc.robot.Constants.*;
 // so it probably doesn't work.
 // Wheel movements are commented out to prevent accidentally damaging the modules
 public class SwerveModule {
+    private static final double WHEEL_TURN_KF = 0;
     private final WPI_TalonSRX driveMotor;
     private final WPI_TalonSRX turnMotor;
     private final CANCoder canCoder;
     private final double canOffset;
     private final PIDController turnPID;
+    private final SimpleMotorFeedforward turnFeed;
     //private final ArmFeedforward turnFeed;
 
     // TEMPORARY, TODO: REMOVE
@@ -66,8 +70,11 @@ public class SwerveModule {
         turnMotor.stopMotor();
 
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
-        turnPID.enableContinuousInput(-Math.PI, Math.PI);
-        turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
+        turnPID.enableContinuousInput(-180, 180);
+        turnPID.setTolerance(WHEEL_TURN_TOLERANCE);
+        //turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
+
+        turnFeed = new SimpleMotorFeedforward(1, 0);
 
         //turnFeed = new ArmFeedforward(cancoderOffset, cancoderOffset, cancoderOffset); // TODO: Figure this out
     }
@@ -85,12 +92,13 @@ public class SwerveModule {
 
         Rotation2d canRotation = new Rotation2d(canCoder.getAbsolutePosition());
         SwerveModuleState moduleState = SwerveModuleState.optimize(swerveModuleState, canRotation);
-        double currentAngle = canCoder.getAbsolutePosition();
+        Rotation2d currentAngle = new Rotation2d(Math.toRadians(canCoder.getAbsolutePosition()));
+        Rotation2d normalizedAngle = Utils.normalizeRotation2d(currentAngle);
         Rotation2d targetAngle = moduleState.angle;
         double targetSpeed = moduleState.speedMetersPerSecond;
 
         // Turn to target angle
-        double turnAmount = turnPID.calculate(currentAngle,targetAngle.getDegrees());
+        double turnAmount = turnPID.calculate(normalizedAngle.getDegrees(),0);//This 0 should be targetAngle
         turnAmount = MathUtil.clamp(turnAmount,-1.0,1.0);
 
         // Drive the target speed
@@ -98,22 +106,12 @@ public class SwerveModule {
         driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
 
         // Spin the motors
-        turnMotor.set(ControlMode.PercentOutput, 0); //Set back at targetAngle
+        turnMotor.set(ControlMode.PercentOutput, turnAmount); 
         driveMotor.set(ControlMode.PercentOutput, driveAmount);
 
-
-        // Temporary
-        if (printDebugging) {
-            System.out.println(" ***** Debugging Swerve Module 1 ***** ");
-            System.out.println("Current module angle: " + currentAngle);
-            System.out.println("Target module angle: " + targetAngle.getDegrees());
-            System.out.println("Target drive speed: " + targetSpeed);
-            System.out.println("Percent output turn motor: " + 100 * turnAmount + "%");
-            System.out.println("Percent ouptut drive motor: " + 100 * driveAmount + "%");
-            System.out.println(" ************************************* ");
-            System.out.println();
-            System.out.println();
-            System.out.println();
+        if(printDebugging){
+            System.out.println(turnAmount);
+            System.out.println(normalizedAngle);
         }
     }
 
