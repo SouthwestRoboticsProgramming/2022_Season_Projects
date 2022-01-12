@@ -49,6 +49,13 @@ public class SwerveDrive {
 
     }
 
+    public void canCoderConfig() {
+        w1.canCoderConfig();
+        w2.canCoderConfig();
+        w3.canCoderConfig();
+        w4.canCoderConfig();
+    }
+
     public void zeroGyroscope() {
         navx.zeroYaw();
     }
