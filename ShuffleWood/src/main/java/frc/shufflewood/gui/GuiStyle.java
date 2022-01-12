@@ -1,5 +1,6 @@
-package frc.shufflewood;
+package frc.shufflewood.gui;
 
+import frc.shufflewood.draw.Font;
 import processing.core.PApplet;
 
 public final class GuiStyle {
@@ -12,9 +13,11 @@ public final class GuiStyle {
     public float treeArrowSize = 15;
     public float separatorSize = 15;
     public float buttonContentPadding = 5;
+    public float textEditContentPadding = 5;
     
     public int borderColor;
     public int headerColor;
+    public int headerFocusedColor;
     public int backgroundColor;
     public int textColor;
     public int treeArrowColor;
@@ -23,16 +26,28 @@ public final class GuiStyle {
     public int buttonHoverColor;
     public int buttonPressColor;
     public int buttonBorderColor;
+    public int textEditColor;
+    public int textEditHoverColor;
+    public int textEditActiveColor;
+    public int textEditBorderColor;
+    public int textEditFilteredColor;
+    public int textEditFilteredBorderColor;
     
     public GuiStyle(PApplet app) {
+        // Branding colors
         int white    = app.color(255);
         int grey     = app.color(148, 153, 157);
-        int darkGrey = app.color(74, 76, 78);
         int purple   = app.color(81, 6, 121);
         int black    = app.color(0);
+
+        // Additional colors
+        int darkGrey = app.color(74, 76, 78);
+        int red = app.color(255, 0, 0);
+        int darkRed = app.color(64, 0, 0);
         
         borderColor = white;
-        headerColor = purple;
+        headerColor = darkGrey;
+        headerFocusedColor = purple;
         backgroundColor = black;
         textColor = white;
         treeArrowColor = white;
@@ -41,5 +56,11 @@ public final class GuiStyle {
         buttonHoverColor = purple;
         buttonPressColor = darkGrey;
         buttonBorderColor = white;
+        textEditColor = black;
+        textEditHoverColor = purple;
+        textEditActiveColor = darkGrey;
+        textEditBorderColor = white;
+        textEditFilteredColor = darkRed;
+        textEditFilteredBorderColor = red;
     }
 }

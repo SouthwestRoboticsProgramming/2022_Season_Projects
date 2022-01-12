@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
 public final class Constants {
     // TODO: Get these values from the robot
     public static final int DRIVE_PORT_1 = 8;
@@ -24,14 +26,16 @@ public final class Constants {
     public static final double JOYSTICK_DEAD_ZONE = 0.1;
 	public static final int DRIVE_CONTROLLER = 0;
 
-    public static final double WHEEL_TURN_KP = 1;
-    public static final double WHEEL_TURN_KI = 1;
-    public static final double WHEEL_TURN_KD = .2;
+    public static final double WHEEL_TURN_KP = 0.1;
+    public static final double WHEEL_TURN_KI = 0;
+    public static final double WHEEL_TURN_KD = .02;
 
     public static final double WHEEL_TURN_TOLERANCE = 10; // In degrees
     public static final double WHEEL_TOLERANCE = .1; // In radians
     public static final double WHEEL_DERVIVATIVE_TOLERANCE = .2; // In radians
-	public static final double STARTING_WHEEL_ANGLE = 0;
+    public static final double STARTING_WHEEL_ANGLE = 0;
+    
+    public static final Rotation2d ROT = Rotation2d.fromDegrees(1);
 
     public static final double WHEEL_SPACING_FRONT_BACK = 1.0; // FIXME
     public static final double WHEEL_SPACING_LEFT_RIGHT = 1.0; // FIXME

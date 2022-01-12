@@ -1,6 +1,6 @@
 package frc.shufflewood.tools;
 
-import frc.shufflewood.GuiContext;
+import frc.shufflewood.gui.GuiContext;
 import frc.shufflewood.Rectangle;
 import processing.core.PApplet;
 import processing.core.PGraphics;

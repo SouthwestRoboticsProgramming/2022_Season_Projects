@@ -98,7 +98,7 @@ public class SwerveModule {
         driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
 
         // Spin the motors
-        turnMotor.set(ControlMode.PercentOutput, turnAmount);
+        turnMotor.set(ControlMode.PercentOutput, 0); //Set back at targetAngle
         driveMotor.set(ControlMode.PercentOutput, driveAmount);
 
 

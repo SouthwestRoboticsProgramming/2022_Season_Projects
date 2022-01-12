@@ -1,4 +1,6 @@
-package frc.shufflewood;
+package frc.shufflewood.gui;
+
+import frc.shufflewood.draw.DrawList;
 
 public final class GuiWindow {
   public String title;
