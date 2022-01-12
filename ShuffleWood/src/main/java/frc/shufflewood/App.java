@@ -1,11 +1,31 @@
 package frc.shufflewood;
 
-import frc.shufflewood.tools.LidarTool;
+import frc.messenger.client.MessengerClient;
+import frc.shufflewood.draw.Font;
+import frc.shufflewood.gui.GuiContext;
+import frc.shufflewood.tools.messenger.MessengerConnectTool;
+import frc.shufflewood.tools.Tool;
 import processing.core.PApplet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class App extends PApplet {
     private GuiContext gui;
-    private LidarTool lidar;
+    private List<Tool> tools;
+    private MessengerClient msg;
+
+    public void setMessenger(MessengerClient msg) {
+        this.msg = msg;
+    }
+
+    public void openTool(Tool tool) {
+        tools.add(tool);
+    }
+
+    public void closeTool(Tool tool) {
+        tools.remove(tool);
+    }
     
     @Override
     public void settings() {
@@ -19,43 +39,38 @@ public final class App extends PApplet {
         
         gui = new GuiContext(this);
         gui.getStyle().font = new Font(this, 20f/64f);
-        
-        textSize(20);
 
-        lidar = new LidarTool(this);
+        tools = new ArrayList<>();
+        tools.add(new MessengerConnectTool(this));
     }
-    
+
+    String lastKey = "";
     @Override
     public void draw() {
+        if (msg != null)
+            msg.read();
+
         background(64);
 
         gui.beginFrame();
-        gui.begin("Test");
-        gui.text("FPS: " + nf(frameRate, 0, 3));
-        gui.separator();
-        gui.text("Text content");
-        gui.separator();
-        gui.text("More content");
-        if (gui.button("Button")) {
-            gui.text("Click");
+
+        for (Tool tool : tools) {
+            tool.draw(gui);
         }
-        gui.separator();
-        if (!gui.button("Recreate tree")) {
-            if (gui.treePush("Tree")) {
-                gui.treePop();
-            }
-        }
+
+        gui.begin("Keyboard");
+        gui.text("Last key typed: " + lastKey);
         gui.end();
 
-        gui.begin("Test window 2");
-        gui.text("Another window");
-        gui.button("button 2");
-        gui.end();
-
-        lidar.draw(gui);
         gui.endFrame();
         
         gui.getDrawList().draw();
+    }
+
+    @Override
+    public void keyTyped() {
+        lastKey = String.valueOf(key);
+        gui.getInput().onCharTyped(key);
     }
     
     @Override 

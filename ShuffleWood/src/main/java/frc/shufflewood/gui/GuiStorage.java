@@ -1,9 +1,10 @@
-package frc.shufflewood;
+package frc.shufflewood.gui;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public final class GuiStorage {
   private final Map<Object, Object> storage;
@@ -26,13 +27,14 @@ public final class GuiStorage {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T getOrSet(Object key, T def) {
+  public <T> T getOrSet(Object key, Supplier<T> def) {
     unusedKeys.remove(key);
     if (storage.containsKey(key)) {
       return (T) storage.get(key);
     } else {
-      storage.put(key, def);
-      return def;
+      T t = def.get();
+      storage.put(key, t);
+      return t;
     }
   }
 

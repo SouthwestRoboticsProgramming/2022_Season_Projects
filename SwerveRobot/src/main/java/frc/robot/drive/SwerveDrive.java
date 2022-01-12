@@ -1,16 +1,16 @@
 package frc.robot.drive;
 
 import static frc.robot.Constants.*;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class SwerveDrive {
     /*
@@ -22,7 +22,7 @@ public class SwerveDrive {
      *  |         |
      * w4 ------- w3
      */
-    private final SwerveModule w1, w2, w3, w4;
+    public final SwerveModule w1, w2, w3, w4;
     private final AHRS navx;
     private final SwerveDriveOdometry odometry;
     private double currentAngle; // In radians
@@ -79,10 +79,10 @@ public class SwerveDrive {
         
         
         // TEMPORARY, TODO: Remove
-        System.out.println(" ***** Debugging Swerve Drive ***** ");
-        System.out.println("Gyroscope angle: " + currentAngle);
-        System.out.println(" ********************************** ");
-        System.out.println();
+        // System.out.println(" ***** Debugging Swerve Drive ***** ");
+        // System.out.println("Gyroscope angle: " + currentAngle);
+        // System.out.println(" ********************************** ");
+        // System.out.println();
         
         
         // Calculate the movements of each indevidual module
