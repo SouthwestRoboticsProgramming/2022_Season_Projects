@@ -14,11 +14,11 @@ public final class Constants {
     public static final int CAN_PORT_2 = 4;
     public static final int CAN_PORT_3 = 3;
     public static final int CAN_PORT_4 = 1;
-    public static final int NAVX_PORT = 0; //FIXME
-    public static final double OFFSET_1 = 0.63; //FIXME
-    public static final double OFFSET_2 = -0.11; //FIXME
-    public static final double OFFSET_3 = 1.58; //FIXME
-    public static final double OFFSET_4 = 1.26; //FIXME
+    public static final int NAVX_PORT = 0;
+    public static final double OFFSET_1 = -276.59;
+    public static final double OFFSET_2 = -349.54;
+    public static final double OFFSET_3 = -311.31;
+    public static final double OFFSET_4 = -218.85;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
     
     public static final double JOYSTICK_DEAD_ZONE = 0.1;
@@ -33,10 +33,9 @@ public final class Constants {
     public static final double WHEEL_DERVIVATIVE_TOLERANCE = .02; // In radians
 	public static final double STARTING_WHEEL_ANGLE = 0;
 
-    public static final double WHEEL_SPACING_FRONT_BACK = 1.0; // FIXME
-    public static final double WHEEL_SPACING_LEFT_RIGHT = 1.0; // FIXME
+    public static final double WHEEL_SPACING_FRONT_BACK = 0.31; // FIXME
+    public static final double WHEEL_SPACING_LEFT_RIGHT = 0.30; // FIXME
 
-    public static final double MAX_VOLTAGE = 12.0; // FIXME Might not be useful
-    public static final double MAX_VELOCITY = 16.0; //FIXME // Meters per second
-    public static final double MAX_ROTATION_SPEED = 14.0; // FIXME // Radians per second
+    public static final double MAX_VELOCITY = 0.001; //FIXME // Meters per second
+    public static final double MAX_ROTATION_SPEED = 0.01; // FIXME // Radians per second
 }

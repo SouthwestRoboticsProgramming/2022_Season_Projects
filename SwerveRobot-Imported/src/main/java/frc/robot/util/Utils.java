@@ -15,9 +15,22 @@ public final class Utils {
     }
 
     public static Rotation2d normalizeRotation2d(Rotation2d angle) {
-        return new Rotation2d(-Math.PI + ((Math.PI * 2 + ((angle.getRadians() + Math.PI) % (Math.PI * 2))) % (Math.PI * 2)));
+        return new Rotation2d(-180 + ((180 * 2 + ((angle.getDegrees() + 180) % (180 * 2))) % (180 * 2)));
     }
 
+    public static Rotation2d normalizeModuleState(Rotation2d angle) {
+        if(angle.getRadians()<0) {
+            return new Rotation2d(angle.getRadians()+Math.PI);
+        } else {
+            return new Rotation2d(angle.getRadians());
+        }
+    }
+
+    public static double fixCurrentAngle(double degreesAngle) {
+        if(degreesAngle<90){return degreesAngle;}
+        if(degreesAngle>270){return degreesAngle-360;}
+        if(degreesAngle<270){return degreesAngle-180;} else {return 0;}
+    }
 
 
     private Utils() {

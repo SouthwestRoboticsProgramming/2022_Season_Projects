@@ -51,10 +51,6 @@ public class SwerveDrive {
 
     public void init() {
         navx.zeroYaw();
-        w1.canCoderConfig();
-        w2.canCoderConfig();
-        w3.canCoderConfig();
-        w4.canCoderConfig();
     }
 
     public void setPosition(Pose2d position){
