@@ -35,5 +35,6 @@ public final class Constants {
     public static final double WHEEL_SPACING_LEFT_RIGHT = 1.0; // FIXME // Meters
 
     public static final double MAX_VELOCITY = 0.5; //FIXME // Meters per second
+    public static final double ROBOT_MAX_VELOCITY = 4.11;
     public static final double MAX_ROTATION_SPEED = 0.1; // FIXME // Radians per second
 }

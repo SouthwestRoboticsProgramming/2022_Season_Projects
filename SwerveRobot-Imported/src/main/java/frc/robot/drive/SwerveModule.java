@@ -100,7 +100,7 @@ public class SwerveModule {
         turnAmount = MathUtil.clamp(turnAmount,-1.0,1.0);
 
         // Drive the target speed
-        double driveAmount = targetSpeed / MAX_VELOCITY;
+        double driveAmount = targetSpeed / ROBOT_MAX_VELOCITY;
         driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
 
         // Spin the motors
