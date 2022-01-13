@@ -11,7 +11,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.MathUtil;
@@ -21,9 +20,6 @@ import frc.robot.util.Utils;
 
 import static frc.robot.Constants.*;
 
-// This was pretty much copied from the mini robot DriveTrain class,
-// so it probably doesn't work.
-// Wheel movements are commented out to prevent accidentally damaging the modules
 public class SwerveModule {
 
     // TEMPORARY
@@ -33,7 +29,6 @@ public class SwerveModule {
     private final CANCoder canCoder;
     private final double canOffset;
     private final PIDController turnPID;
-    private final SimpleMotorFeedforward turnFeed;
     //private final ArmFeedforward turnFeed;
 
     // TEMPORARY, TODO: REMOVE
@@ -47,7 +42,6 @@ public class SwerveModule {
         turnMotor = new WPI_TalonSRX(turnPort);
         canCoder = new CANCoder(canPort);
         canOffset = cancoderOffset;
-        driveNumber = drivePort;
 
         // TEMPORARY
         printDebugging = turnPort == TURN_PORT_1;
@@ -67,7 +61,7 @@ public class SwerveModule {
         config.openloopRamp = 0.5;
         config.closedloopRamp = 0.5;
         // driveMotor.configAllSettings(config);
-        // turnMotor.configAllSettings(config);
+        turnMotor.configAllSettings(config);
 
         driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.setSelectedSensorPosition(0, 0, 30);
@@ -86,12 +80,8 @@ public class SwerveModule {
 
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
         turnPID.enableContinuousInput(-90, 90);
-        turnPID.setTolerance(WHEEL_TURN_TOLERANCE);
+        turnPID.setTolerance(WHEEL_TOLERANCE.getDegrees());
         //turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
-
-        turnFeed = new SimpleMotorFeedforward(1, 0);
-
-        //turnFeed = new ArmFeedforward(cancoderOffset, cancoderOffset, cancoderOffset); // TODO: Figure this out
     }
 
     public void update(SwerveModuleState swerveModuleState) {
@@ -99,7 +89,6 @@ public class SwerveModule {
         Rotation2d canRotation = new Rotation2d(Math.toRadians(canCoder.getAbsolutePosition()));
         Rotation2d currentAngle = new Rotation2d(Math.toRadians(Utils.fixCurrentAngle(canCoder.getAbsolutePosition())));
         SwerveModuleState moduleState = SwerveModuleState.optimize(swerveModuleState, canRotation);
-        double normalDegrees = currentAngle.getDegrees()%180;
         Rotation2d targetAngle = moduleState.angle;
         double targetSpeed = moduleState.speedMetersPerSecond;
 
@@ -116,8 +105,6 @@ public class SwerveModule {
         driveMotor.set(ControlMode.PercentOutput, driveAmount*.1);
 
         if(printDebugging) {
-            System.out.println(targetSpeed);
-            System.out.println("Drive amount: " + driveAmount);
         }
     }
 

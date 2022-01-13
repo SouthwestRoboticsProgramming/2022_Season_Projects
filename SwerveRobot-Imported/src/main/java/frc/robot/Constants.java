@@ -2,7 +2,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class Constants {
-    // TODO: Get these values from the robot
     public static final int DRIVE_PORT_1 = 8;
     public static final int DRIVE_PORT_2 = 7;
     public static final int DRIVE_PORT_3 = 5;
@@ -31,10 +30,10 @@ public final class Constants {
 
     public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // In degrees
 
-    public static final double WHEEL_SPACING_FRONT_BACK = 0.31; // FIXME
-    public static final double WHEEL_SPACING_LEFT_RIGHT = 0.30; // FIXME
+    public static final double WHEEL_SPACING_FRONT_BACK = 0.31;
+    public static final double WHEEL_SPACING_LEFT_RIGHT = 0.30;
 
-    public static final double MAX_VELOCITY = 0.001; //FIXME // Meters per second
+    public static final double MAX_VELOCITY = 0.001; // Meters per second
     public static final double ROBOT_MAX_VELOCITY = 4.11;
-    public static final double MAX_ROTATION_SPEED = 0.01; // FIXME // Radians per second
+    public static final double MAX_ROTATION_SPEED = 0.01; // Radians per second
 }
