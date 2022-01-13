@@ -1,4 +1,5 @@
 package frc.robot;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class Constants {
     // TODO: Get these values from the robot
@@ -28,14 +29,12 @@ public final class Constants {
     public static final double WHEEL_TURN_KI = 0; // Leave this at 0: There is no steady-state error in the system
     public static final double WHEEL_TURN_KD = 0.002;
 
-    public static final double WHEEL_TURN_TOLERANCE = 1; // In degrees
-    public static final double WHEEL_TOLERANCE = .01; // In radians
-    public static final double WHEEL_DERVIVATIVE_TOLERANCE = .02; // In radians
-	public static final double STARTING_WHEEL_ANGLE = 0;
+    public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // In degrees
 
     public static final double WHEEL_SPACING_FRONT_BACK = 0.31; // FIXME
     public static final double WHEEL_SPACING_LEFT_RIGHT = 0.30; // FIXME
 
     public static final double MAX_VELOCITY = 0.001; //FIXME // Meters per second
+    public static final double ROBOT_MAX_VELOCITY = 4.11;
     public static final double MAX_ROTATION_SPEED = 0.01; // FIXME // Radians per second
 }

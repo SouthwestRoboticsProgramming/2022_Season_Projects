@@ -27,7 +27,6 @@ import static frc.robot.Constants.*;
 public class SwerveModule {
 
     // TEMPORARY
-    private final int canNumber;
 
     private final WPI_TalonFX driveMotor;
     private final WPI_TalonSRX turnMotor;
@@ -39,7 +38,6 @@ public class SwerveModule {
 
     // TEMPORARY, TODO: REMOVE
     private boolean printDebugging;
-    private int driveNumber;
 
     
 
@@ -53,7 +51,6 @@ public class SwerveModule {
 
         // TEMPORARY
         printDebugging = turnPort == TURN_PORT_1;
-        canNumber = canPort;
 
         // if(drivePort == DRIVE_PORT_2 || drivePort == DRIVE_PORT_4) {
         //     driveMotor.setInverted(true);
@@ -76,7 +73,7 @@ public class SwerveModule {
         driveMotor.setSelectedSensorPosition(0, 0, 30);
         driveMotor.stopMotor();
 
-        //turnMotor.setNeutralMode(NeutralMode.Brake);
+        turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setSelectedSensorPosition(0, 0, 30);
         turnMotor.stopMotor();
 
@@ -111,7 +108,7 @@ public class SwerveModule {
         turnAmount = MathUtil.clamp(turnAmount,-1.0,1.0);
 
         // Drive the target speed
-        double driveAmount = targetSpeed / MAX_VELOCITY;
+        double driveAmount = targetSpeed / ROBOT_MAX_VELOCITY;
         driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
 
         // Spin the motors

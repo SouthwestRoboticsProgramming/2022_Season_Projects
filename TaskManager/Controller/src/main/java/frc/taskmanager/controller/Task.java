@@ -33,7 +33,7 @@ public class Task {
     }
 
     public void delete() {
-        msg.sendMessage(prefix +Messages.DELETE_TASK, encodeString(name));
+        msg.sendMessage(prefix + Messages.DELETE_TASK, encodeString(name));
     }
 
     public void upload(byte[] payload) {
