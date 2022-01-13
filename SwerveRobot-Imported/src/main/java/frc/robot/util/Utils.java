@@ -9,6 +9,11 @@ public final class Utils {
         return value;
     }
 
+    // Maps a value from one range to another
+    public static double map(double value, double min, double max, double newMin, double newMax) {
+        return (value - min) / (max - min) * (newMax - newMin) + newMin;
+    }
+
     // Makes the angle be in the interval [-PI, PI)
     public static double normalizeAngle(double angle) {
         return -Math.PI + ((Math.PI * 2 + ((angle + Math.PI) % (Math.PI * 2))) % (Math.PI * 2));

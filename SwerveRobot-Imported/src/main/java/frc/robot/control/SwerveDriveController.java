@@ -1,6 +1,7 @@
 package frc.robot.control;
 
 import frc.robot.drive.SwerveDrive;
+import frc.robot.util.Utils;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants;
@@ -41,6 +42,22 @@ public class SwerveDriveController {
             rot = 0;
         }
 
+        // Eliminate deadzone jump
+        if (driveX > 0) {
+            driveX = Utils.map(driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+            driveX = -Utils.map(-driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
+        if (driveY > 0) {
+            driveY = Utils.map(driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+            driveY = -Utils.map(-driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
+        if (rot > 0) {
+            rot = Utils.map(rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+            rot = -Utils.map(-rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
 
         Rotation2d currentAngle = drive.getGyroscopeRotation();
 
@@ -55,6 +72,5 @@ public class SwerveDriveController {
         System.out.println("X: " + driveX);
         System.out.println("Y: " + driveY);
         System.out.println("Rot: " + rot);
-
     }
 }
