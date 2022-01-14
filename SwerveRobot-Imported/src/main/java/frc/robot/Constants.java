@@ -21,19 +21,26 @@ public final class Constants {
     public static final double OFFSET_4 = -218.85;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
     
-    public static final double JOYSTICK_DEAD_ZONE = 0.1;
+    public static final double JOYSTICK_DEAD_ZONE = 0.2;
 	public static final int DRIVE_CONTROLLER = 0;
 
+    
+    
+    public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // In degrees
+    
+    public static final double WHEEL_SPACING_FRONT_BACK = 0.31;
+    public static final double WHEEL_SPACING_LEFT_RIGHT = 0.30;
+    
+    public static final double MAX_VELOCITY = 1.5; // Meters per second
+    public static final double ROBOT_MAX_VELOCITY = 4.11/*4.11*/;
+    public static final double MAX_ROTATION_SPEED = 5.0; // Radians per second
+    public static final double ROBOT_MAX_ROTATION_SPEED = 26.5; // Radians per second
+    
     public static final double WHEEL_TURN_KP = .02;
     public static final double WHEEL_TURN_KI = 0; // Leave this at 0: There is no steady-state error in the system
     public static final double WHEEL_TURN_KD = 0.002;
-
-    public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // In degrees
-
-    public static final double WHEEL_SPACING_FRONT_BACK = 0.31;
-    public static final double WHEEL_SPACING_LEFT_RIGHT = 0.30;
-
-    public static final double MAX_VELOCITY = 0.001; // Meters per second
-    public static final double ROBOT_MAX_VELOCITY = 4.11;
-    public static final double MAX_ROTATION_SPEED = 0.01; // Radians per second
+    
+    public static final double STABILIZATION_KP = .1;
+    public static final double STABILIZATION_KI = 0;
+    public static final double STABILIZATION_KD = 0.002;
 }

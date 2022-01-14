@@ -20,6 +20,7 @@ import frc.robot.util.Utils;
 
 import static frc.robot.Constants.*;
 
+
 public class SwerveModule {
 
     // TEMPORARY
@@ -102,7 +103,7 @@ public class SwerveModule {
 
         // Spin the motors
         turnMotor.set(ControlMode.PercentOutput, turnAmount); 
-        driveMotor.set(ControlMode.PercentOutput, driveAmount*.1);
+        driveMotor.set(ControlMode.PercentOutput, driveAmount);
 
         if(printDebugging) {
         }

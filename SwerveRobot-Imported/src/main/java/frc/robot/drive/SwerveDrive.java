@@ -48,7 +48,7 @@ public class SwerveDrive {
 
     }
 
-    public void init() {
+    public void zeroGyro() {
         navx.zeroYaw();
     }
 
@@ -57,10 +57,7 @@ public class SwerveDrive {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        if (navx.isMagnetometerCalibrated()) {
-            return Rotation2d.fromDegrees(navx.getAngle());
-        }
-        return Rotation2d.fromDegrees(360.0 - navx.getYaw());
+        return Rotation2d.fromDegrees(navx.getYaw());
     }
 
     public void update(ChassisSpeeds chassisSpeeds) {
