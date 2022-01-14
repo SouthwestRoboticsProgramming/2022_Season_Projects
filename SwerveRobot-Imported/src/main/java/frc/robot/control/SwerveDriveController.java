@@ -2,6 +2,7 @@ package frc.robot.control;
 
 import frc.robot.drive.SwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.util.Utils;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants;
@@ -58,6 +59,22 @@ public class SwerveDriveController {
             targetAngle = currentAngle.getDegrees();
         }
 
+        // Eliminate deadzone jump
+        if (driveX > 0) {
+            driveX = Utils.map(driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+            driveX = -Utils.map(-driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
+        if (driveY > 0) {
+            driveY = Utils.map(driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+            driveY = -Utils.map(-driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
+        if (rot > 0) {
+            rot = Utils.map(rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+            rot = -Utils.map(-rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
 
         //Rotation2d targetAngle = Rotation2d(rot * Constants.MAX_ROTATION_SPEED / 50);
 
