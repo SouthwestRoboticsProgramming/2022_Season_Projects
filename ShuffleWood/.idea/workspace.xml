@@ -23,26 +23,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da777d2d-befa-4519-9c9c-3c8912e9bd79" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/messenger/client/MessengerClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContextBackup.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/AnyFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/IntegerFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/RangedIntegerFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/TextFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/messenger/MessengerConnectTool.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/taskmanager/TaskManagerTool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/FileChooser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/MessengerAccess.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContextImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/Rect.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/Vec2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/draw/GuiDraw.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/draw/GuiDrawBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/draw/GuiDrawData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/taskmanager/Messages.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/taskmanager/Task.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/taskmanager/TaskManagerAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Task/dependency-reduced-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Task/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/task/Lidar-Task-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/task/task.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/task/task.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Messenger/Messenger-Testing/src/main/java/frc/messenger/test/MessengerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Messenger/Messenger-Testing/src/main/java/frc/messenger/test/MessengerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/DrawList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/draw/DrawList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/Font.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/draw/Font.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/GuiContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/GuiInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiInput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/GuiStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/GuiStyle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiStyle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/GuiWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/CustomDrawTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/CustomDrawTool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/Tool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/Tool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/Rectangle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/Vec2f.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/draw/DrawList.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/draw/Font.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/draw/Font.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContextBackup.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiInput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiStyle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiStyle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiWindow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/AnyFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/AnyFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/IntegerFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/IntFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/TextFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/filter/TextFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/CustomDrawTool.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/LidarTool.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/messenger/MessengerConnectTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/messenger/MessengerConnectTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/taskmanager/TaskManagerTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/taskmanager/TaskManagerTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TaskManager/.idea/runConfigurations/ControllerMain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TaskManager/.idea/runConfigurations/ControllerMain.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../TaskManager/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TaskManager/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,13 +92,20 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/taskmanager" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="frc.shufflewood.tools.taskmanager" />
+      <recent name="frc.shufflewood.gui2" />
       <recent name="frc.shufflewood.gui" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Student Laptop #1\Documents\GitHub\2022_Season_Projects\ShuffleWood\src\main\java\frc\shufflewood\tools\taskmanager" />
+    </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.App2">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="frc.shufflewood.App" />
       <module name="ShuffleWood" />
@@ -96,8 +119,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="frc.shufflewood.App" />
+      <module name="ShuffleWood" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="frc.shufflewood.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.App2" />
         <item itemvalue="Application.App" />
       </list>
     </recent_temporary>
@@ -126,33 +163,57 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1641949501423">
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1642278109868">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1641949501423" />
-    <state x="743" y="388" width="433" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1641919498078">
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1642278109868" />
+    <state x="743" y="388" width="433" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1642213580658">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="743" y="388" width="433" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1641919498078" />
-    <state x="691" y="274" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1641947330828">
+    <state x="743" y="388" width="433" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1642213580658" />
+    <state x="691" y="274" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1642272293398">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="691" y="274" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1641947330828" />
-    <state width="1863" height="277" key="GridCell.Tab.0.bottom" timestamp="1641947061296">
+    <state x="691" y="274" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1642272293398" />
+    <state width="1242" height="218" key="GridCell.Tab.0.bottom" timestamp="1642278172340">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1863" height="277" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1641947061296" />
-    <state width="1863" height="277" key="GridCell.Tab.0.center" timestamp="1641947061295">
+    <state width="1242" height="218" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1642278172340" />
+    <state width="1242" height="218" key="GridCell.Tab.0.center" timestamp="1642278172340">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1863" height="277" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1641947061295" />
-    <state width="1863" height="277" key="GridCell.Tab.0.left" timestamp="1641947061294">
+    <state width="1242" height="218" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1642278172340" />
+    <state width="1242" height="218" key="GridCell.Tab.0.left" timestamp="1642278172340">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1863" height="277" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1641947061294" />
-    <state width="1863" height="277" key="GridCell.Tab.0.right" timestamp="1641947061295">
+    <state width="1242" height="218" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1642278172340" />
+    <state width="1242" height="218" key="GridCell.Tab.0.right" timestamp="1642278172340">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1863" height="277" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1641947061295" />
+    <state width="1242" height="218" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1642278172340" />
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1642196381466">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1642196381466" />
+    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1642196381465">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1642196381465" />
+    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1642196381465">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1642196381465" />
+    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1642196381465">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1642196381465" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1642130388254">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1642130388254" />
+    <state x="624" y="241" width="672" height="678" key="search.everywhere.popup" timestamp="1642018805250">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="624" y="241" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1642018805250" />
   </component>
 </project>
