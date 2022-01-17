@@ -32,9 +32,23 @@ public class TaskManagerTool implements Tool {
     public TaskManagerTool(MessengerAccess msg, String prefix) {
         this.prefix = prefix;
         api = new TaskManagerAPI(msg, prefix);
+	api.setStdOutCallback(this::stdOutCallback);
+	api.setStdErrCallback(this::stdErrCallback);
         tasks = new ArrayList<>();
         log = new ArrayList<>();
         newTaskBuf = new StringBuffer();
+    }
+
+    private void stdOutCallback(Task task, String line) {
+	if (selectedTask == task) {
+	    log.add("[OUT] " + line);
+	}
+    }
+
+    private void stdErrCallback(Task task, String line) {
+	if (selectedTask == task) {
+	    log.add("[ERR] " + line);
+	}
     }
 
     @Override
@@ -99,6 +113,7 @@ public class TaskManagerTool implements Tool {
                 if (taskRunning) {
                     selectedTask.stop();
                 } else {
+		    log.clear();
                     selectedTask.start();
                 }
             }
