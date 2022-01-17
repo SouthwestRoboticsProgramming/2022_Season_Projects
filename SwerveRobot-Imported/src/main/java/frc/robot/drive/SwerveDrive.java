@@ -25,7 +25,6 @@ public class SwerveDrive {
     private final SwerveModule w1, w2, w3, w4;
     private final AHRS navx;
     private final SwerveDriveOdometry odometry;
-    private double currentAngle; // In radians
     private Pose2d currentPose;
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -49,12 +48,8 @@ public class SwerveDrive {
 
     }
 
-    public void init() {
+    public void zeroGyro() {
         navx.zeroYaw();
-        w1.canCoderConfig();
-        w2.canCoderConfig();
-        w3.canCoderConfig();
-        w4.canCoderConfig();
     }
 
     public void setPosition(Pose2d position){
@@ -62,24 +57,10 @@ public class SwerveDrive {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        if (navx.isMagnetometerCalibrated()) {
-            return Rotation2d.fromDegrees(navx.getAngle());
-        }
-        return Rotation2d.fromDegrees(360.0 - navx.getYaw());
-    }
-
-    public double[] getVelocity() {
-        double[] velocity = new double[3];
-        velocity[0] = navx.getVelocityX(); // May not work, experimental
-        velocity[1] = navx.getVelocityY(); // May not work, experimental
-        velocity[2] = Math.toRadians(navx.getRate()); //FIXME Check if this doesn't work, if it doesn't try this: https://github.com/kauailabs/navxmxp/issues/69
-        return velocity;
+        return Rotation2d.fromDegrees(navx.getYaw());
     }
 
     public void update(ChassisSpeeds chassisSpeeds) {
-
-        // Get current position and state of robot
-        currentAngle = navx.getAngle();
         
         
         // Calculate the movements of each indevidual module

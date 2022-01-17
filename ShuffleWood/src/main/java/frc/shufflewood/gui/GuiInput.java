@@ -1,7 +1,5 @@
 package frc.shufflewood.gui;
 
-import frc.shufflewood.Vec2f;
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -75,34 +73,34 @@ public final class GuiInput {
     return b.toString();
   }
 
-  public boolean rectHovered(float x, float y, float w, float h) {
+  public boolean rectHovered(Rect r) {
     float cx = cursorX;
     float cy = cursorY;
 
-    return cx > x && cx < x + w && cy > y && cy < y + h;
+    return cx > r.min.x && cx < r.max.x && cy > r.min.y && cy < r.max.y;
   }
 
-  public boolean rectClicked(float x, float y, float w, float h) {
-    return mouseClicked && rectHovered(x, y, w, h);
+  public boolean rectClicked(Rect r) {
+    return mouseClicked && rectHovered(r);
   }
 
-  public boolean clickedOutsideRect(float x, float y, float w, float h) {
-    return mouseClicked && !rectHovered(x, y, w, h);
+  public boolean clickedOutsideRect(Rect r) {
+    return mouseClicked && !rectHovered(r);
   }
 
-  public boolean rectPressed(float x, float y, float w, float h) {
-    return mouseDown && rectHovered(x, y, w, h);
+  public boolean rectPressed(Rect r) {
+    return mouseDown && rectHovered(r);
   }
 
-  public Vec2f rectDrag(float x, float y, float w, float h) {
+  public Vec2 rectDrag(Rect r) {
     float lx = lastX;
     float ly = lastY;
 
-    if (!mouseDown || lx < x || lx > x + w || ly < y || ly > y + h) {
-      return new Vec2f(0, 0);
+    if (!mouseDown || lx < r.min.x || lx > r.max.x || ly < r.min.y || ly > r.max.y) {
+      return new Vec2(0, 0);
     }
 
-    return new Vec2f(cursorX - lx, cursorY - ly);
+    return new Vec2(cursorX - lx, cursorY - ly);
   }
 
   public void onCharTyped(char c) {

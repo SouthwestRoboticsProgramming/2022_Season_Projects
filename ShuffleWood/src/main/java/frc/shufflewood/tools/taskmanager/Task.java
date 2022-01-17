@@ -1,6 +1,7 @@
-package frc.taskmanager.controller;
+package frc.shufflewood.tools.taskmanager;
 
 import frc.messenger.client.MessengerClient;
+import frc.shufflewood.MessengerAccess;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -11,16 +12,15 @@ import java.util.concurrent.CompletableFuture;
 
 public class Task {
     private final String name;
-    private final MessengerClient msg;
+    private final MessengerAccess msg;
     private final Set<CompletableFuture<Boolean>> runningFutures;
     private final String prefix;
 
-    public Task(String name, MessengerClient msg, String prefix) {
+    public Task(String name, MessengerAccess msg, String prefix) {
         this.name = name;
         this.msg = msg;
         this.prefix = prefix;
-        msg.listen(prefix + Messages.STDOUT + name);
-        msg.listen(prefix + Messages.STDERR + name);
+
         runningFutures = new HashSet<>();
     }
 

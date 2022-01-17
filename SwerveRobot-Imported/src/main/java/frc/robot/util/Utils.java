@@ -9,15 +9,33 @@ public final class Utils {
         return value;
     }
 
+    // Maps a value from one range to another
+    public static double map(double value, double min, double max, double newMin, double newMax) {
+        return (value - min) / (max - min) * (newMax - newMin) + newMin;
+    }
+
     // Makes the angle be in the interval [-PI, PI)
     public static double normalizeAngle(double angle) {
         return -Math.PI + ((Math.PI * 2 + ((angle + Math.PI) % (Math.PI * 2))) % (Math.PI * 2));
     }
 
     public static Rotation2d normalizeRotation2d(Rotation2d angle) {
-        return new Rotation2d(-Math.PI + ((Math.PI * 2 + ((angle.getRadians() + Math.PI) % (Math.PI * 2))) % (Math.PI * 2)));
+        return new Rotation2d(-180 + ((180 * 2 + ((angle.getDegrees() + 180) % (180 * 2))) % (180 * 2)));
     }
 
+    public static Rotation2d normalizeModuleState(Rotation2d angle) {
+        if(angle.getRadians()<0) {
+            return new Rotation2d(angle.getRadians()+Math.PI);
+        } else {
+            return new Rotation2d(angle.getRadians());
+        }
+    }
+
+    public static double fixCurrentAngle(double degreesAngle) {
+        if(degreesAngle<90){return degreesAngle;}
+        if(degreesAngle>270){return degreesAngle-360;}
+        if(degreesAngle<270){return degreesAngle-180;} else {return 0;}
+    }
 
 
     private Utils() {

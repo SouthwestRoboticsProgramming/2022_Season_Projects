@@ -1,8 +1,8 @@
 package frc.shufflewood.gui.filter;
 
-public class AnyFilter implements TextFilter {
+public final class AnyFilter implements TextFilter {
     @Override
-    public boolean isAllowed(String text) {
+    public boolean isAllowed(String str) {
         return true;
     }
 }
