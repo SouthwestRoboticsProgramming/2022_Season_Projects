@@ -20,6 +20,9 @@ public final class Constants {
     public static final double OFFSET_3 = -311.31;
     public static final double OFFSET_4 = -218.85;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
+
+    public static final int CLIMBER_LEFT_MOTOR_ID = 20; //FIXME
+    public static final int CLIMBER_RIGHT_MOTOR_ID = 21; //FIXME
     
     public static final double JOYSTICK_DEAD_ZONE = 0.2;
 	public static final int DRIVE_CONTROLLER = 0;

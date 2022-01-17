@@ -20,4 +20,12 @@ public class Input {
     public double getRot() {
         return controller.getRightStickX();
     }
+
+    public boolean getSwingLeft() {
+        return controller.getLeftShoulderButton();
+    }
+
+    public boolean getSwingRight() {
+        return controller.getRightShoulderButton();
+    }
 }
