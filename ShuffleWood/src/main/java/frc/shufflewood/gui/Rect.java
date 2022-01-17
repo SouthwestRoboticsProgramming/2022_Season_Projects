@@ -58,7 +58,7 @@ public final class Rect {
     public Rect clip(Rect r) {
         // Can't clip if no overlap
         if (min.x > r.max.x || min.y > r.max.y || max.x < r.min.x || max.y < r.min.y)
-            return null;
+            return new Rect(0, 0, 0, 0);
 
         return new Rect(
                 Math.max(min.x, r.min.x),

@@ -96,7 +96,7 @@ public class GuiDrawBuilder {
     // --- Draw Command Implementations ---
 
     public void drawLine(Vec2 a, Vec2 b, int color) {
-        if (a.equals(b)) return; // No point in drawing a line with zero length
+	if (a.equals(b)) return; // No point in drawing a line with zero length
 
         float x1 = a.x;
         float y1 = a.y;
@@ -137,13 +137,13 @@ public class GuiDrawBuilder {
     }
 
     public void fillTriangle(Vec2 a, Vec2 b, Vec2 c, int color) {
-        draw.vertex(a, color);
+	draw.vertex(a, color);
         draw.vertex(b, color);
         draw.vertex(c, color);
     }
 
     public void drawRect(Rect r, int color) {
-        beginPolygonBorder(color);
+	beginPolygonBorder(color);
         polygonBorderVertex(r.min);
         polygonBorderVertex(new Vec2(r.max.x, r.min.y));
         polygonBorderVertex(r.max);
@@ -152,7 +152,7 @@ public class GuiDrawBuilder {
     }
 
     public void fillRect(Rect r, int color) {
-        r = clipRect.clip(r);
+	r = clipRect.clip(r);
         if (r == null) return;
 
         beginPolygon(color);
@@ -163,7 +163,7 @@ public class GuiDrawBuilder {
     }
 
     public void drawRoundRect(Rect r, float round, int color) {
-        // Edges
+	// Edges
         drawLine(new Vec2(r.min.x + round, r.min.y), new Vec2(r.max.x - round, r.min.y), color);
         drawLine(new Vec2(r.min.x, r.min.y + round), new Vec2(r.min.x, r.max.y - round), color);
         drawLine(new Vec2(r.min.x + round, r.max.y), new Vec2(r.max.x - round, r.max.y), color);
@@ -184,7 +184,7 @@ public class GuiDrawBuilder {
     }
 
     public void fillRoundRect(Rect r, float round, int color) {
-        beginPolygon(color);
+	beginPolygon(color);
 
         // Bottom right
         for (int i = 0; i <= CURVE_DETAIL; i++) {
@@ -216,7 +216,7 @@ public class GuiDrawBuilder {
     }
 
     public void textureRect(Rect r, Rect uv, PImage texture, int color) {
-        beginPolygon(color);
+       	beginPolygon(color);
         polygonTextureVertex(r.min, uv.min, texture);
         polygonTextureVertex(new Vec2(r.max.x, r.min.y), new Vec2(uv.max.x, uv.min.y), texture);
         polygonTextureVertex(r.max, uv.max, texture);
@@ -230,7 +230,7 @@ public class GuiDrawBuilder {
 
     public void pushClipRect(Rect r) {
         clipStack.push(clipRect);
-        clipRect = clipRect.clip(r);
+	clipRect = clipRect.clip(r);
     }
 
     public void popClipRect() {
