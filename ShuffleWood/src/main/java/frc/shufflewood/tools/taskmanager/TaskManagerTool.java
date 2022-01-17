@@ -76,6 +76,8 @@ public class TaskManagerTool implements Tool {
         gui.tableNextColumn();
         if (gui.button("Add")) {
             FileChooser.chooseZipOrFolder((f) -> {
+		if (f == null) return;
+		
                 Task task = api.getTask(newTaskBuf.toString());
                 byte[] payload = encodeFileToPayload(f);
                 if (payload != null) {
@@ -120,7 +122,9 @@ public class TaskManagerTool implements Tool {
             gui.sameLine();
             if (gui.button("Upload data", buttonSize)) {
                 FileChooser.chooseZipOrFolder((f) -> {
-                    byte[] payload = encodeFileToPayload(f);
+		    if (f == null) return;
+		    
+		    byte[] payload = encodeFileToPayload(f);
                     if (payload != null) {
                         selectedTask.upload(payload);
                     }
