@@ -89,4 +89,9 @@ public class SwerveDriveController {
         System.out.println("Current Angle: " + currentAngle);
         System.out.println("Target Angle: " + targetAngle);
     }
+
+    public double pointAtAngle(double angleTargetDegrees) {
+        double targetRotPercent = rotPID.calculate(drive.getGyroscopeRotation().getDegrees(),angleTargetDegrees);
+        return targetRotPercent;
+    }
 }

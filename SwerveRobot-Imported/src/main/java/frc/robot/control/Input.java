@@ -28,4 +28,8 @@ public class Input {
     public boolean getSwingRight() {
         return controller.getRightShoulderButton();
     }
+
+    public boolean getShoot() {
+        return controller.getAButton();
+    }
 }
