@@ -27,45 +27,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/FileChooser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/MessengerAccess.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiContextImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/Rect.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/Vec2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/draw/GuiDraw.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/draw/GuiDrawBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/draw/GuiDrawData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/taskmanager/Messages.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/taskmanager/Task.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/taskmanager/TaskManagerAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/Demo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Task/dependency-reduced-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Task/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/task/Lidar-Task-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lidar/task/task.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/task/task.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Messenger/Messenger-Testing/src/main/java/frc/messenger/test/MessengerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Messenger/Messenger-Testing/src/main/java/frc/messenger/test/MessengerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/Rectangle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/Vec2f.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/draw/DrawList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/draw/Font.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/draw/Font.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiContextBackup.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiInput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiStyle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiStyle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/GuiWindow.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/filter/AnyFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/filter/AnyFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/filter/IntegerFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/filter/IntFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/filter/TextFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/gui/filter/TextFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/CustomDrawTool.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/LidarTool.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/messenger/MessengerConnectTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/messenger/MessengerConnectTool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/taskmanager/TaskManagerTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/taskmanager/TaskManagerTool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ControllerMain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/ControllerMain.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="3b1ea5dd-f68b-4478-b75e-3e031edcaa94" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -110,7 +72,7 @@
       <recent name="frc.messenger.client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Application.ControllerMain">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="frc.taskmanager.Main" />
       <module name="TaskManager-Core" />

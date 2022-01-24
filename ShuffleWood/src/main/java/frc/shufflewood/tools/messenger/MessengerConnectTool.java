@@ -51,7 +51,7 @@ public class MessengerConnectTool implements Tool {
                 MessengerClient client = new MessengerClient(host.toString(), port[0], name.toString());
                 app.setMessenger(client);
                 app.openTool(new TaskManagerTool(app.getMessenger(), "RPi"));
-                //app.openTool(new TaskManagerTool(app.getMessenger(), "Nano"));
+                app.openTool(new TaskManagerTool(app.getMessenger(), "Nano"));
                 app.closeTool(this);
             } catch (RuntimeException e) {
                 e.printStackTrace();
