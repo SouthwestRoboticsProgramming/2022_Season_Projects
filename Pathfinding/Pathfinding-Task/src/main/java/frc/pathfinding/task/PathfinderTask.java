@@ -7,6 +7,7 @@ import frc.pathfinding.lib.Pathfinder;
 import frc.pathfinding.lib.collision.CircleCollider;
 import frc.pathfinding.lib.collision.Collider;
 import frc.pathfinding.lib.collision.CollisionGrid;
+import frc.pathfinding.lib.collision.RectangleCollider;
 
 import java.io.*;
 import java.util.List;
@@ -50,6 +51,7 @@ public final class PathfinderTask {
         Collider robotCollider = new CircleCollider(0, 0, agentRadius + collisionPadding);
 
         CollisionGrid grid = new CollisionGrid(30, 30, robotCollider);
+        grid.loadFromFile("scene.txt");
         Pathfinder pathfinder = new Pathfinder(grid);
         PathOptimizer optimizer = new PathOptimizer(grid);
         // Default start and goal so it doesn't crash
