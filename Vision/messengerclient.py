@@ -87,13 +87,10 @@ class MessengerClient:
         assume that the connection is dropped and disconnect.
         """
 
-        print("Start")
         self.send_message("_Heartbeat", b"")
 
         while self._available():
             self._read_message()
-
-        print("End")
 
     def disconnect(self):
         """

@@ -3,7 +3,7 @@ from Constants import Constants
 import threading
 
 def main():
-    t1 = VisionThreads.getSingleCamThread("TestTwo",0)
+    t1 = VisionThreads.getHubVisionThread("TestTwo",0)
 
     t1.start()
 

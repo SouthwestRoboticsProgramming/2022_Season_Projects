@@ -200,9 +200,9 @@ class USBCamera:
             angle2X = math.degrees(math.atan(((x) - (frame.shape[1]/2))/pixDistanceX))
             cv2.rectangle(frameResult,(x,y),( x + w,y + h ),Constants.BOUNDING_COLOR,3)
         else:
-            angleX = "Obstructed"
-            angleY = "Obstructed"
-            angle2X = "Obstructed"
+            angleX = False
+            angleY = False
+            angle2X = False
 
         binary3Channel = cv2.cvtColor(binary,cv2.COLOR_GRAY2BGR)
         stacked = np.hstack((binary3Channel,frameResult))
@@ -281,9 +281,9 @@ class USBCamera:
             angle2X = math.degrees(math.atan(((x) - (frame.shape[1]/2))/pixDistanceX))
             cv2.rectangle(frameResult,(x,y),( x + w,y + h ),Constants.BOUNDING_COLOR,3)
         else:
-            angleX = "Obstructed"
-            angleY = "Obstructed"
-            angle2X = "Obstructed"
+            angleX = False
+            angleY = False
+            angle2X = False
 
         binary3Channel = cv2.cvtColor(binary,cv2.COLOR_GRAY2BGR)
         stacked = np.hstack((binary3Channel,frameResult))

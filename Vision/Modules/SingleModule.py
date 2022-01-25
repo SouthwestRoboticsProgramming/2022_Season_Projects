@@ -16,7 +16,7 @@ class SingleModule:
         self.camera.setExposure(settings[7])
         frame = self.camera.getFrame()
         if frame is not False:
-            Xangle, Xangle2, Yangle, outputFrame = self.camera.circleDetection(frame)
+            Xangle, Xangle2, Yangle, outputFrame = self.camera.objectDetection(frame)
         else:
             Xangle, Xangle2, Yangle = False
             outputFrame = frame
@@ -24,7 +24,7 @@ class SingleModule:
         return(Xangle, Xangle2, Yangle, outputFrame)
 
     def readValues(self):
-        settings = open('Vision/config.txt','r')
+        settings = open('config.txt','r')
         values = settings.readlines()
         i=0
         while i <= len(values)-1:

@@ -39,11 +39,16 @@ public final class Constants {
     public static final double MAX_ROTATION_SPEED = 5.0; // Radians per second
     public static final double ROBOT_MAX_ROTATION_SPEED = 26.5; // Radians per second
     
-    public static final double WHEEL_TURN_KP = .02;
+    public static final double WHEEL_TURN_KP = 0.02;
     public static final double WHEEL_TURN_KI = 0; // Leave this at 0: There is no steady-state error in the system
     public static final double WHEEL_TURN_KD = 0.002;
     
-    public static final double STABILIZATION_KP = .1;
+    public static final double STABILIZATION_KP = 0.1;
     public static final double STABILIZATION_KI = 0;
     public static final double STABILIZATION_KD = 0.002;
+
+    public static final int CAMERA_TURRET_SERVO_ID = 0; //FIXME
+    public static final double CAMERA_TURRET_KP = 0.1;
+    public static final double CAMERA_TURRET_KI = 0;
+    public static final double CAMERA_TURRET_KD = 0;
 }

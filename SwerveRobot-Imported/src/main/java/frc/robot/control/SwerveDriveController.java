@@ -12,8 +12,7 @@ public class SwerveDriveController {
     private final Input input;
     private final PIDController rotPID;
 
-    private double targetAngle = 0.0;
-    //private final PIDController rotPID;
+    private Rotation2d targetAngle;
 
     // Sets initial state of robot (In this case, staying still)
     private ChassisSpeeds speeds = new ChassisSpeeds(0.0, 0.0, 0.0);
@@ -23,6 +22,7 @@ public class SwerveDriveController {
         this.input = input;
         rotPID = new PIDController(Constants.STABILIZATION_KP, Constants.STABILIZATION_KI, Constants.STABILIZATION_KD);
         rotPID.enableContinuousInput(-180, 180);
+        targetAngle = new Rotation2d();
     }
 
     public void swerveInit(){
@@ -32,32 +32,16 @@ public class SwerveDriveController {
         // drive.setWheelTargetAngle(startingAngle);
         drive.update(speeds);
     }
+
+    public void setRobotTargetAngle(Rotation2d targetAngle) {
+        this.targetAngle = targetAngle;
+    }
     
     public void update() {
         double driveX = input.getDriveX();
         double driveY = input.getDriveY();
         double rot = input.getRot();
         Rotation2d currentAngle = drive.getGyroscopeRotation();
-        
-        if (Math.abs(driveX) < Constants.JOYSTICK_DEAD_ZONE) {
-            driveX = 0;
-        }
-
-        if (Math.abs(driveY) < Constants.JOYSTICK_DEAD_ZONE) {
-            driveY = 0;
-        }
-        
-        double targetRot = rot * Constants.MAX_ROTATION_SPEED;
-        
-        if (Math.abs(rot) < Constants.JOYSTICK_DEAD_ZONE) {
-            if(Math.abs(currentAngle.getDegrees()-targetAngle) < 200 && Math.abs(currentAngle.getDegrees()-targetAngle) > 2){
-                targetRot = rotPID.calculate(currentAngle.getDegrees(),targetAngle);
-            } else {
-                targetRot = 0;
-            }
-        } else {
-            targetAngle = currentAngle.getDegrees();
-        }
 
         // Eliminate deadzone jump
         if (driveX > 0) {
@@ -81,6 +65,7 @@ public class SwerveDriveController {
 
         double fieldRelativeX = driveX * Constants.MAX_VELOCITY;
         double fieldRelativeY = driveY * Constants.MAX_VELOCITY;
+        double targetRot = rot * Constants.MAX_ROTATION_SPEED;
 
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);

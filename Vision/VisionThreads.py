@@ -1,12 +1,15 @@
 import cv2
 import threading
+import struct
 from Modules import StereoModule
 from Modules import SingleModule
 from Constants import Constants
+from messengerclient import MessengerClient
 
 class VisionThreads:
     camID = None
     instanceName = None
+    client = None
     
     h_min = 5
     h_max = 255
@@ -19,6 +22,7 @@ class VisionThreads:
 
     def __init__(self,instanceName):
         self.instanceName = instanceName
+        self.client = MessengerClient("10.21.29.3", 8341, "Vision")
 
     def _singleCamModule(self,camID):
         self.readValues()
@@ -31,6 +35,17 @@ class VisionThreads:
         while True: # TODO: Find a better way to loop
             settings = [self.h_min,self.h_max,self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure]
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
+
+            print(Xangle, Xangle2, Yangle)
+
+            data = None
+            if not Xangle is False:
+                data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
+            else:
+                data = struct.pack(">?", False)
+            self.client.send_message("Vision:Angles", data)
+
+            self.client.read()
 
             # TODO: Send these angles to messanger client
             if Constants.EXPERIMENTAL:
@@ -94,7 +109,7 @@ class VisionThreads:
             self.exposure = cv2.getTrackbarPos("Exposure",str(self.instanceName) + " Track Bars")
 
     def readValues(self):
-        lines = open('Vision/config.txt','r')
+        lines = open('./config.txt','r')
         values = lines.readlines()
         i=0
         while i <= len(values)-1:
@@ -105,6 +120,10 @@ class VisionThreads:
     def _empty(self,a):
         # This function doens't do anything but is required for creating trackbars
         pass
+
+def getHubVisionThread(hubThreadNumber,camID):
+    thread = threading.Thread(target=_runSingleCamModule,args=(("Hub Target Thread " + hubThreadNumber),camID))
+    return(thread)
 
 def getSingleCamThread(instanceName,camID):
     thread = threading.Thread(target=_runSingleCamModule,args=(instanceName,camID))
