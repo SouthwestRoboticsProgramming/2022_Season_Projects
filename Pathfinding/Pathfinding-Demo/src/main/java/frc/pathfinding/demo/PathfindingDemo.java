@@ -46,6 +46,7 @@ public class PathfindingDemo extends PApplet {
         grid.addObstacle(new RectangleCollider(0, CELLS_Y, 15.42, 15.42, .25*Math.PI));
         grid.addObstacle(new RectangleCollider(CELLS_X, 0, 15.42, 15.42, .25*Math.PI));
         //grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 7.69, height, 0));
+        grid.loadFromFile("scene.txt");
 
         pathfinder = new Pathfinder(grid);
         optimizer = new PathOptimizer(grid);

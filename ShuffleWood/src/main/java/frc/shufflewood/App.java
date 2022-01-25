@@ -8,6 +8,7 @@ import frc.shufflewood.gui.draw.GuiDrawData;
 import frc.shufflewood.tools.Tool;
 import frc.shufflewood.tools.messenger.MessengerConnectTool;
 import processing.core.PApplet;
+import processing.core.PImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ public final class App extends PApplet {
 
     @Override
     public void setup() {
+        surface.setResizable(true);
+
         gui = new GuiContextImpl(this);
         gui.getStyle().font = new Font(this, 0.25f);
 
@@ -72,11 +75,17 @@ public final class App extends PApplet {
 
         gui.endFrame();
 
+        PImage lastTexture = null;
         noStroke();
         beginShape(TRIANGLES);
         GuiDrawData data = gui.getDrawData();
         for (GuiDrawData.Vertex v : data.getVertices()) {
-            texture(v.texture);
+            if (lastTexture != v.getTexture()) {
+                lastTexture = v.getTexture();
+                endShape();
+                beginShape(TRIANGLES);
+                texture(v.getTexture());
+            }
             tint(v.tint);
             vertex(v.pos.x, v.pos.y, v.uv.x, v.uv.y);
         }

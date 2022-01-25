@@ -2,9 +2,7 @@ package frc.messenger.test;
 
 import frc.messenger.client.MessengerClient;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class MessengerTest {
@@ -12,7 +10,22 @@ public class MessengerTest {
         MessengerClient client = new MessengerClient("10.21.29.3", 8341, "Tester");
 
         client.setCallback((type, data) -> {
-            System.out.println("Got " + type);
+            //System.out.println("Got " + type);
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
+            try {
+                boolean good = in.readBoolean();
+                if (good) {
+                    double xAngle = in.readDouble();
+                    double xAngle2 = in.readDouble();
+                    double yAngle = in.readDouble();
+
+                    System.out.println(xAngle + " " + xAngle2 + " " + yAngle);
+                } else {
+                    System.out.println("bad");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         Scanner in = new Scanner(System.in);

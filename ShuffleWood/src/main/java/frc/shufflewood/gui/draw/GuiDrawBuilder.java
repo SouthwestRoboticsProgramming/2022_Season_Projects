@@ -10,11 +10,12 @@ import java.util.Deque;
 public class GuiDrawBuilder {
     private static final int CURVE_DETAIL = 8;
     private static final float[] curveLookup = new float[CURVE_DETAIL * 2 + 2];
+
     static {
         for (int i = 0; i <= CURVE_DETAIL; i++) {
             double angle = i / (double) CURVE_DETAIL * Math.PI / 2;
 
-            curveLookup[i * 2    ] = (float) Math.cos(angle);
+            curveLookup[i * 2] = (float) Math.cos(angle);
             curveLookup[i * 2 + 1] = (float) Math.sin(angle);
         }
     }
@@ -23,18 +24,18 @@ public class GuiDrawBuilder {
     private final GuiDrawData draw;
     private final Deque<Rect> clipStack;
     private Rect clipRect;
-    
+
     public GuiDrawBuilder(Font font, int width, int height) {
         this.font = font;
         draw = new GuiDrawData(font.getWhiteUV(), font.getTexture());
         clipStack = new ArrayDeque<>();
         clipRect = new Rect(0, 0, width, height);
     }
-    
+
     public GuiDrawData getDrawData() {
         return draw;
     }
-    
+
     // --- Convex Polygon Triangulation ---
 
     private Vec2 firstPos, lastPos;
@@ -96,7 +97,7 @@ public class GuiDrawBuilder {
     // --- Draw Command Implementations ---
 
     public void drawLine(Vec2 a, Vec2 b, int color) {
-	if (a.equals(b)) return; // No point in drawing a line with zero length
+        if (a.equals(b)) return; // No point in drawing a line with zero length
 
         float x1 = a.x;
         float y1 = a.y;
@@ -137,13 +138,13 @@ public class GuiDrawBuilder {
     }
 
     public void fillTriangle(Vec2 a, Vec2 b, Vec2 c, int color) {
-	draw.vertex(a, color);
+        draw.vertex(a, color);
         draw.vertex(b, color);
         draw.vertex(c, color);
     }
 
     public void drawRect(Rect r, int color) {
-	beginPolygonBorder(color);
+        beginPolygonBorder(color);
         polygonBorderVertex(r.min);
         polygonBorderVertex(new Vec2(r.max.x, r.min.y));
         polygonBorderVertex(r.max);
@@ -152,7 +153,7 @@ public class GuiDrawBuilder {
     }
 
     public void fillRect(Rect r, int color) {
-	r = clipRect.clip(r);
+        r = clipRect.clip(r);
         if (r == null) return;
 
         beginPolygon(color);
@@ -163,7 +164,7 @@ public class GuiDrawBuilder {
     }
 
     public void drawRoundRect(Rect r, float round, int color) {
-	// Edges
+        // Edges
         drawLine(new Vec2(r.min.x + round, r.min.y), new Vec2(r.max.x - round, r.min.y), color);
         drawLine(new Vec2(r.min.x, r.min.y + round), new Vec2(r.min.x, r.max.y - round), color);
         drawLine(new Vec2(r.min.x + round, r.max.y), new Vec2(r.max.x - round, r.max.y), color);
@@ -173,7 +174,7 @@ public class GuiDrawBuilder {
         for (int i = 1; i <= CURVE_DETAIL; i++) {
             float lx = curveLookup[i * 2 - 2];
             float ly = curveLookup[i * 2 - 1];
-            float px = curveLookup[i * 2    ];
+            float px = curveLookup[i * 2];
             float py = curveLookup[i * 2 + 1];
 
             drawLine(new Vec2(r.max.x - round + round * lx, r.max.y - round + round * ly), new Vec2(r.max.x - round + round * px, r.max.y - round + round * py), color);
@@ -184,39 +185,39 @@ public class GuiDrawBuilder {
     }
 
     public void fillRoundRect(Rect r, float round, int color) {
-	beginPolygon(color);
+        beginPolygon(color);
 
         // Bottom right
         for (int i = 0; i <= CURVE_DETAIL; i++) {
             float vx = curveLookup[i * 2] * round + r.max.x - round;
-            float vy = curveLookup[i*2+1] * round + r.max.y - round;
+            float vy = curveLookup[i * 2 + 1] * round + r.max.y - round;
             polygonVertex(new Vec2(vx, vy));
         }
 
         // Bottom left
         for (int i = CURVE_DETAIL; i >= 0; i--) {
             float vx = r.min.x + round - curveLookup[i * 2] * round;
-            float vy = curveLookup[i*2+1] * round + r.max.y - round;
+            float vy = curveLookup[i * 2 + 1] * round + r.max.y - round;
             polygonVertex(new Vec2(vx, vy));
         }
 
         // Top left
         for (int i = 0; i <= CURVE_DETAIL; i++) {
             float vx = r.min.x + round - curveLookup[i * 2] * round;
-            float vy = r.min.y + round - curveLookup[i*2+1] * round;
+            float vy = r.min.y + round - curveLookup[i * 2 + 1] * round;
             polygonVertex(new Vec2(vx, vy));
         }
 
         // Top right
         for (int i = CURVE_DETAIL; i >= 0; i--) {
             float vx = curveLookup[i * 2] * round + r.max.x - round;
-            float vy = r.min.y + round - curveLookup[i*2+1] * round;
+            float vy = r.min.y + round - curveLookup[i * 2 + 1] * round;
             polygonVertex(new Vec2(vx, vy));
         }
     }
 
     public void textureRect(Rect r, Rect uv, PImage texture, int color) {
-       	beginPolygon(color);
+        beginPolygon(color);
         polygonTextureVertex(r.min, uv.min, texture);
         polygonTextureVertex(new Vec2(r.max.x, r.min.y), new Vec2(uv.max.x, uv.min.y), texture);
         polygonTextureVertex(r.max, uv.max, texture);
@@ -230,7 +231,7 @@ public class GuiDrawBuilder {
 
     public void pushClipRect(Rect r) {
         clipStack.push(clipRect);
-	clipRect = clipRect.clip(r);
+        clipRect = clipRect.clip(r);
     }
 
     public void popClipRect() {
