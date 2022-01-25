@@ -23,14 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da777d2d-befa-4519-9c9c-3c8912e9bd79" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/ToolPalette.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/lidar/LidarTool.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/lidar/ScanEntry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContextImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/gui/GuiContextImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/messenger/MessengerConnectTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/messenger/MessengerConnectTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/lidar/LidarTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/lidar/LidarTool.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

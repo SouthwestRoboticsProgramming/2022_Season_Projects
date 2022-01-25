@@ -97,6 +97,8 @@ public class LidarTool implements Tool {
         if (width > 0 && height > 0) {
             if (width != lastW || height != lastH) {
                 g = app.createGraphics(width, height, PConstants.P2D);
+                lastW = width;
+                lastH = height;
             }
 
             g.beginDraw();
