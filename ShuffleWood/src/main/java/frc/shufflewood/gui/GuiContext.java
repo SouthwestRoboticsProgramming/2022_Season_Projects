@@ -4,6 +4,7 @@ import frc.shufflewood.gui.draw.GuiDrawData;
 import frc.shufflewood.gui.filter.AnyFilter;
 import frc.shufflewood.gui.filter.IntFilter;
 import frc.shufflewood.gui.filter.TextFilter;
+import frc.shufflewood.gui.input.GuiInput;
 import processing.core.PImage;
 
 public interface GuiContext {

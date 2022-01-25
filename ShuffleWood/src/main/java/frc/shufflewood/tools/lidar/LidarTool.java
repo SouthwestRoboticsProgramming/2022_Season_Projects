@@ -59,14 +59,13 @@ public class LidarTool implements Tool {
         g.background(0);
         g.translate(g.width / 2f, g.height / 2f);
 
-        g.scale(0.25f);
-
-        g.stroke(255, 0, 0);
-        g.strokeWeight(32);
+        g.scale(0.1f);
 
         List<ScanEntry> scanList = new ArrayList<>(scan);
         scanList.sort(Comparator.comparingDouble(ScanEntry::getAngle));
 
+        g.stroke(255, 0, 0);
+        g.strokeWeight(32);
         g.beginShape(PConstants.POINTS);
         for (ScanEntry entry : scanList) {
             float x = (float) (Math.cos(Math.toRadians(entry.getAngle())) * entry.getDistance());

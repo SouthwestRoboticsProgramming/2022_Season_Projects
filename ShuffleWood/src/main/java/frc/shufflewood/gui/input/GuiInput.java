@@ -1,4 +1,7 @@
-package frc.shufflewood.gui;
+package frc.shufflewood.gui.input;
+
+import frc.shufflewood.gui.Rect;
+import frc.shufflewood.gui.Vec2;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -15,6 +18,8 @@ public final class GuiInput {
   public boolean mouseDown;
   public boolean mouseClicked;
   private Queue<Character> charQueue;
+  private float scrollX;
+  private float scrollY;
 
   private float lastX;
   private float lastY;
@@ -30,37 +35,36 @@ public final class GuiInput {
 
     lastX = 0;
     lastY = 0;
+    scrollX = 0;
+    scrollY = 0;
   }
 
   public void update() {
     lastX = cursorX;
     lastY = cursorY;
+    scrollX = 0;
+    scrollY = 0;
     mouseClicked = false;
     charQueue.clear();
 
     Event event;
     while ((event = eventQueue.poll()) != null) {
-      if (event instanceof MouseEvent) {
-        MouseEvent e = (MouseEvent) event;
-        cursorX = e.x;
-        cursorY = e.y;
+      EventDispatcher d = new EventDispatcher(event);
 
-        switch (e.type) {
-          case EVENT_MOUSE_MOVED:
-            break;
-          case EVENT_MOUSE_DOWN:
-            mouseDown = true;
-            mouseClicked = true;
-            break;
-          case EVENT_MOUSE_UP:
-            mouseDown = false;
-            break;
-        }
-      } else if (event instanceof KeyEvent) {
-        KeyEvent e = (KeyEvent) event;
-
-        charQueue.add(e.c);
-      }
+      d.dispatch(MouseEvent.class, (e) -> {
+        cursorX = e.getX();
+        cursorY = e.getY();
+      });
+      d.dispatch(MouseDownEvent.class, (e) -> {
+        mouseDown = true;
+        mouseClicked = true;
+      });
+      d.dispatch(MouseUpEvent.class, (e) -> {
+        mouseDown = false;
+      });
+      d.dispatch(KeyTypedEvent.class, (e) -> {
+        charQueue.add(e.getChar());
+      });
     }
   }
 
@@ -71,6 +75,16 @@ public final class GuiInput {
       b.append(c.charValue());
     }
     return b.toString();
+  }
+
+  public Vec2 getScrollInRect(Rect r) {
+    if (rectHovered(r)) {
+      Vec2 scroll = new Vec2(scrollX, scrollY);
+      scrollX = 0;
+      scrollY = 0;
+      return scroll;
+    }
+    return new Vec2();
   }
 
   public boolean rectHovered(Rect r) {
@@ -104,49 +118,22 @@ public final class GuiInput {
   }
 
   public void onCharTyped(char c) {
-    eventQueue.add(new KeyEvent(c));
+    eventQueue.add(new KeyTypedEvent(c));
   }
 
   public void onMouseMoved(float x, float y) {
-    eventQueue.add(new MouseEvent(
-      EVENT_MOUSE_MOVED,
-      x, y
-    ));
+    eventQueue.add(new MouseMovedEvent(x, y));
   }
 
   public void onMouseDown(float x, float y) {
-    eventQueue.add(new MouseEvent(
-      EVENT_MOUSE_DOWN,
-      x, y
-    ));
+    eventQueue.add(new MouseDownEvent(x, y));
   }
 
   public void onMouseUp(float x, float y) {
-    eventQueue.add(new MouseEvent(
-      EVENT_MOUSE_UP,
-      x,y
-    ));
+    eventQueue.add(new MouseUpEvent(x, y));
   }
 
-  private static abstract class Event {}
-
-  private static class MouseEvent extends Event {
-    private final int type;
-    private final float x;
-    private final float y;
-
-    private MouseEvent(int type, float x, float y) {
-      this.type = type;
-      this.x = x;
-      this.y = y;
-    }
-  }
-
-  private static class KeyEvent extends Event {
-    private final char c;
-
-    public KeyEvent(char c) {
-      this.c = c;
-    }
+  public void onMouseScrolled(float x, float y, float sx, float sy) {
+    eventQueue.add(new MouseScrolledEvent(x, y, sx, sy));
   }
 }

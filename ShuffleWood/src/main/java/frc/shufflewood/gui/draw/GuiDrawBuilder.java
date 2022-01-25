@@ -217,11 +217,19 @@ public class GuiDrawBuilder {
     }
 
     public void textureRect(Rect r, Rect uv, PImage texture, int color) {
+        Rect clipped = clipRect.clip(r);
+        r = clipped;
+
         beginPolygon(color);
         polygonTextureVertex(r.min, uv.min, texture);
         polygonTextureVertex(new Vec2(r.max.x, r.min.y), new Vec2(uv.max.x, uv.min.y), texture);
         polygonTextureVertex(r.max, uv.max, texture);
         polygonTextureVertex(new Vec2(r.min.x, r.max.y), new Vec2(uv.min.x, uv.max.y), texture);
+    }
+
+    private float map(float val, float min, float max, float newMin, float newMax) {
+        float l = (val - min) / (max - min);
+        return l * (newMax - newMin) + newMin;
     }
 
     public void setClipRect(Rect r) {

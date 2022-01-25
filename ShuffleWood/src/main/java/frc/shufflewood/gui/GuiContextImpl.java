@@ -3,6 +3,7 @@ package frc.shufflewood.gui;
 import frc.shufflewood.gui.draw.GuiDraw;
 import frc.shufflewood.gui.draw.GuiDrawData;
 import frc.shufflewood.gui.filter.TextFilter;
+import frc.shufflewood.gui.input.GuiInput;
 import processing.core.PApplet;
 import processing.core.PImage;
 

@@ -22,4 +22,12 @@ public class ScanEntry {
     public double getDistance() {
         return distance;
     }
+
+    public float getX() {
+        return (float) (Math.cos(Math.toRadians(angle)) * distance);
+    }
+
+    public float getY() {
+        return (float) (Math.sin(Math.toRadians(angle)) * distance);
+    }
 }

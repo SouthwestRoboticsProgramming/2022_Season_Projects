@@ -9,6 +9,7 @@ import frc.shufflewood.tools.Tool;
 import frc.shufflewood.tools.messenger.MessengerConnectTool;
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +114,11 @@ public final class App extends PApplet {
     @Override
     public void mouseReleased() {
         gui.getInput().onMouseUp(mouseX, mouseY);
+    }
+
+    @Override
+    public void mouseWheel(MouseEvent event) {
+        gui.getInput().onMouseScrolled(mouseX, mouseY, 0, event.getCount());
     }
 
     public static void main(String[] args) {
