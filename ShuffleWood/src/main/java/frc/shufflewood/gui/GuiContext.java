@@ -49,6 +49,7 @@ public interface GuiContext {
     boolean button(String label, Vec2 size);
     default void image(PImage image) { image(image, image.width, image.height); }
     void image(PImage image, float width, float height);
+    boolean checkbox(boolean[] checked);
 
     // Text edit
     // TODO: Maybe use String[] instead?

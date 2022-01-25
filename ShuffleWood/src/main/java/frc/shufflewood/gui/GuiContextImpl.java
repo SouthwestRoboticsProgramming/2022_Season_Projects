@@ -18,6 +18,7 @@ public final class GuiContextImpl implements GuiContext {
         Vec2 widgetSize = new Vec2();
         Vec2 sameLinePos = new Vec2();
         float lineBeginX = 0;
+        float maxLineHeight = 0;
 
         boolean tableDrawBorder;
         boolean tableUsePadding;
@@ -72,10 +73,12 @@ public final class GuiContextImpl implements GuiContext {
     private void beginWidget() {}
 
     private void endWidget() {
+        activePane.maxLineHeight = Math.max(activePane.maxLineHeight, activePane.widgetSize.y);
+
         activePane.sameLinePos.x = activePane.position.x + activePane.widgetSize.x;
         activePane.sameLinePos.y = activePane.position.y;
 
-        activePane.position.y += activePane.widgetSize.y + style.widgetPadding;
+        activePane.position.y += activePane.maxLineHeight + style.widgetPadding;
         activePane.position.x = activePane.lineBeginX;
     }
 
@@ -457,7 +460,31 @@ public final class GuiContextImpl implements GuiContext {
 
     @Override
     public void image(PImage image, float width, float height) {
+        beginWidget();
+        GuiPane p = activePane;
 
+        p.widgetSize.x = width;
+        p.widgetSize.y = height;
+
+        Rect r = new Rect(new Vec2(p.position), new Vec2(p.position.x + width, p.position.y + height));
+        Rect uv = new Rect(0, 0, image.width, image.height);
+        draw.textureRect(r, uv, image, 0xffffffff);
+        draw.drawRect(r, style.borderColor);
+
+        endWidget();
+    }
+
+    // TODO: Make better
+    @Override
+    public boolean checkbox(boolean[] checked) {
+        Vec2 size = new Vec2(50, style.font.getHeight() + style.buttonContentPadding * 2);
+        boolean clicked = button(checked[0] ? "Yes" : "No", size);
+
+        if (clicked) {
+            checked[0] = !checked[0];
+        }
+
+        return clicked;
     }
 
     private static final class TextEditState {
