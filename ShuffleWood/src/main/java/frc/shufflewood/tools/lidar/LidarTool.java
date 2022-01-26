@@ -64,6 +64,34 @@ public class LidarTool implements Tool {
         List<ScanEntry> scanList = new ArrayList<>(scan);
         scanList.sort(Comparator.comparingDouble(ScanEntry::getAngle));
 
+        g.stroke(0, 0, 255);
+        g.strokeWeight(32);
+        g.fill(0, 0, 64);
+        g.beginShape();
+        int size = scanList.size();
+        for (int i = 0; i < size; i++) {
+            ScanEntry last = scanList.get(i > 0 ? i - 1 : size - 1);
+            ScanEntry current = scanList.get(i);
+            ScanEntry next = scanList.get(i < size - 1 ? i + 1 : 0);
+
+            float x1 = last.getX();
+            float y1 = last.getY();
+            float x0 = current.getX();
+            float y0 = current.getY();
+            float x2 = next.getX();
+            float y2 = next.getY();
+
+            float num = Math.abs((x2-x1)*(y1-y0)-(x1-x0)*(y2-y1));
+            float den = (float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+            float off = num / den;
+            float linearity = 1 / off;
+
+            float x = (float) (Math.cos(Math.toRadians(current.getAngle())) * linearity * 200);
+            float y = (float) (Math.sin(Math.toRadians(current.getAngle())) * linearity * 200);
+            g.vertex(x, y);
+        }
+        g.endShape();
+
         g.stroke(255, 0, 0);
         g.strokeWeight(32);
         g.beginShape(PConstants.POINTS);
