@@ -30,7 +30,6 @@
   <properties>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
-    <lwjgl.natives>natives-linux</lwjgl.natives>
     <p5x.version>0.353.0-beta-3</p5x.version>
     <lwjgl.version>3.2.3</lwjgl.version>
   </properties>
