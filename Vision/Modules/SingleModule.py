@@ -6,7 +6,7 @@ class SingleModule:
 
     def __init__(self,camID):
 
-        self.camera = USBCamera(camID,"WIN_20211116_16_05_41_Pro",self.readValues())
+        self.camera = USBCamera(camID,"new-checkerboard",self.readValues())
 
         # Turn off auto settings for greater control
         self.camera.turnOffAuto()

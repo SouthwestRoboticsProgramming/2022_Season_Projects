@@ -98,7 +98,7 @@ class USBCamera:
         objp = np.zeros((1, checkerboard[0] * checkerboard[1], 3), np.float32)
         objp[0,:,:2] = np.mgrid[0:checkerboard[0],0:checkerboard[1]].T.reshape(-1,2)
 
-        images = glob.glob('Vision/checkerboards/'+ str(calibrationImageName) +'.jpg')
+        images = glob.glob('checkerboards/'+ str(calibrationImageName) +'.jpg')
         for fname in images:
             img = cv2.imread(fname)
             if img is not None:

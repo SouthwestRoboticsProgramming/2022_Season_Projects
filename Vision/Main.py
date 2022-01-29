@@ -3,7 +3,7 @@ from Constants import Constants
 import threading
 
 def main():
-    t1 = VisionThreads.getHubVisionThread("TestTwo",0)
+    t1 = VisionThreads.getStereoThread("StereoThing",0,1,4,)
 
     t1.start()
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
 import cv2
 import numpy as np
 import math
-import glob
+import glob 
 import struct
 import threading
 import time

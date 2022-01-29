@@ -1,6 +1,7 @@
 import cv2
 import threading
 import struct
+import time
 from Modules import StereoModule
 from Modules import SingleModule
 from Constants import Constants
@@ -31,12 +32,14 @@ class VisionThreads:
 
         
         module = SingleModule(camID)
-        
         while True: # TODO: Find a better way to loop
+
+            time.sleep(1000/50.0)
+
             settings = [self.h_min,self.h_max,self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure]
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
 
-            print(Xangle, Xangle2, Yangle)
+            #print(Xangle, Xangle2, Yangle)
 
             data = None
             if not Xangle is False:
@@ -68,9 +71,22 @@ class VisionThreads:
         module = StereoModule(camIDL,camIDR,baseline)
 
         while True: # TODO: Find a better way to loop
-            localPose,globalPose,outputFrame = module.getMeasurements(settings)
+
+            time.sleep(1000/50.0)
+
+            globalPose,localPose,outputFrame = module.getMeasurements(settings)
 
             # TODO: Send these angles to messenger client
+
+            data = None
+            if not isinstance(globalPose, str):
+                data = struct.pack(">?ddddd", True, globalPose[0], globalPose[1], localPose[0], localPose[1], localPose[2])
+            else:
+                data = struct.pack(">?", False)
+            self.client.send_message("Vision:Stereo_Position", data)
+
+            self.client.read()
+
 
             if Constants.EXPERIMENTAL:
                 cv2.imshow(str(self.instanceName) + " Module")
