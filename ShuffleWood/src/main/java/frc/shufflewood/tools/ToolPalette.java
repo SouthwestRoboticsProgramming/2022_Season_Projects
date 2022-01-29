@@ -7,20 +7,23 @@ import frc.shufflewood.tools.lidar.LidarTool;
 import frc.shufflewood.tools.taskmanager.TaskManagerTool;
 
 public class ToolPalette implements Tool {
-    private final boolean[] enablePiTask, enableNanoTask, enableLidar;
+    private final boolean[] enablePiTask, enableNanoTask, enableLidar, enableValueDisplay;
     private final TaskManagerTool piTask;
     private final TaskManagerTool nanoTask;
     private final LidarTool lidar;
+    private final ValueDisplayTool valueDisplay;
 
     public ToolPalette(App app) {
-        enablePiTask = new boolean[] {true};
+        enablePiTask = new boolean[] {false};
         enableNanoTask = new boolean[] {false};
-        enableLidar = new boolean[] {true};
+        enableLidar = new boolean[] {false};
+        enableValueDisplay = new boolean[] {true};
 
         MessengerAccess msg = app.getMessenger();
         piTask = new TaskManagerTool(msg, "RPi");
         nanoTask = new TaskManagerTool(msg, "Nano");
         lidar = new LidarTool(app);
+        valueDisplay = new ValueDisplayTool(msg);
     }
 
     @Override
@@ -39,11 +42,16 @@ public class ToolPalette implements Tool {
         gui.sameLine();
         gui.text("Lidar");
 
+        gui.checkbox(enableValueDisplay);
+        gui.sameLine();
+        gui.text("Value Display");
+
         gui.setWindowHeightAuto();
         gui.end();
 
         if (enablePiTask[0]) piTask.draw(gui);
         if (enableNanoTask[0]) nanoTask.draw(gui);
         if (enableLidar[0]) lidar.draw(gui);
+        if (enableValueDisplay[0]) valueDisplay.draw(gui);
     }
 }

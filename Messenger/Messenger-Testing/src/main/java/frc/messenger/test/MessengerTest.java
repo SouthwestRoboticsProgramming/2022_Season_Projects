@@ -15,11 +15,15 @@ public class MessengerTest {
             try {
                 boolean good = in.readBoolean();
                 if (good) {
-                    double xAngle = in.readDouble();
-                    double xAngle2 = in.readDouble();
-                    double yAngle = in.readDouble();
+                    double[] d = new double[5];
+                    for (int i = 0; i < d.length; i++) {
+                        d[i] = in.readDouble();
+                    }
 
-                    System.out.println(xAngle + " " + xAngle2 + " " + yAngle);
+                    for (double v : d) {
+                        System.out.print(v + " ");
+                    }
+                    System.out.println();
                 } else {
                     System.out.println("bad");
                 }
@@ -44,20 +48,12 @@ public class MessengerTest {
                     case "send": {
                         byte[] data;
                         if (tokens.length > 2) {
-                            StringBuilder builder = new StringBuilder();
-                            boolean space = false;
-                            for (int i = 2; i < tokens.length; i++) {
-                                if (space) {
-                                    builder.append(" ");
-                                }
-                                space = true;
-                                builder.append(tokens[i]);
-                            }
-
                             ByteArrayOutputStream b = new ByteArrayOutputStream();
                             DataOutputStream d = new DataOutputStream(b);
                             try {
-                                d.writeUTF(builder.toString());
+                                for (int i = 2; i < tokens.length; i++) {
+                                    d.writeUTF(tokens[i]);
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
