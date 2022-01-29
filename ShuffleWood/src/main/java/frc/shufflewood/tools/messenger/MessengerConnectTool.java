@@ -5,6 +5,7 @@ import frc.shufflewood.App;
 import frc.shufflewood.gui.GuiContext;
 import frc.shufflewood.gui.filter.RangedIntegerFilter;
 import frc.shufflewood.gui.filter.TextFilter;
+import frc.shufflewood.tools.StartingStateMenu;
 import frc.shufflewood.tools.Tool;
 import frc.shufflewood.tools.ToolPalette;
 import frc.shufflewood.tools.taskmanager.TaskManagerTool;
@@ -52,6 +53,7 @@ public class MessengerConnectTool implements Tool {
                 MessengerClient client = new MessengerClient(host.toString(), port[0], name.toString());
                 app.setMessenger(client);
                 app.openTool(new ToolPalette(app));
+                app.openTool(new StartingStateMenu());
                 app.closeTool(this);
             } catch (RuntimeException e) {
                 e.printStackTrace();
