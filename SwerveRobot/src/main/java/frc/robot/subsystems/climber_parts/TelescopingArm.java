@@ -19,8 +19,9 @@ public class TelescopingArm extends SubsystemBase {
     motorTwo.set(percent);
   }
 
-  public void setPosition(double position)
+  public void setPosition(double position) {
 
+  }
 
   @Override
   public void periodic() {
