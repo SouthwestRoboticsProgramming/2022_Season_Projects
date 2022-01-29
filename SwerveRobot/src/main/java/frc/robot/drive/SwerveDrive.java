@@ -38,12 +38,12 @@ public class SwerveDrive {
         new Translation2d(-WHEEL_SPACING_FRONT_BACK / 2.0, -WHEEL_SPACING_LEFT_RIGHT / 2.0)
     );
 
-    public SwerveDrive() {
+    public SwerveDrive(AHRS navx) {
         w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1, CAN_PORT_1, OFFSET_1);
         w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2, CAN_PORT_2, OFFSET_2);
         w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3, CAN_PORT_3, OFFSET_3);
         w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4, CAN_PORT_4, OFFSET_4);
-        navx = new AHRS(SPI.Port.kMXP, (byte) 200);
+        this.navx = navx;
         odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d());
 
     }
