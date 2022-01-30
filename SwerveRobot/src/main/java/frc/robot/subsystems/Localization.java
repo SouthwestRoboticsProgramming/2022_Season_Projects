@@ -8,7 +8,18 @@ public class Localization extends SubsystemBase {
   private static AHRS gyro;
 
   public Localization(AHRS gyro) {
-    this.gyro = gyro;
+    Localization.gyro = gyro;
+
+    /* Steps
+
+    1. Get gyro angle
+    2. Get camera turret angle
+    3. Find the points that work
+    4. Narrow down points using starting box
+    5. Check that result is possible
+
+    */
+
   }
 
   @Override

@@ -21,8 +21,13 @@ public final class Constants {
     public static final double OFFSET_4 = -218.85;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
 
-    public static final int CLIMBER_LEFT_MOTOR_ID = 20; //FIXME
-    public static final int CLIMBER_RIGHT_MOTOR_ID = 21; //FIXME
+    /* Climber */
+    public static final int CLIMBER_LEFT_TELE_MOTOR_ONE_ID = 20; //FIXME
+    public static final int CLIMBER_LEFT_TELE_MOTOR_TWO_ID = 21; //FIXME
+    public static final int CLIMBER_RIGHT_TELE_MOTOR_ONE_ID = 22; //FIXME
+    public static final int CLIMBER_RIGHT_TELE_MOTOR_TWO_ID = 23; //FIXME
+    public static final int CLIMBER_LEFT_SWING_MOTOR_ID = 24; //FIXME
+    public static final int CLIMBER_RIGHT_SWING_MOTOR_ID = 25; //FIXME
     
     public static final double JOYSTICK_DEAD_ZONE = 0.2;
 	public static final int DRIVE_CONTROLLER = 0;
