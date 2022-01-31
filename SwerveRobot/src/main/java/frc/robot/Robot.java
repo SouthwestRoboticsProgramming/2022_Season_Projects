@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import frc.messenger.client.MessageDispatcher;
 import frc.messenger.client.MessengerClient;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
@@ -18,6 +20,7 @@ public class Robot extends TimedRobot {
   private SwerveDriveController driveController;
   private Localization localization;
   private MessengerClient msg;
+  private MessageDispatcher dispatch;
 
   @Override
   public void robotInit() {
@@ -41,6 +44,7 @@ public class Robot extends TimedRobot {
       }
     }
     ShuffleWood.setMessenger(msg);
+    dispatch = new MessageDispatcher(msg);
 
     localization = new Localization(gyro);
   }
