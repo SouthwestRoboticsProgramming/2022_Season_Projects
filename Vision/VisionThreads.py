@@ -2,6 +2,7 @@ import cv2
 import threading
 import struct
 import time
+import math
 from Modules import StereoModule
 from Modules import SingleModule
 from Constants import Constants
@@ -9,7 +10,6 @@ from messengerclient import MessengerClient
 
 class VisionThreads:
     camID = None
-    instanceName = None
     client = None
     
     h_min = 5
@@ -21,8 +21,9 @@ class VisionThreads:
     TLow = 0
     exposure = 2
 
-    def __init__(self,instanceName):
-        self.instanceName = instanceName
+    def __init__(self):
+
+        # TODO: DO a try catch or something for this
         self.client = MessengerClient("10.21.29.3", 8341, "Vision")
 
     def _singleCamModule(self,camID):
@@ -61,6 +62,80 @@ class VisionThreads:
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     module.release()
                     return()
+
+
+    def _hubModule(self,camID,hubDiameter):
+        settings = self.readValues("hubSettings")
+
+        if Constants.EXPERIMENTAL:
+            self._createTrackbars("Hub Camera ID: " + str(camID))
+
+        module = SingleModule(camID)
+        while True:
+            time.sleep(1000/50.0)
+
+            if Constants.EXPERIMENTAL:
+                settings = self._getTrackbars()
+
+            Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
+
+            data = None
+            if not Xangle is False:
+
+                diffAngle = Xangle2 - Xangle
+                distance = (.5 * hubDiameter) / math.tan(diffAngle)
+
+                data = struct.pack(">dd", True, Xangle, distance)
+            else:
+                data = struct.pack(">?", False)
+            # TODO: Do a try catch to makc sure that we can connect
+            self.client.send_message("Vision:Hub_Measurements", data)
+            self.client.read()
+
+            # TODO: Listen for stop message
+
+            if Constants.EXPERIMENTAL:
+                cv2.imshow(str("Hub Camera ID: " + str(camID)))
+                cv2.waitKey(1)
+
+                if cv2.waitKey(1) & 0xFF == ord('1'):
+                    return()
+
+    def _climberModule(self,camID):
+        settings = self.readValues("climberSettings")
+
+        if Constants.EXPERIMENTAL:
+            self._createTrackbars("Climber Camera ID: " + str(camID))
+
+        module = SingleModule(camID)
+        while True:
+            time.sleep(1000/50.0)
+
+            if Constants.EXPERIMENTAL:
+                settings = self._getTrackbars()
+
+            Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
+
+            data = None
+            if not Xangle is False:
+
+                data = struct.pack(">ddd", True, Xangle, Xangle2, Yangle)
+            else:
+                data = struct.pack(">?", False)
+            # TODO: Do a try catch to makc sure that we can connect
+            self.client.send_message("Vision:Climber_Angles", data)
+            self.client.read()
+
+            # TODO: Listen for stop message
+
+            if Constants.EXPERIMENTAL:
+                cv2.imshow(str("Climber Camera ID: " + str(camID)))
+                cv2.waitKey(1)
+
+                if cv2.waitKey(1) & 0xFF == ord('1'):
+                    return()
+
+            
 
 
 
@@ -102,59 +177,56 @@ class VisionThreads:
 
 
 
-    def _createTrackbars(self):
-            cv2.namedWindow(str(self.instanceName) + " Track Bars")
-            cv2.resizeWindow(str(self.instanceName) + " Track Bars", 1000,500)
-            cv2.createTrackbar("Hue Min",str(self.instanceName) + " Track Bars",self.h_min,179,self._empty)
-            cv2.createTrackbar("Hue Max",str(self.instanceName) + " Track Bars",self.h_max,179,self._empty)
-            cv2.createTrackbar("Saturation Min",str(self.instanceName) + " Track Bars",self.s_min,255,self._empty)
-            cv2.createTrackbar("Saturation Max",str(self.instanceName) + " Track Bars",self.s_max,255,self._empty)
-            cv2.createTrackbar("Value Min",str(self.instanceName) + " Track Bars",self.v_min,255,self._empty)
-            cv2.createTrackbar("Value Max",str(self.instanceName) + " Track Bars",self.v_max,255,self._empty)
-            cv2.createTrackbar("Thresh Low", str(self.instanceName) + " Track Bars", self.TLow , 255, self._empty)
-            cv2.createTrackbar("Exposure",str(self.instanceName) + " Track Bars", self.exposure,1000, self._empty)
+    def _createTrackbars(self,instanceName):
+            cv2.namedWindow(str(instanceName) + " Track Bars")
+            cv2.resizeWindow(str(instanceName) + " Track Bars", 1000,500)
+            cv2.createTrackbar("Hue Min",str(instanceName) + " Track Bars",self.h_min,179,self._empty)
+            cv2.createTrackbar("Hue Max",str(instanceName) + " Track Bars",self.h_max,179,self._empty)
+            cv2.createTrackbar("Saturation Min",str(instanceName) + " Track Bars",self.s_min,255,self._empty)
+            cv2.createTrackbar("Saturation Max",str(instanceName) + " Track Bars",self.s_max,255,self._empty)
+            cv2.createTrackbar("Value Min",str(instanceName) + " Track Bars",self.v_min,255,self._empty)
+            cv2.createTrackbar("Value Max",str(instanceName) + " Track Bars",self.v_max,255,self._empty)
+            cv2.createTrackbar("Thresh Low", str(instanceName) + " Track Bars", self.TLow , 255, self._empty)
+            cv2.createTrackbar("Exposure",str(instanceName) + " Track Bars", self.exposure,1000, self._empty)
 
     def _getTrackbars(self):
-            self.h_min = cv2.getTrackbarPos("Hue Min",str(self.instanceName) + " Track Bars")
-            self.h_max = cv2.getTrackbarPos("Hue Max",str(self.instanceName) + " Track Bars")
-            self.s_min = cv2.getTrackbarPos("Saturation Min",str(self.instanceName) + " Track Bars")
-            self.s_max = cv2.getTrackbarPos("Saturation Max",str(self.instanceName) + " Track Bars")
-            self.v_min = cv2.getTrackbarPos("Value Min",str(self.instanceName) + " Track Bars")
-            self.v_max = cv2.getTrackbarPos("Value Max",str(self.instanceName) + " Track Bars")
-            self.TLow = cv2.getTrackbarPos("Thresh Low", str(self.instanceName) + " Track Bars")
-            self.exposure = cv2.getTrackbarPos("Exposure",str(self.instanceName) + " Track Bars")
+            settings = None
+            settings[0] = cv2.getTrackbarPos("Hue Min",str(self.instanceName) + " Track Bars")
+            settings[1] = cv2.getTrackbarPos("Hue Max",str(self.instanceName) + " Track Bars")
+            settings[2] = cv2.getTrackbarPos("Saturation Min",str(self.instanceName) + " Track Bars")
+            settings[3] = cv2.getTrackbarPos("Saturation Max",str(self.instanceName) + " Track Bars")
+            settings[4] = cv2.getTrackbarPos("Value Min",str(self.instanceName) + " Track Bars")
+            settings[5] = cv2.getTrackbarPos("Value Max",str(self.instanceName) + " Track Bars")
+            settings[6] = cv2.getTrackbarPos("Thresh Low", str(self.instanceName) + " Track Bars")
+            settings[7] = cv2.getTrackbarPos("Exposure",str(self.instanceName) + " Track Bars")
 
-    def readValues(self):
-        lines = open('./config.txt','r')
+    def readValues(self,configFile):
+        lines = open('./Settings/' + str(configFile) + '.txt','r')
         values = lines.readlines()
         i=0
         while i <= len(values)-1:
             values[i] = values[i].strip()
             i+=1
-        self.h_min, self.h_max, self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure = [int(i) for i in values]
+        settings = [int(i) for i in values]
+        return(settings)
 
     def _empty(self,a):
         # This function doens't do anything but is required for creating trackbars
         pass
 
-def getHubVisionThread(hubThreadNumber,camID):
-    thread = threading.Thread(target=_runSingleCamModule,args=(("Hub Target Thread " + hubThreadNumber),camID))
+def getHubVisionThread(camID,hubDiameter):
+    thread = threading.Thread(target=_runHubThread, args=(camID,hubDiameter))
     return(thread)
 
-def getSingleCamThread(instanceName,camID):
-    thread = threading.Thread(target=_runSingleCamModule,args=(instanceName,camID))
-    return(thread)
 
-def getStereoThread(instanceName,camIDL,camIDR,baseline,settings):
-    thread = threading.Thread(target=_runStereoModule,args=(instanceName,camIDL,camIDR,baseline,settings))
-    return(thread)
 
-def _runSingleCamModule(instanceName,camID):
-    module = VisionThreads(instanceName)
-    module._singleCamModule(camID)
-    return
+#   * I hade to make these functions outside of the class because threads can't use self *
+def _runHubThread(camID,hubDiameter):
+    module = VisionThreads()
+    module._hubModule(camID,hubDiameter)
 
-def _runStereoModule(instanceName,camIDL,camIDR,baseline,settings):
-    module = VisionThreads(instanceName)
-    module._singleCamModule(camIDL,camIDR,baseline,settings)
-    return
+def _runBallDetectionThread():
+    module = VisionThreads()
+
+def _runClimberThread():
+    module = VisionThreads()

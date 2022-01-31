@@ -3,9 +3,17 @@ from Constants import Constants
 import threading
 
 def main():
-    t1 = VisionThreads.getStereoThread("StereoThing",0,1,4,)
+    hubThread = VisionThreads.getHubVisionThread(Constants.HUB_CAMERA,Constants.HUB_TARGET_DIAMETER)
+    ballDetectionThread = VisionThreads.getBallDetectionThread()
+    climberThread = VisionThreads.getBallDetectionThread()
 
-    t1.start()
+    hubThread.start()
+    ballDetectionThread.start()
+    climberThread.start()
+
+    hubThread.join()
+    ballDetectionThread.join()
+    climberThread.join()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,8 @@
+Hue Min
+Hue Max
+Saturation Min
+Saturation Max
+Value Min
+Value Max
+Threshold (Reduces noise but also reduces accuracy)
+Exposure
