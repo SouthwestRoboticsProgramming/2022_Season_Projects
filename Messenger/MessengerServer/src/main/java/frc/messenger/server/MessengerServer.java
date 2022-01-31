@@ -1,5 +1,6 @@
 package frc.messenger.server;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -50,7 +51,9 @@ public final class MessengerServer {
     }
 
     public void run() {
-        new ClientConnectThread(this, 8341).start();
+        MessengerConfig config = MessengerConfig.loadFromFile(new File("config.properties"));
+
+        new ClientConnectThread(this, config.getPort()).start();
 
         while (true) {
             flushMessages();

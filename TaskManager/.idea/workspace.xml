@@ -87,9 +87,9 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.Main" />
       <item itemvalue="Application.ControllerMain" />
       <item itemvalue="Application.ServerMain" />
-      <item itemvalue="Application.Main" />
     </list>
     <recent_temporary>
       <list>
