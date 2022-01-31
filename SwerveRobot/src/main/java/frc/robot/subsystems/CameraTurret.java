@@ -17,7 +17,7 @@ public class CameraTurret extends SubsystemBase {
   }
 
   public double getAngle() {
-    return turretServo.get()*180; //FIXME: Add the camera angle to this
+    return turretServo.getAngle(); //FIXME: Add the camera angle to this
   }
 
   public double getDistance() {
@@ -27,7 +27,7 @@ public class CameraTurret extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double currentAngle = turretServo.get() * 180;
+    double currentAngle = turretServo.getAngle();
 
     turretServo.setAngle(currentAngle); //FIXME Figure out if I can do a 360 or if something else has to be done
   }

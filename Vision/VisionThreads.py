@@ -27,6 +27,7 @@ class VisionThreads:
         # self.client = MessengerClient("10.21.29.3", 5805, "Vision")
         one = "one"
 
+    """
     def _singleCamModule(self,camID):
         self.readValues()
         if Constants.EXPERIMENTAL:
@@ -63,7 +64,7 @@ class VisionThreads:
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     module.release()
                     return()
-
+    """
 
     def _hubModule(self,camID,hubDiameter):
         settings = self.readValues("hubSettings")
@@ -141,7 +142,7 @@ class VisionThreads:
             
 
 
-
+    """
     def _stereoModule(self,camIDL,camIDR,baseline,settings):
         if Constants.EXPERIMENTAL:
             self._createTrackbars()
@@ -177,6 +178,7 @@ class VisionThreads:
 
             # TODO: Calculate fps and add it to the frame
             # TODO: DO the obstructed thing (It'll be False if it is obstructed)
+    """
 
     def _ballDetectionModule(self,camIDL,camIDR,baseline):
         settings = self.readValues("ballDetectionSettings")
@@ -266,6 +268,7 @@ def getClimberThread(camID):
     thread = threading.Thread(target=_runClimberThread, args=(camID,))
     print("Debug 4")
     return(thread)
+
 
 
 
