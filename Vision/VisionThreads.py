@@ -1,3 +1,4 @@
+from turtle import back
 import cv2
 import threading
 import struct
@@ -75,7 +76,7 @@ class VisionThreads:
             time.sleep(1000/50.0)
 
             if Constants.EXPERIMENTAL:
-                settings = self._getTrackbars()
+                settings = self._getTrackbars("Hub Camera ID: " + str(camID))
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
 
@@ -85,7 +86,7 @@ class VisionThreads:
                 diffAngle = Xangle2 - Xangle
                 distance = (.5 * hubDiameter) / math.tan(diffAngle)
 
-                data = struct.pack(">dd", True, Xangle, distance)
+                data = struct.pack(">?dd", True, Xangle, distance)
             else:
                 data = struct.pack(">?", False)
             # TODO: Do a try catch to makc sure that we can connect
@@ -99,6 +100,7 @@ class VisionThreads:
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
+                    module.release()
                     return()
 
     def _climberModule(self,camID):
@@ -112,14 +114,14 @@ class VisionThreads:
             time.sleep(1000/50.0)
 
             if Constants.EXPERIMENTAL:
-                settings = self._getTrackbars()
+                settings = self._getTrackbars("Climber Camera ID: " + str(camID))
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
 
             data = None
             if not Xangle is False:
 
-                data = struct.pack(">ddd", True, Xangle, Xangle2, Yangle)
+                data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
             else:
                 data = struct.pack(">?", False)
             # TODO: Do a try catch to makc sure that we can connect
@@ -133,6 +135,7 @@ class VisionThreads:
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
+                    module.release()
                     return()
 
             
@@ -175,6 +178,39 @@ class VisionThreads:
             # TODO: Calculate fps and add it to the frame
             # TODO: DO the obstructed thing (It'll be False if it is obstructed)
 
+    def _ballDetectionModule(self,camIDL,camIDR,baseline):
+        settings = self.readValues("ballDetectionSettings")
+
+        if Constants.EXPERIMENTAL:
+            self._createTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
+
+        module = StereoModule(camIDL,camIDR,baseline)
+
+        while True:
+
+            time.sleep(1000/50.0)
+
+            if Constants.EXPERIMENTAL:
+                settings = self._getTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
+
+            globalPose,localPose, outputFrame = module.getMeasurements(settings)
+
+            data = None
+            if not isinstance(globalPose, str):
+                data = struct.pack(">?ddd",True,localPose[0],localPose[1],localPose[2])
+            else:
+                data = struct.pack(">?",False)
+            self.client.send_message("Vision:Ball_Position", data)
+            self.client.read()
+
+            if Constants.EXPERIMENTAL:
+                cv2.imshow(str("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR)))
+                cv2.waitKey(1)
+
+                if cv2.waitKey(1) & 0xFF == ord('1'):
+                    module.release()
+                    return()
+
 
 
     def _createTrackbars(self,instanceName):
@@ -189,16 +225,16 @@ class VisionThreads:
             cv2.createTrackbar("Thresh Low", str(instanceName) + " Track Bars", self.TLow , 255, self._empty)
             cv2.createTrackbar("Exposure",str(instanceName) + " Track Bars", self.exposure,1000, self._empty)
 
-    def _getTrackbars(self):
+    def _getTrackbars(self,instanceName):
             settings = None
-            settings[0] = cv2.getTrackbarPos("Hue Min",str(self.instanceName) + " Track Bars")
-            settings[1] = cv2.getTrackbarPos("Hue Max",str(self.instanceName) + " Track Bars")
-            settings[2] = cv2.getTrackbarPos("Saturation Min",str(self.instanceName) + " Track Bars")
-            settings[3] = cv2.getTrackbarPos("Saturation Max",str(self.instanceName) + " Track Bars")
-            settings[4] = cv2.getTrackbarPos("Value Min",str(self.instanceName) + " Track Bars")
-            settings[5] = cv2.getTrackbarPos("Value Max",str(self.instanceName) + " Track Bars")
-            settings[6] = cv2.getTrackbarPos("Thresh Low", str(self.instanceName) + " Track Bars")
-            settings[7] = cv2.getTrackbarPos("Exposure",str(self.instanceName) + " Track Bars")
+            settings[0] = cv2.getTrackbarPos("Hue Min",str(instanceName) + " Track Bars")
+            settings[1] = cv2.getTrackbarPos("Hue Max",str(instanceName) + " Track Bars")
+            settings[2] = cv2.getTrackbarPos("Saturation Min",str(instanceName) + " Track Bars")
+            settings[3] = cv2.getTrackbarPos("Saturation Max",str(instanceName) + " Track Bars")
+            settings[4] = cv2.getTrackbarPos("Value Min",str(instanceName) + " Track Bars")
+            settings[5] = cv2.getTrackbarPos("Value Max",str(instanceName) + " Track Bars")
+            settings[6] = cv2.getTrackbarPos("Thresh Low", str(instanceName) + " Track Bars")
+            settings[7] = cv2.getTrackbarPos("Exposure",str(instanceName) + " Track Bars")
 
     def readValues(self,configFile):
         lines = open('./Settings/' + str(configFile) + '.txt','r')
@@ -218,6 +254,14 @@ def getHubVisionThread(camID,hubDiameter):
     thread = threading.Thread(target=_runHubThread, args=(camID,hubDiameter))
     return(thread)
 
+def getBallDetectionThread(camIDL,camIDR,baseline):
+    thread = threading.Thread(target=_runBallDetectionThread, args=(camIDL,camIDR,baseline))
+    return(thread)
+
+def getClimberThread(camID):
+    thread = threading.Thread(target=_runClimberThread, args=(camID))
+    return(thread)
+
 
 
 #   * I hade to make these functions outside of the class because threads can't use self *
@@ -225,8 +269,10 @@ def _runHubThread(camID,hubDiameter):
     module = VisionThreads()
     module._hubModule(camID,hubDiameter)
 
-def _runBallDetectionThread():
+def _runBallDetectionThread(camIDL,camIDR,baseline):
     module = VisionThreads()
+    module._ballDetectionModule(camIDL,camIDR,baseline)
 
-def _runClimberThread():
+def _runClimberThread(camID):
     module = VisionThreads()
+    module._climberModule(camID)

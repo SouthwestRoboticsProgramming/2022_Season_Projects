@@ -4,8 +4,8 @@ import threading
 
 def main():
     hubThread = VisionThreads.getHubVisionThread(Constants.HUB_CAMERA,Constants.HUB_TARGET_DIAMETER)
-    ballDetectionThread = VisionThreads.getBallDetectionThread()
-    climberThread = VisionThreads.getBallDetectionThread()
+    # ballDetectionThread = VisionThreads.getBallDetectionThread()
+    # climberThread = VisionThreads.getBallDetectionThread()
 
     hubThread.start()
     ballDetectionThread.start()
