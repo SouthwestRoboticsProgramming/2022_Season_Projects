@@ -29,7 +29,17 @@ public class Robot extends TimedRobot {
 
     driveController.swerveInit();
 
-    msg = new MessengerClient("10.21.29.3", 8341, "RoboRIO");
+    while (msg == null) {
+      try {
+        MessengerClient attempt = new MessengerClient("10.21.29.3", 8341, "RoboRIO");
+        msg = attempt;
+      } catch (Throwable t) {
+        System.err.print("Connect failed, retrying");
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {}
+      }
+    }
     ShuffleWood.setMessenger(msg);
 
     localization = new Localization(gyro);
