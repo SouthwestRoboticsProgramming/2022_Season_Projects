@@ -24,6 +24,10 @@ class VisionThreads:
 
     connection = None
 
+    enableHub = False
+    enableBallDetect = False
+    enableClimber = False
+
     # TEMPORARY
 
     print(USBCamera.checkAllCameras())
@@ -33,14 +37,34 @@ class VisionThreads:
         self.connection = True
         try:
             self.client = MessengerClient("10.21.29.3", 5805, "Vision")
-            self.client.set_callback(lambda type, data: self._messageCallback(type, data))
-            self.client.listen("ShuffleWood:SetValue")
+            self.client.set_callback(lambda type, data: self._messageCallback(type))
+            self.client.listen(Constants.MESSAGE_HUB_START)
+            self.client.listen(Constants.MESSAGE_HUB_STOP)
+            self.client.listen(Constants.MESSAGE_BALL_DETECT_START)
+            self.client.listen(Constants.MESSAGE_BALL_DETECT_STOP)
+            self.client.listen(Constants.MESSAGE_CLIMBER_START)
+            self.client.listen(Constants.MESSAGE_CLIMBER_STOP)
         except Exception:
             print("Connection failed")
             self.connection = False
 
-    def _messageCallback(self,type,data):
-        println("Message:", type)
+    def _messageCallback(self,type):
+        print("Got message:", type)
+
+        if type == Constants.MESSAGE_HUB_START:
+            self.enableHub = True
+        elif type == Constants.MESSAGE_HUB_STOP:
+            self.enableHub = False
+        elif type == Constants.MESSAGE_BALL_DETECT_START:
+            self.enableBallDetect = True
+        elif type == Constants.MESSAGE_BALL_DETECT_STOP:
+            self.enableBallDetect = False
+        elif type == Constants.MESSAGE_CLIMBER_START:
+            self.enableClimber = True
+        elif type == Constnats.MESSAGE_CLIMBER_STOP:
+            self.enableClimber = False
+        else
+            print("Unknown message", type)
 
     def _hubModule(self,camID,hubDiameter):
         settings = self.readValues("hubSettings")
@@ -48,8 +72,11 @@ class VisionThreads:
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Hub Camera ID: " + str(camID))
 
+        while not self.enableHub:
+            time.sleep(0.1)
+
         module = SingleModule(camID,settings)
-        while True:
+        while self.enableHub:
             time.sleep(1/50.0)
 
             if Constants.EXPERIMENTAL:
@@ -78,8 +105,9 @@ class VisionThreads:
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
-                    module.release()
-                    return()
+                    break
+        
+        module.release()
 
     def _climberModule(self,camID):
         settings = self.readValues("climberSettings")
@@ -87,8 +115,11 @@ class VisionThreads:
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Climber Camera ID: " + str(camID))
 
+        while not self.enableClimber:
+            time.sleep(0.1)
+
         module = SingleModule(camID,settings)
-        while True:
+        while self.enableClimber:
             time.sleep(1/50.0)
 
             if Constants.EXPERIMENTAL:
@@ -113,8 +144,9 @@ class VisionThreads:
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
-                    module.release()
-                    return()
+                    break
+        
+        module.release()
 
     def _ballDetectionModule(self,camIDL,camIDR,baseline):
         settings = self.readValues("ballDetectionSettings")
@@ -122,9 +154,12 @@ class VisionThreads:
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
 
+        while not self.enableBallDetect:
+            time.sleep(0.1)
+
         module = StereoModule(camIDL,camIDR,baseline,settings)
 
-        while True:
+        while self.enableBallDetect:
 
             time.sleep(1/50.0)
 
@@ -147,8 +182,9 @@ class VisionThreads:
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
-                    module.release()
-                    return()
+                    break
+        
+        module.release()
 
     def _createTrackbars(self,instanceName):
             cv2.namedWindow(str(instanceName) + " Track Bars")

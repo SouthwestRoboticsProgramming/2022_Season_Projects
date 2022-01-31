@@ -18,3 +18,11 @@ class Constants:
 
     # Module 1
     MODULE_1_CAMID = 0
+
+    # Messages
+    MESSAGE_HUB_START = "Vision:HubStart"
+    MESSAGE_BALL_DETECT_START = "Vision:BallDetectStart"
+    MESSAGE_CLIMBER_START = "Vision:ClimberStart"
+    MESSAGE_HUB_STOP = "Vision:HubStop"
+    MESSAGE_BALL_DETECT_STOP = "Vision:BallDetectStop"
+    MESSAGE_CLIMBER_STOP = "Vision:ClimberStop"
