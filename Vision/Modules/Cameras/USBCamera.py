@@ -307,3 +307,19 @@ class USBCamera:
 
     def release(self):
         self.cap.release()
+
+
+    def checkAllCameras():
+        i = -10
+        cams = []
+        while i<=10:
+            cap = cv2.VideoCapture(i)
+            ret, frame = cap.read()
+            cap.release()
+
+            if ret:
+                print("Camera port " + str(i) + " works!")
+                cams.append(i)
+            i += 1
+        return(cams)
+

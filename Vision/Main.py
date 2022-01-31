@@ -3,12 +3,12 @@ from Constants import Constants
 import threading
 
 def main():
-    hubThread = VisionThreads.getHubVisionThread(Constants.HUB_CAMERA,Constants.HUB_TARGET_DIAMETER)
-    #ballDetectionThread = VisionThreads.getBallDetectionThread(Constants.BALL_DETECTION_CAMERA_LEFT,Constants.BALL_DETECTION_CAMERA_RIGHT,Constants.BALL_DETECTION_BASELINE)
+    #hubThread = VisionThreads.getHubVisionThread(Constants.HUB_CAMERA,Constants.HUB_TARGET_DIAMETER)
+    ballDetectionThread = VisionThreads.getBallDetectionThread(Constants.BALL_DETECTION_CAMERA_LEFT,Constants.BALL_DETECTION_CAMERA_RIGHT,Constants.BALL_DETECTION_BASELINE)
     #climberThread = VisionThreads.getClimberThread(Constants.CLIMBER_CAMERA)
 
-    hubThread.start()
-    #ballDetectionThread.start()
+    #hubThread.start()
+    ballDetectionThread.start()
     #climberThread.start()
 
     # hubThread.join()

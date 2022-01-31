@@ -5,6 +5,7 @@ import time
 import math
 from Modules import StereoModule
 from Modules import SingleModule
+from Modules.Cameras import USBCamera
 from Constants import Constants
 from messengerclient import MessengerClient
 
@@ -21,11 +22,20 @@ class VisionThreads:
     TLow = 0
     exposure = 2
 
+    connection = None
+
+    # TEMPORARY
+
+    print(USBCamera.checkAllCameras())
+
     def __init__(self):
 
-        # TODO: DO a try catch or something for this
-        # self.client = MessengerClient("10.21.29.3", 5805, "Vision")
-        one = "one"
+        self.connection = True
+        try:
+            self.client = MessengerClient("10.21.29.3", 5805, "Vision")
+        except Exception:
+            print("Connection failed")
+            self.connection = False
 
     """
     def _singleCamModule(self,camID):
@@ -80,21 +90,22 @@ class VisionThreads:
                 settings = self._getTrackbars("Hub Camera ID: " + str(camID))
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
+            print(Xangle)
 
-            data = None
-            if not Xangle is False:
+            if self.connection:
+                data = None
+                if not Xangle is False:
 
-                diffAngle = Xangle2 - Xangle
-                distance = (.5 * hubDiameter) / math.tan(diffAngle)
+                    diffAngle = Xangle2 - Xangle
+                    distance = (.5 * hubDiameter) / math.tan(diffAngle)
 
-                data = struct.pack(">?dd", True, Xangle, distance)
-            else:
-                data = struct.pack(">?", False)
-            # TODO: Do a try catch to makc sure that we can connect
-            # self.client.send_message("Vision:Hub_Measurements", data)
-            # self.client.read()
+                    data = struct.pack(">?dd", True, Xangle, distance)
+                else:
+                    data = struct.pack(">?", False)
+                self.client.send_message("Vision:Hub_Measurements", data)
+                self.client.read()
 
-            # TODO: Listen for stop message
+                # TODO: Listen for stop message
 
             if Constants.EXPERIMENTAL:
                 cv2.imshow(str("Hub Camera ID: " + str(camID)),frame)
@@ -119,15 +130,15 @@ class VisionThreads:
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
 
-            data = None
-            if not Xangle is False:
+            if self.connection:
+                data = None
+                if not Xangle is False:
 
-                data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
-            else:
-                data = struct.pack(">?", False)
-            # TODO: Do a try catch to makc sure that we can connect
-            # self.client.send_message("Vision:Climber_Angles", data)
-            # self.client.read()
+                    data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
+                else:
+                    data = struct.pack(">?", False)
+                self.client.send_message("Vision:Climber_Angles", data)
+                self.client.read()
 
             # TODO: Listen for stop message
 
@@ -197,13 +208,14 @@ class VisionThreads:
 
             globalPose,localPose, outputFrame = module.getMeasurements(settings)
 
-            data = None
-            if not isinstance(globalPose, str):
-                data = struct.pack(">?ddd",True,localPose[0],localPose[1],localPose[2])
-            else:
-                data = struct.pack(">?",False)
-            # self.client.send_message("Vision:Ball_Position", data)
-            # self.client.read()
+            if self.connection:
+                data = None
+                if not isinstance(globalPose, str):
+                    data = struct.pack(">?ddd",True,localPose[0],localPose[1],localPose[2])
+                else:
+                    data = struct.pack(">?",False)
+                self.client.send_message("Vision:Ball_Position", data)
+                self.client.read()
 
             if Constants.EXPERIMENTAL:
                 cv2.imshow(str("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR)),outputFrame)

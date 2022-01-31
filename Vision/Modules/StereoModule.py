@@ -54,7 +54,7 @@ class StereoModule:
 
         localPose = (x,y,z)
         globalPose = (xGlobal,zGlobal)
-        outputFrame = np.vstack(stackedL,stackedR)
+        outputFrame = np.vstack((stackedL,stackedR))
 
         # TODO: Obstruction (If I want to)
 

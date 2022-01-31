@@ -28,6 +28,7 @@ class MessengerClient:
         """
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.settimeout(1)
         self.sock.connect((host, port))
         self.callback = lambda type, data: None
 
