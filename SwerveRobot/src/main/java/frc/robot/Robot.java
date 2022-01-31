@@ -10,6 +10,7 @@ import frc.messenger.client.MessengerClient;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
+import frc.robot.subsystems.Cameras;
 import frc.robot.subsystems.Localization;
 import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
@@ -18,9 +19,12 @@ public class Robot extends TimedRobot {
   private Input input;
   private SwerveDrive drive;
   private SwerveDriveController driveController;
-  private Localization localization;
   private MessengerClient msg;
   private MessageDispatcher dispatch;
+
+  // Subsystems
+  private Localization localization;
+  private Cameras cameras;
 
   @Override
   public void robotInit() {
@@ -47,6 +51,7 @@ public class Robot extends TimedRobot {
     dispatch = new MessageDispatcher(msg);
 
     localization = new Localization(gyro);
+    cameras = new Cameras(dispatch);
   }
 
   @Override

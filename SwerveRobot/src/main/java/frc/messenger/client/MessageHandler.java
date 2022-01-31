@@ -19,8 +19,9 @@ public class MessageHandler {
         return this;
     }
 
-    public void setHandler(MessageHandlerFunc handler) {
+    public MessageHandler setHandler(MessageHandlerFunc handler) {
         this.handler = handler;
+        return this;
     }
 
     public void onMessage(String type, byte[] data) {
