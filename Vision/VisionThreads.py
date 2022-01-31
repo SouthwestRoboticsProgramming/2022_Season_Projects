@@ -83,7 +83,6 @@ class VisionThreads:
                 settings = self._getTrackbars("Hub Camera ID: " + str(camID))
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
-            print(Xangle)
 
             if self.connection:
                 data = None
@@ -235,9 +234,7 @@ def getBallDetectionThread(camIDL,camIDR,baseline):
     return(thread)
 
 def getClimberThread(camID):
-    print("Debug 3")
     thread = threading.Thread(target=_runClimberThread, args=(camID,))
-    print("Debug 4")
     return(thread)
 
 #   * I hade to make these functions outside of the class because threads can't use self *
@@ -250,7 +247,5 @@ def _runBallDetectionThread(camIDL,camIDR,baseline):
     module._ballDetectionModule(camIDL,camIDR,baseline)
 
 def _runClimberThread(camID):
-    print("Top of runclimber")
     module = VisionThreads()
-    print("Module was created")
     module._climberModule(camID)
