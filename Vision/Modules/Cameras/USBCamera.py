@@ -53,7 +53,6 @@ class USBCamera:
         else:
             if Constants.EXPERIMENTAL:
                 print("Camera ID " + str(camID) + " not found")
-            return(False)
 
 
     def getFrame(self):
