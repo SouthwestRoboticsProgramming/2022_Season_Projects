@@ -40,7 +40,7 @@ class VisionThreads:
             self.connection = False
 
     def _messageCallback(self,type,data):
-        println("Message:", type)
+        print("Message:", type)
 
     def _hubModule(self,camID,hubDiameter):
         settings = self.readValues("hubSettings")
@@ -49,6 +49,7 @@ class VisionThreads:
             self._createTrackbars("Hub Camera ID: " + str(camID))
 
         module = SingleModule(camID,settings)
+
         while True:
             time.sleep(1/50.0)
 
