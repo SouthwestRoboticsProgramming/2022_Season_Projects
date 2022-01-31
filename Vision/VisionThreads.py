@@ -1,4 +1,3 @@
-from turtle import back
 import cv2
 import threading
 import struct
@@ -26,7 +25,7 @@ class VisionThreads:
 
         # TODO: DO a try catch or something for this
         self.client = MessengerClient("10.21.29.3", 8341, "Vision")
-
+    """
     def _singleCamModule(self,camID):
         self.readValues()
         if Constants.EXPERIMENTAL:
@@ -63,7 +62,7 @@ class VisionThreads:
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     module.release()
                     return()
-
+    """
 
     def _hubModule(self,camID,hubDiameter):
         settings = self.readValues("hubSettings")
@@ -141,7 +140,7 @@ class VisionThreads:
             
 
 
-
+    """
     def _stereoModule(self,camIDL,camIDR,baseline,settings):
         if Constants.EXPERIMENTAL:
             self._createTrackbars()
@@ -177,6 +176,7 @@ class VisionThreads:
 
             # TODO: Calculate fps and add it to the frame
             # TODO: DO the obstructed thing (It'll be False if it is obstructed)
+    """
 
     def _ballDetectionModule(self,camIDL,camIDR,baseline):
         settings = self.readValues("ballDetectionSettings")
