@@ -13,6 +13,7 @@ import frc.robot.drive.SwerveDrive;
 import frc.robot.subsystems.Cameras;
 import frc.robot.subsystems.Localization;
 import frc.robot.util.ShuffleWood;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 
 import static frc.robot.Constants.*;
@@ -60,6 +61,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     msg.read();
     CommandScheduler.getInstance().run();
+
+    ShuffleWood.set("Battery Voltage", RobotController.getBatteryVoltage());
   }
 
   @Override
