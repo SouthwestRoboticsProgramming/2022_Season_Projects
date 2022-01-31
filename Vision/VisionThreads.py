@@ -33,48 +33,14 @@ class VisionThreads:
         self.connection = True
         try:
             self.client = MessengerClient("10.21.29.3", 5805, "Vision")
+            self.client.set_callback(lambda type, data: self._messageCallback(type, data))
+            self.client.listen("ShuffleWood:SetValue")
         except Exception:
             print("Connection failed")
             self.connection = False
 
-    """
-    def _singleCamModule(self,camID):
-        self.readValues()
-        if Constants.EXPERIMENTAL:
-            self._createTrackbars()
-
-        
-        module = SingleModule(camID)
-        while True: # TODO: Find a better way to loop
-
-            time.sleep(1000/50.0)
-
-            settings = [self.h_min,self.h_max,self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure]
-            Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
-
-            #print(Xangle, Xangle2, Yangle)
-
-            data = None
-            if not Xangle is False:
-                data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
-            else:
-                data = struct.pack(">?", False)
-            #self.client.send_message("Vision:Angles", data)
-
-            #self.client.read()
-
-            # TODO: Send these angles to messanger client
-            if Constants.EXPERIMENTAL:
-                self._getTrackbars()
-                cv2.imshow(str(self.instanceName) + " Camera",frame)
-                cv2.waitKey(1)
-            # TODO: Calculate fps and add it to the frame
-            # TODO: DO the obstructed thing (It'll be False if it is obstructed)
-
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    module.release()
-                    return()
-    """
+    def _messageCallback(self,type,data):
+        println("Message:", type)
 
     def _hubModule(self,camID,hubDiameter):
         settings = self.readValues("hubSettings")
@@ -150,47 +116,6 @@ class VisionThreads:
                     module.release()
                     return()
 
-            
-
-
-    """
-    def _stereoModule(self,camIDL,camIDR,baseline,settings):
-        if Constants.EXPERIMENTAL:
-            self._createTrackbars()
-        
-        module = StereoModule(camIDL,camIDR,baseline)
-
-        while True: # TODO: Find a better way to loop
-
-            time.sleep(1000/50.0)
-
-            globalPose,localPose,outputFrame = module.getMeasurements(settings)
-
-            # TODO: Send these angles to messenger client
-
-            data = None
-            if not isinstance(globalPose, str):
-                data = struct.pack(">?ddddd", True, globalPose[0], globalPose[1], localPose[0], localPose[1], localPose[2])
-            else:
-                data = struct.pack(">?", False)
-            # self.client.send_message("Vision:Stereo_Position", data)
-
-            # self.client.read()
-
-
-            if Constants.EXPERIMENTAL:
-                cv2.imshow(str(self.instanceName) + " Module")
-                cv2.waitKey(1)
-
-                # Creating 'q' as the quit button for the webcam
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    module.release()
-                    return()
-
-            # TODO: Calculate fps and add it to the frame
-            # TODO: DO the obstructed thing (It'll be False if it is obstructed)
-    """
-
     def _ballDetectionModule(self,camIDL,camIDR,baseline):
         settings = self.readValues("ballDetectionSettings")
 
@@ -224,8 +149,6 @@ class VisionThreads:
                 if cv2.waitKey(1) & 0xFF == ord('1'):
                     module.release()
                     return()
-
-
 
     def _createTrackbars(self,instanceName):
             cv2.namedWindow(str(instanceName) + " Track Bars")
@@ -280,9 +203,6 @@ def getClimberThread(camID):
     thread = threading.Thread(target=_runClimberThread, args=(camID,))
     print("Debug 4")
     return(thread)
-
-
-
 
 #   * I hade to make these functions outside of the class because threads can't use self *
 def _runHubThread(camID,hubDiameter):
