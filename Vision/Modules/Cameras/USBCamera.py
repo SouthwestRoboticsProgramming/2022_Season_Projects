@@ -253,8 +253,6 @@ class USBCamera:
 
         keypoints = detector.detect(frameEdges)
 
-        print(keypoints)
-
         blank = np.zeros((1,1))
 
         blobs = cv2.drawKeypoints(frame,keypoints,0,(255,0,0),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
