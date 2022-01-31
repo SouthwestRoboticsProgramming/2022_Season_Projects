@@ -21,6 +21,9 @@ public final class Constants {
     public static final double OFFSET_4 = -218.85;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
 
+    public static final String MESSENGER_HOST = "10.21.29.3";
+    public static final int MESSENGER_PORT = 5805;
+
     /* Climber */
     public static final int CLIMBER_LEFT_TELE_MOTOR_ONE_ID = 20; //FIXME
     public static final int CLIMBER_LEFT_TELE_MOTOR_TWO_ID = 21; //FIXME

@@ -11,7 +11,7 @@ import java.io.IOException;
 public class LidarMain {
     public static void main(String[] args) {
         Lidar lidar = new Lidar();
-        MessengerClient msg = new MessengerClient("localhost", 8341, "Lidar");
+        MessengerClient msg = new MessengerClient("localhost", 8505, "Lidar");
 
         msg.listen("Lidar:Start");
         msg.listen("Lidar:Stop");

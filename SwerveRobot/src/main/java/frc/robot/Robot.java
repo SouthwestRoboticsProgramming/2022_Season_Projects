@@ -15,6 +15,8 @@ import frc.robot.subsystems.Localization;
 import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
 
+import static frc.robot.Constants.*;
+
 public class Robot extends TimedRobot {
   private Input input;
   private SwerveDrive drive;
@@ -38,7 +40,7 @@ public class Robot extends TimedRobot {
 
     while (msg == null) {
       try {
-        MessengerClient attempt = new MessengerClient("10.21.29.3", 8341, "RoboRIO");
+        MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO");
         msg = attempt;
       } catch (Throwable t) {
         System.err.print("Connect failed, retrying");
