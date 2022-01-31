@@ -8,9 +8,9 @@ class StereoModule:
     rightCamera = None
     baseline = None # Distance between cameras. Whatever unit you measure this in will be the unit that everything is measured in
 
-    def __init__(self,camIDL,camIDR,baseline):
-        self.leftCamera = USBCamera(camIDL,"littleCamera",self.readValues())
-        self.rightCamera = USBCamera(camIDR,"littleCamera",self.readValues())
+    def __init__(self,camIDL,camIDR,baseline,settings):
+        self.leftCamera = USBCamera(camIDL,"new-checkerboard",settings)
+        self.rightCamera = USBCamera(camIDR,"new-checkerboard",settings)
         self.baseline = baseline
 
         if self.leftCamera == False: return("Left")
@@ -29,8 +29,8 @@ class StereoModule:
         frameL = self.leftCamera.getFrame()
         frameR = self.rightCamera.getFrame()
 
-        if frameL == False: return("Left")
-        if frameR == False: return("Right")
+        if frameL is False: return("Left")
+        if frameR is False: return("Right")
 
         XangleL, XangleL2, YangleL, stackedL = self.leftCamera.objectDetection(frameL)
         XangleR, XangleR2, YangleR, stackedR = self.rightCamera.objectDetection(frameR)
@@ -65,8 +65,8 @@ class StereoModule:
         frameL = self.leftCamera.getFrame()
         frameR = self.rightCamera.getFrame()
 
-        if frameL == False: return("Left")
-        if frameR == False: return("Right")
+        if frameL is False: return("Left")
+        if frameR is False: return("Right")
         if frameL != False and frameR != False: return(True)
 
 

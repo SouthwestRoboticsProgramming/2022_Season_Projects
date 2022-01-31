@@ -4,9 +4,9 @@ class SingleModule:
 
     camera = None
 
-    def __init__(self,camID):
+    def __init__(self,camID,settings):
 
-        self.camera = USBCamera(camID,"new-checkerboard",self.readValues())
+        self.camera = USBCamera(camID,"new-checkerboard",settings)
 
         # Turn off auto settings for greater control
         self.camera.turnOffAuto()
@@ -22,16 +22,6 @@ class SingleModule:
             outputFrame = frame
 
         return(Xangle, Xangle2, Yangle, outputFrame)
-
-    def readValues(self):
-        settings = open('config.txt','r')
-        values = settings.readlines()
-        i=0
-        while i <= len(values)-1:
-            values[i] = values[i].strip()
-            i+=1
-        settings = [int(i) for i in values]
-        return(settings)
 
     def release(self):
         self.camera.release()

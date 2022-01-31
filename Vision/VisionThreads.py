@@ -1,4 +1,3 @@
-from turtle import back
 import cv2
 import threading
 import struct
@@ -25,7 +24,8 @@ class VisionThreads:
     def __init__(self):
 
         # TODO: DO a try catch or something for this
-        self.client = MessengerClient("10.21.29.3", 8341, "Vision")
+        # self.client = MessengerClient("10.21.29.3", 5805, "Vision")
+        one = "one"
 
     def _singleCamModule(self,camID):
         self.readValues()
@@ -48,9 +48,9 @@ class VisionThreads:
                 data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
             else:
                 data = struct.pack(">?", False)
-            self.client.send_message("Vision:Angles", data)
+            #self.client.send_message("Vision:Angles", data)
 
-            self.client.read()
+            #self.client.read()
 
             # TODO: Send these angles to messanger client
             if Constants.EXPERIMENTAL:
@@ -71,9 +71,9 @@ class VisionThreads:
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Hub Camera ID: " + str(camID))
 
-        module = SingleModule(camID)
+        module = SingleModule(camID,settings)
         while True:
-            time.sleep(1000/50.0)
+            time.sleep(1/50.0)
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Hub Camera ID: " + str(camID))
@@ -90,13 +90,13 @@ class VisionThreads:
             else:
                 data = struct.pack(">?", False)
             # TODO: Do a try catch to makc sure that we can connect
-            self.client.send_message("Vision:Hub_Measurements", data)
-            self.client.read()
+            # self.client.send_message("Vision:Hub_Measurements", data)
+            # self.client.read()
 
             # TODO: Listen for stop message
 
             if Constants.EXPERIMENTAL:
-                cv2.imshow(str("Hub Camera ID: " + str(camID)))
+                cv2.imshow(str("Hub Camera ID: " + str(camID)),frame)
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
@@ -109,9 +109,9 @@ class VisionThreads:
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Climber Camera ID: " + str(camID))
 
-        module = SingleModule(camID)
+        module = SingleModule(camID,settings)
         while True:
-            time.sleep(1000/50.0)
+            time.sleep(1/50.0)
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Climber Camera ID: " + str(camID))
@@ -125,13 +125,13 @@ class VisionThreads:
             else:
                 data = struct.pack(">?", False)
             # TODO: Do a try catch to makc sure that we can connect
-            self.client.send_message("Vision:Climber_Angles", data)
-            self.client.read()
+            # self.client.send_message("Vision:Climber_Angles", data)
+            # self.client.read()
 
             # TODO: Listen for stop message
 
             if Constants.EXPERIMENTAL:
-                cv2.imshow(str("Climber Camera ID: " + str(camID)))
+                cv2.imshow(str("Climber Camera ID: " + str(camID)),frame)
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
@@ -161,9 +161,9 @@ class VisionThreads:
                 data = struct.pack(">?ddddd", True, globalPose[0], globalPose[1], localPose[0], localPose[1], localPose[2])
             else:
                 data = struct.pack(">?", False)
-            self.client.send_message("Vision:Stereo_Position", data)
+            # self.client.send_message("Vision:Stereo_Position", data)
 
-            self.client.read()
+            # self.client.read()
 
 
             if Constants.EXPERIMENTAL:
@@ -184,11 +184,11 @@ class VisionThreads:
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
 
-        module = StereoModule(camIDL,camIDR,baseline)
+        module = StereoModule(camIDL,camIDR,baseline,settings)
 
         while True:
 
-            time.sleep(1000/50.0)
+            time.sleep(1/50.0)
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
@@ -200,11 +200,11 @@ class VisionThreads:
                 data = struct.pack(">?ddd",True,localPose[0],localPose[1],localPose[2])
             else:
                 data = struct.pack(">?",False)
-            self.client.send_message("Vision:Ball_Position", data)
-            self.client.read()
+            # self.client.send_message("Vision:Ball_Position", data)
+            # self.client.read()
 
             if Constants.EXPERIMENTAL:
-                cv2.imshow(str("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR)))
+                cv2.imshow(str("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR)),outputFrame)
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
@@ -224,9 +224,10 @@ class VisionThreads:
             cv2.createTrackbar("Value Max",str(instanceName) + " Track Bars",self.v_max,255,self._empty)
             cv2.createTrackbar("Thresh Low", str(instanceName) + " Track Bars", self.TLow , 255, self._empty)
             cv2.createTrackbar("Exposure",str(instanceName) + " Track Bars", self.exposure,1000, self._empty)
+            cv2.waitKey(1)
 
     def _getTrackbars(self,instanceName):
-            settings = None
+            settings = [0,0,0,0,0,0,0,0,0]
             settings[0] = cv2.getTrackbarPos("Hue Min",str(instanceName) + " Track Bars")
             settings[1] = cv2.getTrackbarPos("Hue Max",str(instanceName) + " Track Bars")
             settings[2] = cv2.getTrackbarPos("Saturation Min",str(instanceName) + " Track Bars")
@@ -235,6 +236,8 @@ class VisionThreads:
             settings[5] = cv2.getTrackbarPos("Value Max",str(instanceName) + " Track Bars")
             settings[6] = cv2.getTrackbarPos("Thresh Low", str(instanceName) + " Track Bars")
             settings[7] = cv2.getTrackbarPos("Exposure",str(instanceName) + " Track Bars")
+
+            return(settings)
 
     def readValues(self,configFile):
         lines = open('./Settings/' + str(configFile) + '.txt','r')
@@ -259,7 +262,9 @@ def getBallDetectionThread(camIDL,camIDR,baseline):
     return(thread)
 
 def getClimberThread(camID):
-    thread = threading.Thread(target=_runClimberThread, args=(camID))
+    print("Debug 3")
+    thread = threading.Thread(target=_runClimberThread, args=(camID,))
+    print("Debug 4")
     return(thread)
 
 
@@ -274,5 +279,7 @@ def _runBallDetectionThread(camIDL,camIDR,baseline):
     module._ballDetectionModule(camIDL,camIDR,baseline)
 
 def _runClimberThread(camID):
+    print("Top of runclimber")
     module = VisionThreads()
+    print("Module was created")
     module._climberModule(camID)
