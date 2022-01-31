@@ -61,9 +61,9 @@ class VisionThreads:
             self.enableBallDetect = False
         elif type == Constants.MESSAGE_CLIMBER_START:
             self.enableClimber = True
-        elif type == Constnats.MESSAGE_CLIMBER_STOP:
+        elif type == Constants.MESSAGE_CLIMBER_STOP:
             self.enableClimber = False
-        else
+        else:
             print("Unknown message", type)
 
     def _hubModule(self,camID,hubDiameter):
