@@ -49,3 +49,22 @@ The prefix for the Raspberry Pi is `RPi` and the prefix for the Jetson Nano is `
 | `[prefix]:StdErr:[task]` | `string message`: The error output line from the task. | A line from the standard error of a task. |
 | `[prefix]:Tasks ` | `int count`: The number of task names following<br/>`string[] name`: The names of each task | Response for a list of all task names on the TaskManager. |
 | `[prefix]:Running ` | `string task`: The name of the task<br/>`boolean running`: Whether the task is running | Response for whether a task is running. |
+
+### Vision
+
+###### Messages Read
+| Message | Data format | Description |
+| --- | --- | --- |
+| `Vision:HubStart` | No data | Tells the hub vision camera to start detecting. |
+| `Vision:BallDetectStart` | No data | Tells the stereo ball detection module to start detecting. |
+| `Vision:ClimberStart` | No data | Tells the climber vision camera to start detecting. |
+| `Vision:HubStop` | No data | Tells the hub vision camera to stop detecting. |
+| `Vision:BallDetectStop` | No data | Tells the stereo ball detection module to stop detecting. |
+| `Vision:ClimberStop` | No data | Tells the climber vision camera to stop detecting. |
+
+###### Messages Sent
+| Message | Data format | Description |
+| --- | --- | --- |
+| `Vision:Hub_Measurements` | `bool obscured`: Indicates if an object has been found.<br/>`double Xangle`: X angle in degrees {-fov,fov} to center of target.<br/>`double distance`: Distance to the target, same units as target width.<br/>| The relative position of the robot compared to the vision target. |
+| `Vision:Climber_Angle` | `bool obscured`: Indicates if an object has been found.<br/>`double Yangle`: Y angle in degrees {-fov,fov} to the bar.| The relative position of the robot compared to the vision target. |
+| `Vision:Ball_Position` | `bool obscured`: Indicates if an object has been found.<br/>`double x`: X position of the robot to center of target.<br/>`double z`: Z position of the robot to the center of the target.<br/>|The relative position of a ball to the robot. |
