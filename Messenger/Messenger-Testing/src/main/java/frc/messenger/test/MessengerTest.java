@@ -7,29 +7,10 @@ import java.util.Scanner;
 
 public class MessengerTest {
     public static void main(String[] args) throws Exception {
-        MessengerClient client = new MessengerClient("10.21.29.3", 8341, "Tester");
+        MessengerClient client = new MessengerClient("10.21.29.3", 5805, "Tester");
 
         client.setCallback((type, data) -> {
-            //System.out.println("Got " + type);
-            DataInputStream in = new DataInputStream(new ByteArrayInputStream(data));
-            try {
-                boolean good = in.readBoolean();
-                if (good) {
-                    double[] d = new double[5];
-                    for (int i = 0; i < d.length; i++) {
-                        d[i] = in.readDouble();
-                    }
-
-                    for (double v : d) {
-                        System.out.print(v + " ");
-                    }
-                    System.out.println();
-                } else {
-                    System.out.println("bad");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Got " + type);
         });
 
         Scanner in = new Scanner(System.in);

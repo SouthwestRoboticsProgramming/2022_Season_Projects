@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.ShuffleWood;
 
+// https://www.desmos.com/calculator/w5x76wa3yd
 public class Localization extends SubsystemBase {
   private final AHRS gyro;
   private final CameraTurret cameraTurret;
