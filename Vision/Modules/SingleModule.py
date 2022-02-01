@@ -18,7 +18,7 @@ class SingleModule:
         if frame is not False:
             Xangle, Xangle2, Yangle, outputFrame = self.camera.objectDetection(frame)
         else:
-            Xangle, Xangle2, Yangle = False
+            Xangle, Xangle2, Yangle = False, False, False
             outputFrame = frame
 
         return(Xangle, Xangle2, Yangle, outputFrame)

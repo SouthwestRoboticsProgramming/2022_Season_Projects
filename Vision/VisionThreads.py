@@ -32,11 +32,11 @@ class VisionThreads:
 
     print(USBCamera.checkAllCameras())
 
-    def __init__(self):
+    def __init__(self,threadName):
 
         self.connection = True
         try:
-            self.client = MessengerClient("10.21.29.3", 5805, "Vision")
+            self.client = MessengerClient("10.21.29.3", 5805, "Vision-"+str(threadName))
             self.client.set_callback(lambda type, data: self._messageCallback(type))
             self.client.listen(Constants.MESSAGE_HUB_START)
             self.client.listen(Constants.MESSAGE_HUB_STOP)
@@ -67,17 +67,20 @@ class VisionThreads:
             print("Unknown message", type)
 
     def _hubModule(self,camID,hubDiameter):
+
+        while not self.enableHub:
+            time.sleep(1/50.0)
+            self.client.read()
+
         settings = self.readValues("hubSettings")
 
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Hub Camera ID: " + str(camID))
-
-        while not self.enableHub:
-            time.sleep(0.1)
-
         module = SingleModule(camID,settings)
         while self.enableHub:
             time.sleep(1/50.0)
+
+            print("hub")
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Hub Camera ID: " + str(camID))
@@ -109,14 +112,15 @@ class VisionThreads:
         module.release()
 
     def _climberModule(self,camID):
+
+        while not self.enableClimber:
+            time.sleep(1/50.0)
+            self.client.read()
+
         settings = self.readValues("climberSettings")
 
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Climber Camera ID: " + str(camID))
-
-        while not self.enableClimber:
-            time.sleep(0.1)
-
         module = SingleModule(camID,settings)
         while self.enableClimber:
             time.sleep(1/50.0)
@@ -150,17 +154,20 @@ class VisionThreads:
     def _ballDetectionModule(self,camIDL,camIDR,baseline):
         settings = self.readValues("ballDetectionSettings")
 
-        if Constants.EXPERIMENTAL:
-            self._createTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
 
         while not self.enableBallDetect:
-            time.sleep(0.1)
+            time.sleep(1/50.0)
+            self.client.read()
 
+        if Constants.EXPERIMENTAL:
+            self._createTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
         module = StereoModule(camIDL,camIDR,baseline,settings)
 
         while self.enableBallDetect:
 
             time.sleep(1/50.0)
+
+            print("ball")
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
@@ -239,13 +246,13 @@ def getClimberThread(camID):
 
 #   * I hade to make these functions outside of the class because threads can't use self *
 def _runHubThread(camID,hubDiameter):
-    module = VisionThreads()
+    module = VisionThreads("Hub-ID-"+str(camID))
     module._hubModule(camID,hubDiameter)
 
 def _runBallDetectionThread(camIDL,camIDR,baseline):
-    module = VisionThreads()
+    module = VisionThreads("Ball_Detection-ID-"+str(camIDL)+","+str(camIDR))
     module._ballDetectionModule(camIDL,camIDR,baseline)
 
 def _runClimberThread(camID):
-    module = VisionThreads()
+    module = VisionThreads("Climber-ID-"+str(camID))
     module._climberModule(camID)

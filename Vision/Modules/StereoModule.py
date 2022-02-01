@@ -35,6 +35,7 @@ class StereoModule:
         XangleL, XangleL2, YangleL, stackedL = self.leftCamera.objectDetection(frameL)
         XangleR, XangleR2, YangleR, stackedR = self.rightCamera.objectDetection(frameR)
 
+        # TODO: FIXME
         if XangleL == "Obstructed" and XangleR == "Obstructed": return("Both_Obstructed")
         if XangleL == "Obstructed": return("Left_Obstructed")
         if XangleR == "Obstructed": return("Right_Obstructed")
