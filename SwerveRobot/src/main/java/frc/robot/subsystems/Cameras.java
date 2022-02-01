@@ -28,8 +28,12 @@ public class Cameras extends SubsystemBase {
   }
 
   public double getBallPosition() {
-    // Mason fix stereo, Ryan do stuff
+    // Ryan do stuff
     return 4.1;
+  }
+
+  public double getClimberAngle() {
+    return 24.0;
   }
 
   // TODO: Do the climber camera, not really sure what I'm trying to get out of it yet
