@@ -197,7 +197,7 @@ class VisionThreads:
 
             data = None
             if not isinstance(globalPose, str):
-                data = struct.pack(">?ddd",True,localPose[0],localPose[1],localPose[2])
+                data = struct.pack(">?dd",True,localPose[0],localPose[2])
             else:
                 data = struct.pack(">?",False)
             self.client.send_message("Vision:Ball_Position", data)
