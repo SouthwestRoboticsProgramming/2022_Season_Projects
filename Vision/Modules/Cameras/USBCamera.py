@@ -171,6 +171,14 @@ class USBCamera:
         lower = np.array([h_min,s_min,v_min])
         upper = np.array([h_max,s_max,v_max])
 
+        if (h_min>h_max):
+            lower = np.array([h_min,s_min,v_min])
+            upper = np.array([255,s_max,v_max])
+
+            lower2 = np.array([0,s_min,v_min])
+            upper2 = np.array([h_max,s_max,v_max])
+        else: lower2 = False
+
         frameBlur = cv2.GaussianBlur(frame,(5,5),0)
         frameHSV = cv2.cvtColor(frameBlur,cv2.COLOR_BGR2HSV)
         frameGray = cv2.cvtColor(frameBlur,cv2.COLOR_BGR2GRAY)
