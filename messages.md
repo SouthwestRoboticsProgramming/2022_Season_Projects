@@ -27,17 +27,6 @@ Runs on the Raspberry Pi.
 | `Lidar:ScanStart` | No data | Indicates that a new round of scanning has started. |
 | `Lidar:Scan` | `int quality`: Quality of the measurement from 0 to 15<br/>`double angle`: Angle in counterclockwise radians<br/>`double distance`: Distance from the lidar in millimeters<br/>A quality or distance of 0 indicates an invalid scan. | One measurement from the lidar sensor. |
 
-### Vision
-Runs on the Jetson Nano.
-
-###### Messages Read
-No messages read
-
-###### Messages Sent
-| Message | Data format | Description |
-| --- | --- | --- |
-| `Vision:Xangle` | `float angle`: Angle to the object detected by vision | The angle to the object detected by vision. |
-
 ### TaskManager
 Runs on all processors that need task management. (Raspberry Pi and Jetson Nano)
 
@@ -74,3 +63,22 @@ Runs on the Raspberry Pi.
 | Message | Data format | Description |
 | --- | --- | --- |
 | `Pathfinder:Path` | `int length`: Number of points following<br/>`{int x, int y}[] points`: Path points from start to end | The calculated path from the pathfinder. |
+
+### Vision
+
+###### Messages Read
+| Message | Data format | Description |
+| --- | --- | --- |
+| `Vision:HubStart` | No data | Tells the hub vision camera to start detecting. |
+| `Vision:BallDetectStart` | No data | Tells the stereo ball detection module to start detecting. |
+| `Vision:ClimberStart` | No data | Tells the climber vision camera to start detecting. |
+| `Vision:HubStop` | No data | Tells the hub vision camera to stop detecting. |
+| `Vision:BallDetectStop` | No data | Tells the stereo ball detection module to stop detecting. |
+| `Vision:ClimberStop` | No data | Tells the climber vision camera to stop detecting. |
+
+###### Messages Sent
+| Message | Data format | Description |
+| --- | --- | --- |
+| `Vision:Hub_Measurements` | `bool obscured`: Indicates if an object has been found.<br/>`double Xangle`: X angle in degrees {-fov,fov} to center of target.<br/>`double distance`: Distance to the target, same units as target width.<br/>| The relative position of the robot compared to the vision target. |
+| `Vision:Climber_Angle` | `bool obscured`: Indicates if an object has been found.<br/>`double Yangle`: Y angle in degrees {-fov,fov} to the bar.| The relative position of the robot compared to the vision target. |
+| `Vision:Ball_Position` | `bool obscured`: Indicates if an object has been found.<br/>`double x`: X position of the robot to center of target.<br/>`double z`: Z position of the robot to the center of the target.<br/>|The relative position of a ball to the robot. |
