@@ -35,7 +35,7 @@ public class Demo extends PApplet {
 
     @Override
     public void setup() {
-        msg = new MessengerClient("10.21.29.17", 8341, "Lidar-Visualizer");
+        msg = new MessengerClient("10.21.29.3", 8341, "Lidar-Visualizer");
         msg.listen("Lidar:Ready");
         msg.listen("Lidar:ScanStart");
         msg.listen("Lidar:Scan");

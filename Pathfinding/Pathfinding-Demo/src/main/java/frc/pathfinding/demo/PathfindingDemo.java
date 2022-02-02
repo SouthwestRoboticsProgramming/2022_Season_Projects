@@ -17,7 +17,6 @@ public class PathfindingDemo extends PApplet {
     private Pathfinder pathfinder;
     private PathOptimizer optimizer;
     private CircleCollider robot;
-    private RectangleCollider rect;
     private final int CELLS_Y = 26 * 12 / 6;
     private final int CELLS_X = 54 * 12 / 6;
     private float cellSize;
@@ -40,8 +39,14 @@ public class PathfindingDemo extends PApplet {
         grid = new CollisionGrid(CELLS_X, CELLS_Y, robot);
         cellSize = width / (float) CELLS_X;
 
-        grid.addObstacle(new CircleCollider(30, 25, 7));
-        grid.addObstacle(rect = new RectangleCollider(75, 25, 12, 30, 0));
+        //grid.addObstacle(new CircleCollider(.5*CELLS_X, .5*CELLS_Y, 7));
+        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313, 12.313, Math.toRadians(66)));
+        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313 + 4.417, 4, Math.toRadians(66)));
+        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313 + 4.417, 4, Math.toRadians(66+90)));
+        grid.addObstacle(new RectangleCollider(0, CELLS_Y, 15.42, 15.42, .25*Math.PI));
+        grid.addObstacle(new RectangleCollider(CELLS_X, 0, 15.42, 15.42, .25*Math.PI));
+        //grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 7.69, height, 0));
+        grid.loadFromFile("scene.txt");
 
         pathfinder = new Pathfinder(grid);
         optimizer = new PathOptimizer(grid);
@@ -58,7 +63,6 @@ public class PathfindingDemo extends PApplet {
 
     @Override
     public void draw() {
-        rect.setRotation(millis() / 1000.0 * Math.PI);
 
         background(255);
 
@@ -115,6 +119,20 @@ public class PathfindingDemo extends PApplet {
         if (path == null) {
             return;
         }
+
+        // Raw path line
+        stroke(0, 0, 255);
+        strokeWeight(3);
+        beginShape(LINES);
+        for (int i = 0; i < path.size() - 1; i++) {
+            Cell c1 = path.get(i);
+            Cell c2 = path.get(i + 1);
+            vertex((c1.getX() + 0.5f) * cellSize, (c1.getY() + 0.5f) * cellSize);
+            vertex((c2.getX() + 0.5f) * cellSize, (c2.getY() + 0.5f) * cellSize);
+        }
+        endShape();
+
+        path = optimizer.optimize(path);
         if (playing) play: {
             if (path.size() == 1) {
                 playing = false;
@@ -134,20 +152,6 @@ public class PathfindingDemo extends PApplet {
             startY = (int) Math.floor(robotY);
             pathfinder.setStartCell(new Cell(startX, startY));
         }
-
-        // Raw path line
-        stroke(0, 0, 255);
-        strokeWeight(3);
-        beginShape(LINES);
-        for (int i = 0; i < path.size() - 1; i++) {
-            Cell c1 = path.get(i);
-            Cell c2 = path.get(i + 1);
-            vertex((c1.getX() + 0.5f) * cellSize, (c1.getY() + 0.5f) * cellSize);
-            vertex((c2.getX() + 0.5f) * cellSize, (c2.getY() + 0.5f) * cellSize);
-        }
-        endShape();
-
-        path = optimizer.optimize(path);
 
         // Robot bounds highlight
         stroke(0, 128, 255, 64);

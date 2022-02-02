@@ -28,6 +28,7 @@ class MessengerClient:
         """
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.settimeout(1)
         self.sock.connect((host, port))
         self.callback = lambda type, data: None
 
@@ -87,13 +88,10 @@ class MessengerClient:
         assume that the connection is dropped and disconnect.
         """
 
-        print("Start")
         self.send_message("_Heartbeat", b"")
 
         while self._available():
             self._read_message()
-
-        print("End")
 
     def disconnect(self):
         """

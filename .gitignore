@@ -1,3 +1,7 @@
 *out
 *target
 *.DS_Store
+*.pyc
+*.class
+*.gradle
+*build
