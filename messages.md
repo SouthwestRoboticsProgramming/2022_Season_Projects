@@ -50,19 +50,6 @@ The prefix for the Raspberry Pi is `RPi` and the prefix for the Jetson Nano is `
 | `[prefix]:Tasks ` | `int count`: The number of task names following<br/>`string[] name`: The names of each task | Response for a list of all task names on the TaskManager. |
 | `[prefix]:Running ` | `string task`: The name of the task<br/>`boolean running`: Whether the task is running | Response for whether a task is running. |
 
-### Pathfinding
-Runs on the Raspberry Pi.
-
-###### Messages Read
-| Message | Data format | Description |
-| --- | --- | --- |
-| `Pathfinder:SetPosition` | `int x`: The cell X position of the robot<br/>`int y`: The cell Y position of the robot | Sets the current position of the robot on the pathfinding grid |
-| `Pathfinder:SetTarget` | `int x`: The cell X position of the target<br/>`int y`: The cell Y position of the target | Sets the target position for the path on the pathfinding grid |
-
-###### Messages Sent
-| Message | Data format | Description |
-| --- | --- | --- |
-| `Pathfinder:Path` | `int length`: Number of points following<br/>`{int x, int y}[] points`: Path points from start to end | The calculated path from the pathfinder. |
 
 ### Vision
 
