@@ -55,7 +55,7 @@ public final class Constants {
     public static final double STABILIZATION_KI = 0;
     public static final double STABILIZATION_KD = 0.002;
 
-    public static final int CAMERA_TURRET_SERVO_ID = 0; //FIXME
+    public static final int CAMERA_TURRET_MOTOR_ID = 0; //FIXME
     public static final double CAMERA_TURRET_KP = 0.1;
     public static final double CAMERA_TURRET_KI = 0;
     public static final double CAMERA_TURRET_KD = 0;

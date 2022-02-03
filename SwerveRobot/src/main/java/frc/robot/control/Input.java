@@ -32,4 +32,8 @@ public class Input {
     public boolean getShoot() {
         return controller.getAButton();
     }
+
+    public boolean getAim() {
+        return controller.getRightShoulderButton();
+    }
 }

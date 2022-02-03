@@ -13,6 +13,7 @@ public class SwerveDriveController {
     private final PIDController rotPID;
 
     private Rotation2d targetAngle;
+    private double autoRot;
 
     // Sets initial state of robot (In this case, staying still)
     private ChassisSpeeds speeds = new ChassisSpeeds(0.0, 0.0, 0.0);
@@ -41,7 +42,12 @@ public class SwerveDriveController {
         double driveX = input.getDriveX();
         double driveY = input.getDriveY();
         double rot = input.getRot();
+        double autoRot = this.autoRot;
         Rotation2d currentAngle = drive.getGyroscopeRotation();
+
+        if (autoRot != Double.NaN) {
+            rot = autoRot;
+        }
 
         // Eliminate deadzone jump
         if (driveX > 0) {
@@ -73,10 +79,13 @@ public class SwerveDriveController {
 
         System.out.println("Current Angle: " + currentAngle);
         System.out.println("Target Angle: " + targetAngle);
+
+        this.autoRot = Double.NaN;
     }
 
-    public double pointAtAngle(double angleTargetDegrees) {
+    public void turnToTarget(double angleTargetDegrees) {
         double targetRotPercent = rotPID.calculate(drive.getGyroscopeRotation().getDegrees(),angleTargetDegrees);
-        return targetRotPercent;
+        this.autoRot = targetRotPercent;
+        
     }
 }

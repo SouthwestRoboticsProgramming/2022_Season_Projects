@@ -1,16 +1,23 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TelescopingArm extends SubsystemBase {
 
-  public static Spark motorOne;
-  public static Spark motorTwo;
+  public static CANSparkMax motorOne;
+  public static CANSparkMax motorTwo;
+  public static RelativeEncoder motorOneEncoder;
+  public static RelativeEncoder motorTwoEncoder;
 
-  public TelescopingArm(int motorOneID, int morotTwoID) {
-    motorOne = new Spark(motorOneID);
-    motorTwo = new Spark(motorOneID);
+  public TelescopingArm(int motorOneID, int motorTwoID) {
+    motorOne = new CANSparkMax(motorOneID, MotorType.kBrushless);
+    motorTwo = new CANSparkMax(motorOneID, MotorType.kBrushless);
+
+    motorOneEncoder = motorOne.getEncoder();
+    motorTwoEncoder = motorTwo.getEncoder();
   }
 
 
@@ -21,6 +28,11 @@ public class TelescopingArm extends SubsystemBase {
 
   public void setPosition(double position) {
 
+  }
+
+  public void resetToBottom() {
+     double motorOnespeed = motorOneEncoder.getVelocity();
+     double motorTwoSpeed = motorTwoEncoder.getVelocity();
   }
 
   @Override
