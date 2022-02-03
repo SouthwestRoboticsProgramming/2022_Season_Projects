@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.lib.ADIS16448_IMU;
 import frc.lib.ADIS16448_IMU.IMUAxis;
 import frc.messenger.client.MessengerClient;
+import frc.robot.path.PIDPathFollower;
 import frc.robot.path.PathFollower;
 import frc.robot.path.Point;
 import frc.robot.util.Vec2d;
@@ -24,7 +25,7 @@ public final class Robot extends TimedRobot {
   private VisualizerCommunicator visualizer;
   private Gyro gyro;
   private Localizer localizer;
-  private PathFollower pathFollower;
+  private PIDPathFollower pathFollower;
   private List<Point> path;
   private MessengerClient msg;
   private Input input;
@@ -50,6 +51,8 @@ public final class Robot extends TimedRobot {
     msg = new MessengerClient(Constants.RPI_ADDRESS, Constants.RPI_PORT, "RoboRIO");
     msg.listen("Vision:Xangle");
     msg.setCallback(this::messageCallback);
+
+    pathFollower = new PIDPathFollower(localizer, driveTrain);
   }
 
   @Override
@@ -92,7 +95,7 @@ public final class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15, 45);
+    //pathFollower = new PathFollower(localizer, driveTrain, 0.3, 0.03, 15, 45);
 
     //pathFollower.setPath(path);
   }
@@ -135,24 +138,36 @@ public final class Robot extends TimedRobot {
   @Override
   public void teleopInit() {}
 
+  boolean lastPoint = false;
   @Override
   public void teleopPeriodic() {
     Vec2d drive = driveController.update();
 
     if (input.pointAtTarget()) {
-      double gyroAngle = gyro.getAngle()%360;
-      double visionDiff = gyroAngle + visionAngle;
-
-      if (visionDiff>5){
-        driveTrain.driveMotors(drive.x + .2, drive.y - .2);
-      } else if (visionDiff<-5){
-        driveTrain.driveMotors(drive.x - .2, drive.y + .2);
-      } else {
-        driveTrain.driveMotors(drive.x, drive.y);
+      if (!lastPoint) {
+        pathFollower.reload();
       }
+      pathFollower.update();
+      lastPoint = true;
     } else {
       driveTrain.driveMotors(drive.x, drive.y);
+      lastPoint = false;
     }
+
+    // if (input.pointAtTarget()) {
+    //   double gyroAngle = gyro.getAngle()%360;
+    //   double visionDiff = gyroAngle + visionAngle;
+
+    //   if (visionDiff>5){
+    //     driveTrain.driveMotors(drive.x + .2, drive.y - .2);
+    //   } else if (visionDiff<-5){
+    //     driveTrain.driveMotors(drive.x - .2, drive.y + .2);
+    //   } else {
+    //     driveTrain.driveMotors(drive.x, drive.y);
+    //   }
+    // } else {
+    //   driveTrain.driveMotors(drive.x, drive.y);
+    // }
   }
 
   @Override
