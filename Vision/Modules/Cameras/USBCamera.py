@@ -183,6 +183,11 @@ class USBCamera:
         frameHSV = cv2.cvtColor(frameBlur,cv2.COLOR_BGR2HSV)
         frameGray = cv2.cvtColor(frameBlur,cv2.COLOR_BGR2GRAY)
         frameMask = cv2.inRange(frameHSV,lower,upper)
+        if lower2 is not False:
+            frameMask2 = cv2.inRange(frameHSV,lower2,upper2)
+            # add masks
+            result = 255*(frameMask,frameMask2)
+            frameMask = result.clip(0, 255).astype("uint8")
         frameResult = cv2.bitwise_and(frame,frame,mask=frameMask)
         frameGrayMask = cv2.bitwise_and(frameGray,frameGray, mask=frameMask)
         ret,binary = cv2.threshold(frameGrayMask,TLow,THigh,cv2.THRESH_BINARY)

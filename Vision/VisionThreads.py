@@ -5,6 +5,7 @@ import time
 import math
 from Modules import StereoModule
 from Modules import SingleModule
+from Modules.Cameras import USBCamera
 from Constants import Constants
 from messengerclient import MessengerClient
 
@@ -21,197 +22,171 @@ class VisionThreads:
     TLow = 0
     exposure = 2
 
-    def __init__(self):
+    connection = None
 
-        # TODO: DO a try catch or something for this
-        self.client = MessengerClient("10.21.29.3", 8341, "Vision")
-    """
-    def _singleCamModule(self,camID):
-        self.readValues()
-        if Constants.EXPERIMENTAL:
-            self._createTrackbars()
+    enableHub = False
+    enableBallDetect = False
+    enableClimber = False
 
-        
-        module = SingleModule(camID)
-        while True: # TODO: Find a better way to loop
+    # TEMPORARY
 
-            time.sleep(1000/50.0)
+    print(USBCamera.checkAllCameras())
 
-            settings = [self.h_min,self.h_max,self.s_min,self.s_max,self.v_min,self.v_max,self.TLow,self.exposure]
-            Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
+    def __init__(self,threadName):
 
-            #print(Xangle, Xangle2, Yangle)
+        self.connection = True
+        self.client = MessengerClient("10.21.29.3", 5805, "Vision-"+str(threadName))
+        self.client.set_callback(lambda type, data: self._messageCallback(type))
+        self.client.listen(Constants.MESSAGE_HUB_START)
+        self.client.listen(Constants.MESSAGE_HUB_STOP)
+        self.client.listen(Constants.MESSAGE_BALL_DETECT_START)
+        self.client.listen(Constants.MESSAGE_BALL_DETECT_STOP)
+        self.client.listen(Constants.MESSAGE_CLIMBER_START)
+        self.client.listen(Constants.MESSAGE_CLIMBER_STOP)
 
-            data = None
-            if not Xangle is False:
-                data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
-            else:
-                data = struct.pack(">?", False)
-            self.client.send_message("Vision:Angles", data)
+    def _messageCallback(self,type):
+        print("Got message:", type)
 
-            self.client.read()
-
-            # TODO: Send these angles to messanger client
-            if Constants.EXPERIMENTAL:
-                self._getTrackbars()
-                cv2.imshow(str(self.instanceName) + " Camera",frame)
-                cv2.waitKey(1)
-            # TODO: Calculate fps and add it to the frame
-            # TODO: DO the obstructed thing (It'll be False if it is obstructed)
-
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    module.release()
-                    return()
-    """
+        if type == Constants.MESSAGE_HUB_START:
+            self.enableHub = True
+        elif type == Constants.MESSAGE_HUB_STOP:
+            self.enableHub = False
+        elif type == Constants.MESSAGE_BALL_DETECT_START:
+            self.enableBallDetect = True
+        elif type == Constants.MESSAGE_BALL_DETECT_STOP:
+            self.enableBallDetect = False
+        elif type == Constants.MESSAGE_CLIMBER_START:
+            self.enableClimber = True
+        elif type == Constants.MESSAGE_CLIMBER_STOP:
+            self.enableClimber = False
+        else:
+            print("Unknown message", type)
 
     def _hubModule(self,camID,hubDiameter):
+
+        while not self.enableHub:
+            time.sleep(1/50.0)
+            self.client.read()
+
         settings = self.readValues("hubSettings")
 
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Hub Camera ID: " + str(camID))
+        module = SingleModule(camID,settings)
+        while self.enableHub:
+            time.sleep(1/50.0)
 
-        module = SingleModule(camID)
-        while True:
-            time.sleep(1000/50.0)
+            print("hub")
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Hub Camera ID: " + str(camID))
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
 
-            data = None
-            if not Xangle is False:
+            if self.connection:
+                data = None
+                if not Xangle is False:
 
-                diffAngle = Xangle2 - Xangle
-                distance = (.5 * hubDiameter) / math.tan(diffAngle)
+                    diffAngle = Xangle2 - Xangle
+                    distance = (.5 * hubDiameter) / math.tan(diffAngle)
 
-                data = struct.pack(">?dd", True, Xangle, distance)
-            else:
-                data = struct.pack(">?", False)
-            # TODO: Do a try catch to makc sure that we can connect
-            self.client.send_message("Vision:Hub_Measurements", data)
-            self.client.read()
+                    data = struct.pack(">?dd", True, Xangle, distance)
+                else:
+                    data = struct.pack(">?", False)
+                self.client.send_message("Vision:Hub_Measurements", data)
+                self.client.read()
 
-            # TODO: Listen for stop message
+                # TODO: Listen for stop message
 
             if Constants.EXPERIMENTAL:
-                cv2.imshow(str("Hub Camera ID: " + str(camID)))
+                cv2.imshow(str("Hub Camera ID: " + str(camID)),frame)
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
-                    module.release()
-                    return()
+                    break
+        
+        module.release()
 
     def _climberModule(self,camID):
+
+        while not self.enableClimber:
+            time.sleep(1/50.0)
+            self.client.read()
+
         settings = self.readValues("climberSettings")
 
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Climber Camera ID: " + str(camID))
-
-        module = SingleModule(camID)
-        while True:
-            time.sleep(1000/50.0)
+        module = SingleModule(camID,settings)
+        while self.enableClimber:
+            time.sleep(1/50.0)
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Climber Camera ID: " + str(camID))
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
 
-            data = None
-            if not Xangle is False:
+            if self.connection:
+                data = None
+                if not Xangle is False:
 
-                data = struct.pack(">?d", True, Yangle)
-            else:
-                data = struct.pack(">?", False)
-            # TODO: Do a try catch to makc sure that we can connect
-            self.client.send_message("Vision:Climber_Angles", data)
-            self.client.read()
+                    data = struct.pack(">?ddd", True, Xangle, Xangle2, Yangle)
+                else:
+                    data = struct.pack(">?", False)
+                self.client.send_message("Vision:Climber_Angles", data)
+                self.client.read()
 
             # TODO: Listen for stop message
 
             if Constants.EXPERIMENTAL:
-                cv2.imshow(str("Climber Camera ID: " + str(camID)))
+                cv2.imshow(str("Climber Camera ID: " + str(camID)),frame)
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
-                    module.release()
-                    return()
-
-            
-
-
-    """
-    def _stereoModule(self,camIDL,camIDR,baseline,settings):
-        if Constants.EXPERIMENTAL:
-            self._createTrackbars()
+                    break
         
-        module = StereoModule(camIDL,camIDR,baseline)
-
-        while True: # TODO: Find a better way to loop
-
-            time.sleep(1000/50.0)
-
-            globalPose,localPose,outputFrame = module.getMeasurements(settings)
-
-            # TODO: Send these angles to messenger client
-
-            data = None
-            if not isinstance(globalPose, str):
-                data = struct.pack(">?ddddd", True, globalPose[0], globalPose[1], localPose[0], localPose[1], localPose[2])
-            else:
-                data = struct.pack(">?", False)
-            self.client.send_message("Vision:Stereo_Position", data)
-
-            self.client.read()
-
-
-            if Constants.EXPERIMENTAL:
-                cv2.imshow(str(self.instanceName) + " Module")
-                cv2.waitKey(1)
-
-                # Creating 'q' as the quit button for the webcam
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    module.release()
-                    return()
-
-            # TODO: Calculate fps and add it to the frame
-            # TODO: DO the obstructed thing (It'll be False if it is obstructed)
-    """
+        module.release()
 
     def _ballDetectionModule(self,camIDL,camIDR,baseline):
         settings = self.readValues("ballDetectionSettings")
 
+
+        while not self.enableBallDetect:
+            time.sleep(1/50.0)
+            self.client.read()
+
         if Constants.EXPERIMENTAL:
             self._createTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
+        module = StereoModule(camIDL,camIDR,baseline,settings)
 
-        module = StereoModule(camIDL,camIDR,baseline)
+        while self.enableBallDetect:
 
-        while True:
+            time.sleep(1/50.0)
 
-            time.sleep(1000/50.0)
+            print("ball")
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR))
 
             globalPose,localPose, outputFrame = module.getMeasurements(settings)
 
-            data = None
-            if not isinstance(globalPose, str):
-                data = struct.pack(">?dd",True,localPose[0],localPose[2])
-            else:
-                data = struct.pack(">?",False)
-            self.client.send_message("Vision:Ball_Position", data)
-            self.client.read()
+            if self.connection:
+                data = None
+                if not isinstance(globalPose, str):
+                    data = struct.pack(">?ddd",True,localPose[0],localPose[1],localPose[2])
+                else:
+                    data = struct.pack(">?",False)
+                self.client.send_message("Vision:Ball_Position", data)
+                self.client.read()
 
             if Constants.EXPERIMENTAL:
-                cv2.imshow(str("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR)))
+                cv2.imshow(str("Ball Detection Module ID: " + str(camIDL) + ", " + str(camIDR)),outputFrame)
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
-                    module.release()
-                    return()
-
-
+                    break
+        
+        module.release()
 
     def _createTrackbars(self,instanceName):
             cv2.namedWindow(str(instanceName) + " Track Bars")
@@ -224,9 +199,10 @@ class VisionThreads:
             cv2.createTrackbar("Value Max",str(instanceName) + " Track Bars",self.v_max,255,self._empty)
             cv2.createTrackbar("Thresh Low", str(instanceName) + " Track Bars", self.TLow , 255, self._empty)
             cv2.createTrackbar("Exposure",str(instanceName) + " Track Bars", self.exposure,1000, self._empty)
+            cv2.waitKey(1)
 
     def _getTrackbars(self,instanceName):
-            settings = None
+            settings = [0,0,0,0,0,0,0,0,0]
             settings[0] = cv2.getTrackbarPos("Hue Min",str(instanceName) + " Track Bars")
             settings[1] = cv2.getTrackbarPos("Hue Max",str(instanceName) + " Track Bars")
             settings[2] = cv2.getTrackbarPos("Saturation Min",str(instanceName) + " Track Bars")
@@ -235,6 +211,8 @@ class VisionThreads:
             settings[5] = cv2.getTrackbarPos("Value Max",str(instanceName) + " Track Bars")
             settings[6] = cv2.getTrackbarPos("Thresh Low", str(instanceName) + " Track Bars")
             settings[7] = cv2.getTrackbarPos("Exposure",str(instanceName) + " Track Bars")
+
+            return(settings)
 
     def readValues(self,configFile):
         lines = open('./Settings/' + str(configFile) + '.txt','r')
@@ -259,20 +237,18 @@ def getBallDetectionThread(camIDL,camIDR,baseline):
     return(thread)
 
 def getClimberThread(camID):
-    thread = threading.Thread(target=_runClimberThread, args=(camID))
+    thread = threading.Thread(target=_runClimberThread, args=(camID,))
     return(thread)
-
-
 
 #   * I hade to make these functions outside of the class because threads can't use self *
 def _runHubThread(camID,hubDiameter):
-    module = VisionThreads()
+    module = VisionThreads("Hub-ID-"+str(camID))
     module._hubModule(camID,hubDiameter)
 
 def _runBallDetectionThread(camIDL,camIDR,baseline):
-    module = VisionThreads()
+    module = VisionThreads("Ball_Detection-ID-"+str(camIDL)+","+str(camIDR))
     module._ballDetectionModule(camIDL,camIDR,baseline)
 
 def _runClimberThread(camID):
-    module = VisionThreads()
+    module = VisionThreads("Climber-ID-"+str(camID))
     module._climberModule(camID)
