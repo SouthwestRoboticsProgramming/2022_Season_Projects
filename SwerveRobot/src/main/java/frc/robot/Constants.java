@@ -21,6 +21,9 @@ public final class Constants {
     public static final double OFFSET_4 = -218.85;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
 
+    public static final int CAMERA_TURRET_MOTOR_ID = 30;
+    public static final double CAMERA_TURRET_ENCODER_TICKS_PER_ROTATION = 177.6;
+
     public static final String MESSENGER_HOST = "10.21.29.3";
     public static final int MESSENGER_PORT = 5805;
 
@@ -54,9 +57,4 @@ public final class Constants {
     public static final double STABILIZATION_KP = 0.1;
     public static final double STABILIZATION_KI = 0;
     public static final double STABILIZATION_KD = 0.002;
-
-    public static final int CAMERA_TURRET_SERVO_ID = 0; //FIXME
-    public static final double CAMERA_TURRET_KP = 0.1;
-    public static final double CAMERA_TURRET_KI = 0;
-    public static final double CAMERA_TURRET_KD = 0;
 }
