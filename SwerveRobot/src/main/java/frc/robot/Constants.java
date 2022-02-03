@@ -21,9 +21,10 @@ public final class Constants {
     public static final double OFFSET_4 = -218.85;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
 
+    
     public static final String MESSENGER_HOST = "10.21.29.3";
     public static final int MESSENGER_PORT = 5805;
-
+    
     /* Climber */
     public static final int CLIMBER_LEFT_TELE_MOTOR_ONE_ID = 20; //FIXME
     public static final int CLIMBER_LEFT_TELE_MOTOR_TWO_ID = 21; //FIXME
@@ -34,7 +35,7 @@ public final class Constants {
     
     public static final double JOYSTICK_DEAD_ZONE = 0.2;
 	public static final int DRIVE_CONTROLLER = 0;
-
+    
     
     
     public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // In degrees
@@ -54,8 +55,9 @@ public final class Constants {
     public static final double STABILIZATION_KP = 0.1;
     public static final double STABILIZATION_KI = 0;
     public static final double STABILIZATION_KD = 0.002;
-
-    public static final int CAMERA_TURRET_MOTOR_ID = 0; //FIXME
+    
+    public static final int CAMERA_TURRET_MOTOR_ID = 30;
+    public static final double CAMERA_TURRET_ENCODER_TICKS_PER_ROTATION = 177.6;
     public static final double CAMERA_TURRET_KP = 0.1;
     public static final double CAMERA_TURRET_KI = 0;
     public static final double CAMERA_TURRET_KD = 0;

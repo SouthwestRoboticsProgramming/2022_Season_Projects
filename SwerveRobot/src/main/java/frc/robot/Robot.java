@@ -10,6 +10,7 @@ import frc.messenger.client.MessengerClient;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
+import frc.robot.subsystems.CameraTurret;
 import frc.robot.subsystems.Cameras;
 import frc.robot.subsystems.Localization;
 import frc.robot.util.ShuffleWood;
@@ -20,13 +21,14 @@ import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
   private Input input;
-  private SwerveDrive drive;
-  private SwerveDriveController driveController;
+  //private SwerveDrive drive;
+  //private SwerveDriveController driveController;
   private MessengerClient msg;
   private MessageDispatcher dispatch;
 
   // Subsystems
   private Localization localization;
+  private CameraTurret cameraTurret;
   private Cameras cameras;
 
   @Override
@@ -34,10 +36,10 @@ public class Robot extends TimedRobot {
     AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     input = new Input();
-    drive = new SwerveDrive(gyro);
-    driveController = new SwerveDriveController(drive, input);
+    //drive = new SwerveDrive(gyro);
+    //driveController = new SwerveDriveController(drive, input);
 
-    driveController.swerveInit();
+    //driveController.swerveInit();
 
     while (msg == null) {
       try {
@@ -54,6 +56,7 @@ public class Robot extends TimedRobot {
     dispatch = new MessageDispatcher(msg);
 
     localization = new Localization(gyro);
+    cameraTurret = new CameraTurret();
     cameras = new Cameras(dispatch);
   }
 
@@ -61,8 +64,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     msg.read();
     CommandScheduler.getInstance().run();
-
-    ShuffleWood.set("Battery Voltage", RobotController.getBatteryVoltage());
   }
 
   @Override
@@ -76,12 +77,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    driveController.update();
+    //driveController.update();
   }
 
   @Override
   public void disabledInit() {
-    drive.disable();
+    //drive.disable();
   }
 
   @Override

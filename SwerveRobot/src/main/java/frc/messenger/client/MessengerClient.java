@@ -56,8 +56,8 @@ public class MessengerClient {
         }
 
         connected = true;
-        incomingMessages = new ConcurrentLinkedQueue();
-        outgoingMessages = new ConcurrentLinkedQueue();
+        incomingMessages = new ConcurrentLinkedQueue<>();
+        outgoingMessages = new ConcurrentLinkedQueue<>();
 
         new Thread(this::runThread).start();
     }
@@ -138,7 +138,7 @@ public class MessengerClient {
     }
 
     private void runThread() {
-        timer = System.nanoTime();
+        heartbeatTimer = System.nanoTime();
 
         while (connected) {
             // Send messages
@@ -162,8 +162,8 @@ public class MessengerClient {
             }
 
             // Receive messages
-            while (in.available() > 0) {
-                try {
+            try {
+                while (in.available() > 0) {
                     int length = in.readInt();
                     byte[] data = new byte[length];
                     in.readFully(data);
@@ -176,9 +176,9 @@ public class MessengerClient {
                     d.close();
 
                     incomingMessages.add(new Message(type, messageData));
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             // Heartbeat

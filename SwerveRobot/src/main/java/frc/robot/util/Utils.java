@@ -19,6 +19,10 @@ public final class Utils {
         return -Math.PI + ((Math.PI * 2 + ((angle + Math.PI) % (Math.PI * 2))) % (Math.PI * 2));
     }
 
+    public static double normalizeAngleDegrees(double angle) {
+        return -180 + ((360 + ((angle + 180) % 360)) % 360);
+    }
+
     public static Rotation2d normalizeRotation2d(Rotation2d angle) {
         return new Rotation2d(-180 + ((180 * 2 + ((angle.getDegrees() + 180) % (180 * 2))) % (180 * 2)));
     }

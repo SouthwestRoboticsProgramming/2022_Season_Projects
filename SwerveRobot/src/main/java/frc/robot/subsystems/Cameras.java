@@ -6,20 +6,46 @@ import java.io.IOException;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.messenger.client.MessageDispatcher;
 import frc.messenger.client.MessageHandler;
+import frc.robot.util.ShuffleWood;
 
 public class Cameras extends SubsystemBase {
   public Cameras(MessageDispatcher dispatch) {
     super();
 
     MessageHandler handler = new MessageHandler()
-        .setHandler(this::onMessage);
-    //    .listen("some message type");
+        .setHandler(this::onMessage)
+        .listen("Vision:Ball_Position")
+        .listen("Vision:Hub_Measurements");
     
     dispatch.addMessageHandler(handler);
   }
 
   private void onMessage(String type, DataInputStream in) throws IOException {
+    if (type.equals("Vision:Hub_Measurements")) {
+      boolean good = in.readBoolean();
+      if (good) {
+        double xAngle = in.readDouble();
+        double distance = in.readDouble();
 
+        ShuffleWood.set("Hub XAngle", xAngle);
+        ShuffleWood.set("Hub Distance", distance);
+      } else {
+        ShuffleWood.set("Hub XAngle", "bad");
+        ShuffleWood.set("Hub Distance", "bad");
+      }
+    } else if (type.equals("Vision:Ball_Position")) {
+      boolean good = in.readBoolean();
+      if (good) {
+        double x = in.readDouble();
+        double z = in.readDouble();
+
+        ShuffleWood.set("Ball X", x);
+        ShuffleWood.set("Ball Z", z);
+      } else {
+        ShuffleWood.set("Ball X", "bad");
+        ShuffleWood.set("Ball Z", "bad");
+      }
+    }
   }
 
   public double getHubTargetAngle() {
