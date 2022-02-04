@@ -2,9 +2,15 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase {
+// TODO: Feedforward control of flywheel speed
 
-  public Intake() {}
+
+public class Intake extends SubsystemBase {
+  SimpleMotorFeedForward feedForward;
+
+  public Intake() {
+    feedForward = new SimpleMotorFeedForward(ks,kv,ka)
+  }
 
   @Override
   public void periodic() {

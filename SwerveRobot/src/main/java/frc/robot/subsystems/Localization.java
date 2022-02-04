@@ -4,6 +4,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 // https://www.desmos.com/calculator/w5x76wa3yd
+
+/* ALL ANGLES IN DEGREES {-180,180} UNLESS NOTED  */
 public class Localization extends SubsystemBase {
   private final AHRS gyro;
   private final CameraTurret cameraTurret;
@@ -37,7 +39,7 @@ public class Localization extends SubsystemBase {
     5. Check that result is possible
     
     */
-    double gyroAngle = gyro.getYaw();
+    double gyroAngle = Math.toDegrees(Utils.normalizeAngle(Math.toRadians(gyro.getYaw)));
     double cameraAngle = cameraTurret.getAngle();
     double cameraDistance = cameraTurret.getDistance();
 
