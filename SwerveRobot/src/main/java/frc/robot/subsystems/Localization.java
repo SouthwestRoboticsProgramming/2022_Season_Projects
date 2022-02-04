@@ -10,9 +10,9 @@ public class Localization extends SubsystemBase {
 
   private double x, y;
 
-  public Localization(AHRS gyro) {
+  public Localization(AHRS gyro, CameraTurret cameraTurret) {
     this.gyro = gyro;
-    cameraTurret = new CameraTurret();
+    this.cameraTurret = cameraTurret;
   }
 
   public double getX() {

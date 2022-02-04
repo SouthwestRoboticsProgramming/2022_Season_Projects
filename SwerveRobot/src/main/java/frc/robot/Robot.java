@@ -55,9 +55,9 @@ public class Robot extends TimedRobot {
     ShuffleWood.setMessenger(msg);
     dispatch = new MessageDispatcher(msg);
 
-    localization = new Localization(gyro);
-    cameraTurret = new CameraTurret();
     cameras = new Cameras(dispatch);
+    cameraTurret = new CameraTurret();
+    localization = new Localization(gyro, cameraTurret);
   }
 
   @Override
