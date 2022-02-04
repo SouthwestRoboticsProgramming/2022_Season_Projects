@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.Utils;
 
 // https://www.desmos.com/calculator/w5x76wa3yd
 
@@ -39,7 +40,7 @@ public class Localization extends SubsystemBase {
     5. Check that result is possible
     
     */
-    double gyroAngle = Math.toDegrees(Utils.normalizeAngle(Math.toRadians(gyro.getYaw)));
+    double gyroAngle = Math.toDegrees(Utils.normalizeAngle(Math.toRadians(gyro.getYaw())));
     double cameraAngle = cameraTurret.getAngle();
     double cameraDistance = cameraTurret.getDistance();
 

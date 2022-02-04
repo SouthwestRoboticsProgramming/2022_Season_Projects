@@ -26,9 +26,9 @@ public final class PathfinderTask {
         } catch (IOException e) {
             System.err.println("Failed to load configuration file, using default config");
             config.setProperty("host", "localhost");
-            config.setProperty("port", "8341");
+            config.setProperty("port", "5805");
             config.setProperty("name", "Pathfinder");
-            config.setProperty("agentRadius", "3");
+            config.setProperty("agentRadius", "5.89");
             config.setProperty("collisionPadding", "1");
             try {
                 config.store(new FileWriter(CONFIG_FILE), "Configuration for Pathfinder");

@@ -21,23 +21,23 @@ import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
   private Input input;
-  //private SwerveDrive drive;
-  //private SwerveDriveController driveController;
+  private SwerveDrive drive;
+  private SwerveDriveController driveController;
   private MessengerClient msg;
   private MessageDispatcher dispatch;
 
   // Subsystems
   private Localization localization;
-  private CameraTurret cameraTurret;
   private Cameras cameras;
+  private CameraTurret cameraTurret;
 
   @Override
   public void robotInit() {
     AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     input = new Input();
-    //drive = new SwerveDrive(gyro);
-    //driveController = new SwerveDriveController(drive, input);
+    drive = new SwerveDrive(gyro);
+    driveController = new SwerveDriveController(drive, input);
 
     //driveController.swerveInit();
 

@@ -61,4 +61,9 @@ public final class Constants {
     public static final double CAMERA_TURRET_KP = 0.1;
     public static final double CAMERA_TURRET_KI = 0;
     public static final double CAMERA_TURRET_KD = 0;
+
+    public static final int INTAKE_MOTOR_ID = 50943; //FIXME
+    public static final double INTAKE_KS = 0;
+    public static final double INTAKE_KA = 0;
+    public static final double INTAKE_KV = 0;
 }

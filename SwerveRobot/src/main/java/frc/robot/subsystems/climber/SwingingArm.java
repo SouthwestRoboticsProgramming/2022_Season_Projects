@@ -4,15 +4,17 @@
 
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwingingArm extends SubsystemBase {
 
-  private static Spark motor;
+  private static CANSparkMax motor;
 
   public SwingingArm(int motorID) {
-    motor = new Spark(motorID);
+    motor = new CANSparkMax(motorID, MotorType.kBrushless);
   }
 
   @Override
