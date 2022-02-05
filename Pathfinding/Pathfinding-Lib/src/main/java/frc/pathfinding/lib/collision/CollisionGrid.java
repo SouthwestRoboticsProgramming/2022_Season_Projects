@@ -58,7 +58,7 @@ public class CollisionGrid extends Grid {
                                 case "y": y = value; break;
                                 case "width": width = value; break;
                                 case "height": height = value; break;
-                                case "rotation": rotation = value; break;
+                                case "rotation": rotation = (float) Math.toRadians(value); break;
                             }
                         }
                         System.out.println("Rectangle collider at (" + x + ", " + y + ") with size (" + width + ", " + height + ") with rotation " + rotation);

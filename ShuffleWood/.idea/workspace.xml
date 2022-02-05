@@ -23,12 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da777d2d-befa-4519-9c9c-3c8912e9bd79" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/shufflewood/tools/ValueEditTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Lib/src/main/java/frc/pathfinding/lib/collision/CollisionGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Pathfinding/Pathfinding-Lib/src/main/java/frc/pathfinding/lib/collision/CollisionGrid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pathfinding/scene.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Pathfinding/scene.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/Constants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/Robot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/subsystems/CameraTurret.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/subsystems/CameraTurret.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/subsystems/Cameras.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/subsystems/Cameras.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/util/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/util/Utils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

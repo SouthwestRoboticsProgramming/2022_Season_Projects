@@ -73,6 +73,10 @@ public class SwerveDrive {
         w3.update(moduleStates[1]);
         w4.update(moduleStates[3]);
 
+        // System.out.printf(
+        //     "ANGLES: w1: %3.3f  w2: %3.3f  w3: %3.3f  w4: %3.3f %n",
+        //     w1.getCanRotation(), w2.getCanRotation(), w3.getCanRotation(), w4.getCanRotation()
+        // );
     }
 
     public void disable() {

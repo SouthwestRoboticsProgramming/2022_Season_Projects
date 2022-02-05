@@ -20,28 +20,29 @@ import edu.wpi.first.wpilibj.SPI;
 import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
+  private AHRS gyro;
   private Input input;
   private SwerveDrive drive;
   private SwerveDriveController driveController;
-  private MessengerClient msg;
-  private MessageDispatcher dispatch;
+  // private MessengerClient msg;
+  // private MessageDispatcher dispatch;
 
   // Subsystems
-  private Localization localization;
-  private Cameras cameras;
-  private CameraTurret cameraTurret;
+  // private Localization localization;
+  // private Cameras cameras;
+  // private CameraTurret cameraTurret;
 
   @Override
   public void robotInit() {
-    AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
+    gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     input = new Input();
     drive = new SwerveDrive(gyro);
     driveController = new SwerveDriveController(drive, input);
 
-    //driveController.swerveInit();
+    driveController.swerveInit();
 
-    while (msg == null) {
+    /*while (msg == null) {
       try {
         MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO");
         msg = attempt;
@@ -57,13 +58,15 @@ public class Robot extends TimedRobot {
 
     cameras = new Cameras(dispatch);
     cameraTurret = new CameraTurret();
-    localization = new Localization(gyro, cameraTurret);
+    localization = new Localization(gyro, cameraTurret);*/
   }
 
   @Override
   public void robotPeriodic() {
-    msg.read();
+    //msg.read();
     CommandScheduler.getInstance().run();
+
+    System.out.println(gyro.getYaw());
   }
 
   @Override
@@ -77,12 +80,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    //driveController.update();
+    driveController.update();
   }
 
   @Override
   public void disabledInit() {
-    //drive.disable();
+    drive.disable();
   }
 
   @Override

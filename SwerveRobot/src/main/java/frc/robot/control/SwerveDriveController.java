@@ -45,26 +45,38 @@ public class SwerveDriveController {
         double autoRot = this.autoRot;
         Rotation2d currentAngle = drive.getGyroscopeRotation();
 
-        if (autoRot != Double.NaN) {
-            rot = autoRot;
+        // FIXME mason
+        // if (autoRot != Double.NaN) {
+        //     rot = autoRot;
+        // }
+
+        if (Math.abs(driveX) < Constants.JOYSTICK_DEAD_ZONE) {
+            driveX = 0;
+        }
+        if (Math.abs(driveY) < Constants.JOYSTICK_DEAD_ZONE) {
+            driveY = 0;
+        }
+        if (Math.abs(rot) < Constants.JOYSTICK_DEAD_ZONE) {
+            rot = 0;
         }
 
         // Eliminate deadzone jump
-        if (driveX > 0) {
-            driveX = Utils.map(driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        } else {
-            driveX = -Utils.map(-driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        }
-        if (driveY > 0) {
-            driveY = Utils.map(driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        } else {
-            driveY = -Utils.map(-driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        }
-        if (rot > 0) {
-            rot = Utils.map(rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        } else {
-            rot = -Utils.map(-rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        }
+        //FIXME: RYAN!
+        // if (driveX > 0) {
+        //     driveX = Utils.map(driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        // } else {
+        //     driveX = -Utils.map(-driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        // }
+        // if (driveY > 0) {
+        //     driveY = Utils.map(driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        // } else {
+        //     driveY = -Utils.map(-driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        // }
+        // if (rot > 0) {
+        //     rot = Utils.map(rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        // } else {
+        //     rot = -Utils.map(-rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        // }
 
         //Rotation2d targetAngle = Rotation2d(rot * Constants.MAX_ROTATION_SPEED / 50);
 
@@ -73,12 +85,11 @@ public class SwerveDriveController {
         double fieldRelativeY = driveY * Constants.MAX_VELOCITY;
         double targetRot = rot * Constants.MAX_ROTATION_SPEED;
 
+        //System.out.println(driveX + " " + driveY + " " + targetRot);
+
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);
         drive.update(speeds);
-
-        System.out.println("Current Angle: " + currentAngle);
-        System.out.println("Target Angle: " + targetAngle);
 
         this.autoRot = Double.NaN;
     }

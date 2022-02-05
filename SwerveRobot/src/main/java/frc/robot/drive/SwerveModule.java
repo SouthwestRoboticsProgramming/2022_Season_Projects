@@ -109,6 +109,9 @@ public class SwerveModule {
         }
     }
 
+    public double getCanRotation() {
+        return canCoder.getAbsolutePosition();
+    }
 
     public void disable() {
         turnPID.reset();

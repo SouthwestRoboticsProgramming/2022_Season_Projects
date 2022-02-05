@@ -2,23 +2,23 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class Constants {
-    public static final int DRIVE_PORT_1 = 8;
-    public static final int DRIVE_PORT_2 = 7;
-    public static final int DRIVE_PORT_3 = 5;
-    public static final int DRIVE_PORT_4 = 6;
-    public static final int TURN_PORT_1 = 11;
-    public static final int TURN_PORT_2 = 10;
-    public static final int TURN_PORT_3 = 9;
-    public static final int TURN_PORT_4 = 12;
-    public static final int CAN_PORT_1 = 2;
-    public static final int CAN_PORT_2 = 4;
-    public static final int CAN_PORT_3 = 3;
-    public static final int CAN_PORT_4 = 1;
+    public static final int DRIVE_PORT_1 = 1;
+    public static final int DRIVE_PORT_2 = 4;
+    public static final int DRIVE_PORT_3 = 7;
+    public static final int DRIVE_PORT_4 = 10;
+    public static final int TURN_PORT_1 = 2;
+    public static final int TURN_PORT_2 = 5;
+    public static final int TURN_PORT_3 = 8;
+    public static final int TURN_PORT_4 = 11;
+    public static final int CAN_PORT_1 = 3;
+    public static final int CAN_PORT_2 = 6;
+    public static final int CAN_PORT_3 = 9;
+    public static final int CAN_PORT_4 = 12;
     public static final int NAVX_PORT = 0;
-    public static final double OFFSET_1 = -276.59;
-    public static final double OFFSET_2 = -349.54;
-    public static final double OFFSET_3 = -311.31;
-    public static final double OFFSET_4 = -218.85;
+    public static final double OFFSET_1 = -133.945 + 180;
+    public static final double OFFSET_2 = -220.781 + 180;
+    public static final double OFFSET_3 = -77.607;
+    public static final double OFFSET_4 = -3.955;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
 
     
@@ -40,12 +40,12 @@ public final class Constants {
     
     public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // In degrees
     
-    public static final double WHEEL_SPACING_FRONT_BACK = 0.31;
-    public static final double WHEEL_SPACING_LEFT_RIGHT = 0.30;
+    public static final double WHEEL_SPACING_FRONT_BACK = 0.4699;
+    public static final double WHEEL_SPACING_LEFT_RIGHT = 0.4699;
     
-    public static final double MAX_VELOCITY = 1.5; // Meters per second
+    public static final double MAX_VELOCITY = 1.0; // Meters per second
     public static final double ROBOT_MAX_VELOCITY = 4.11/*4.11*/;
-    public static final double MAX_ROTATION_SPEED = 5.0; // Radians per second
+    public static final double MAX_ROTATION_SPEED = 4.0; // Radians per second
     public static final double ROBOT_MAX_ROTATION_SPEED = 26.5; // Radians per second
     
     public static final double WHEEL_TURN_KP = 0.02;

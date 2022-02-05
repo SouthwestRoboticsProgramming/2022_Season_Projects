@@ -1,4 +1,4 @@
 # Test scene
 
 circle x=10 y=10 radius=2.5
-rectangle x=20 y=10 width=5 height=10 rotation=0.3
+rectangle x=20 y=10 width=5 height=10 rotation=8732
