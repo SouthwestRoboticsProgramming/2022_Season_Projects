@@ -10,22 +10,21 @@ import frc.messenger.client.MessengerClient;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
-import frc.robot.subsystems.CameraTurret;
-import frc.robot.subsystems.Cameras;
-import frc.robot.subsystems.Localization;
 import frc.robot.util.ShuffleWood;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 
 import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
+  private static final int SHUFFLEWOOD_SAVE_INTERVAL = 50;
+
   private AHRS gyro;
   private Input input;
   private SwerveDrive drive;
   private SwerveDriveController driveController;
-  // private MessengerClient msg;
-  // private MessageDispatcher dispatch;
+  private MessengerClient msg;
+  private MessageDispatcher dispatch;
+  private int shufflewoodSaveTimer = SHUFFLEWOOD_SAVE_INTERVAL;
 
   // Subsystems
   // private Localization localization;
@@ -42,7 +41,7 @@ public class Robot extends TimedRobot {
 
     driveController.swerveInit();
 
-    /*while (msg == null) {
+    while (msg == null) {
       try {
         MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO");
         msg = attempt;
@@ -53,20 +52,27 @@ public class Robot extends TimedRobot {
         } catch (InterruptedException e) {}
       }
     }
-    ShuffleWood.setMessenger(msg);
     dispatch = new MessageDispatcher(msg);
 
-    cameras = new Cameras(dispatch);
+    ShuffleWood.setMessenger(dispatch);
+
+    /*cameras = new Cameras(dispatch);
     cameraTurret = new CameraTurret();
     localization = new Localization(gyro, cameraTurret);*/
+
+    //ShuffleWood.setInt("TEST", 736219837);
   }
 
   @Override
   public void robotPeriodic() {
-    //msg.read();
+    msg.read();
     CommandScheduler.getInstance().run();
 
-    //System.out.println(gyro.getYaw());
+    if (shufflewoodSaveTimer-- == 0) {
+      shufflewoodSaveTimer = SHUFFLEWOOD_SAVE_INTERVAL;
+
+      ShuffleWood.save();
+    }
   }
 
   @Override
@@ -86,6 +92,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     drive.disable();
+    ShuffleWood.save();
   }
 
   @Override

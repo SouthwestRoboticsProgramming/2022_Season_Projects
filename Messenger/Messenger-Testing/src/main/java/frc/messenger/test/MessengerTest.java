@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class MessengerTest {
     public static void main(String[] args) throws Exception {
-        MessengerClient client = new MessengerClient("10.21.29.3", 5805, "Tester");
+        MessengerClient client = new MessengerClient("localhost", 8341, "Tester");
 
         client.setCallback((type, data) -> {
             System.out.println("Got " + type);
@@ -16,7 +16,9 @@ public class MessengerTest {
         Scanner in = new Scanner(System.in);
         System.out.println("Ready.");
 
-        while (true) {
+        ShuffleWood.init(client);
+
+        main: while (true) {
             client.read();
 
             if (System.in.available() > 0) {
@@ -56,6 +58,22 @@ public class MessengerTest {
                         client.unlisten(tokens[1]);
                         System.out.println("No longer listening to " + tokens[1]);
                         break;
+                    case "set": {
+                        String key = tokens[1];
+
+                        if (tokens[2].equals("int")) {
+                            ShuffleWood.setInt(key, Integer.parseInt(tokens[3]));
+                        } else if (tokens[2].equals("double")){
+                            ShuffleWood.setDouble(key, Double.parseDouble(tokens[3]));
+                        }
+
+                        break;
+                    }
+                    case "debug":
+                        ShuffleWood.debug();
+                        break;
+                    case "stop":
+                        break main;
                     default:
                         System.out.println("Unknown command");
                         break;
@@ -64,5 +82,7 @@ public class MessengerTest {
 
             Thread.sleep(25);
         }
+
+        ShuffleWood.save();
     }
 }

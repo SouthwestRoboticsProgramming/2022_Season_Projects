@@ -52,10 +52,10 @@ public class CameraTurret extends SubsystemBase {
   @Override
   public void periodic() {
     double encoder = getEncoderDegrees();
-    ShuffleWood.set("Encoder", encoder);
+    ShuffleWood.show("Encoder", encoder);
 
     double calc = pid.calculate(encoder, target);
-    ShuffleWood.set("pid", calc);
+    ShuffleWood.show("pid", calc);
     if (pid.atSetpoint()) {
       isSweepback = !isSweepback;
       if (isSweepback) {
@@ -64,7 +64,7 @@ public class CameraTurret extends SubsystemBase {
         target = 90;
       }
     }
-    ShuffleWood.set("target", target);
+    ShuffleWood.show("target", target);
     
     motor.set(ControlMode.PercentOutput, Utils.clamp(calc, -0.15, 0.15));
   }
