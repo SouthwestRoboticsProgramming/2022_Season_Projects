@@ -12,8 +12,8 @@ public class SwerveDriveController {
     private final Input input;
     private final PIDController rotPID;
 
-    private Rotation2d targetAngle;
     private double autoRot;
+    private boolean autoControl;
 
     // Sets initial state of robot (In this case, staying still)
     private ChassisSpeeds speeds = new ChassisSpeeds(0.0, 0.0, 0.0);
@@ -23,33 +23,21 @@ public class SwerveDriveController {
         this.input = input;
         rotPID = new PIDController(Constants.STABILIZATION_KP, Constants.STABILIZATION_KI, Constants.STABILIZATION_KD);
         rotPID.enableContinuousInput(-180, 180);
-        targetAngle = new Rotation2d();
+        autoControl = false;
     }
 
     public void swerveInit(){
         drive.zeroGyro();
-        
-        // double startingAngle = Constants.STARTING_WHEEL_ANGLE;
-        // drive.setWheelTargetAngle(startingAngle);
         drive.update(speeds);
-    }
-
-    public void setRobotTargetAngle(Rotation2d targetAngle) {
-        this.targetAngle = targetAngle;
     }
     
     public void update() {
         double driveX = input.getDriveX();
         double driveY = input.getDriveY();
         double rot = input.getRot();
-        double autoRot = this.autoRot;
         Rotation2d currentAngle = drive.getGyroscopeRotation();
 
-        // FIXME mason
-        // if (autoRot != Double.NaN) {
-        //     rot = autoRot;
-        // }
-
+        
         if (Math.abs(driveX) < Constants.JOYSTICK_DEAD_ZONE) {
             driveX = 0;
         }
@@ -59,44 +47,45 @@ public class SwerveDriveController {
         if (Math.abs(rot) < Constants.JOYSTICK_DEAD_ZONE) {
             rot = 0;
         }
-
+        
         // Eliminate deadzone jump
-        //FIXME: RYAN!
-        // if (driveX > 0) {
-        //     driveX = Utils.map(driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        // } else {
-        //     driveX = -Utils.map(-driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        // }
-        // if (driveY > 0) {
-        //     driveY = Utils.map(driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        // } else {
-        //     driveY = -Utils.map(-driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        // }
-        // if (rot > 0) {
-        //     rot = Utils.map(rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        // } else {
-        //     rot = -Utils.map(-rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        // }
 
-        //Rotation2d targetAngle = Rotation2d(rot * Constants.MAX_ROTATION_SPEED / 50);
+        if (driveX > 0) {
+                driveX = Utils.map(driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+                driveX = -Utils.map(-driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+            }
+        if (driveY > 0) {
+                driveY = Utils.map(driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+                driveY = -Utils.map(-driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
+        if (rot > 0) {
+                rot = Utils.map(rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        } else {
+                rot = -Utils.map(-rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
+        }
 
+        if (autoControl) {
+            rot = autoRot;
+        }
 
         double fieldRelativeX = driveX * Constants.MAX_VELOCITY;
         double fieldRelativeY = driveY * Constants.MAX_VELOCITY;
         double targetRot = rot * Constants.MAX_ROTATION_SPEED;
-
-        //System.out.println(driveX + " " + driveY + " " + targetRot);
-
+                            
+        System.out.println(driveX + " " + driveY + " " + targetRot);
+        
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);
         drive.update(speeds);
 
-        this.autoRot = Double.NaN;
+        autoControl = false;
     }
 
     public void turnToTarget(double angleTargetDegrees) {
         double targetRotPercent = rotPID.calculate(drive.getGyroscopeRotation().getDegrees(),angleTargetDegrees);
+        autoControl = true;
         this.autoRot = targetRotPercent;
-        
     }
 }

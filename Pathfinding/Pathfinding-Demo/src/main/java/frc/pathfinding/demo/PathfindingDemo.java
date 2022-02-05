@@ -35,7 +35,7 @@ public class PathfindingDemo extends PApplet {
     public void setup() {
         ellipseMode(CENTER);
 
-        robot = new CircleCollider(0, 0, 2 + padding);
+        robot = new CircleCollider(0, 0, 5.89 + padding);
         grid = new CollisionGrid(CELLS_X, CELLS_Y, robot);
         cellSize = width / (float) CELLS_X;
 
