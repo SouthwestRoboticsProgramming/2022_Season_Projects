@@ -16,6 +16,10 @@ public class MessageDispatcher {
         msg.setCallback(this::onMessage);
     }
 
+    public void sendMessage(String type, byte[] data) {
+        msg.sendMessage(type, data);
+    }
+
     public void addMessageHandler(MessageHandler handler) {
         for (String type : handler.getListening()) {
             Set<MessageHandler> handlers = listeners.computeIfAbsent(type, (t) -> new HashSet<>());

@@ -2,6 +2,7 @@ package frc.shufflewood.gui;
 
 import frc.shufflewood.gui.draw.GuiDrawData;
 import frc.shufflewood.gui.filter.AnyFilter;
+import frc.shufflewood.gui.filter.DoubleFilter;
 import frc.shufflewood.gui.filter.IntFilter;
 import frc.shufflewood.gui.filter.TextFilter;
 import frc.shufflewood.gui.input.GuiInput;
@@ -11,6 +12,7 @@ public interface GuiContext {
     // Default text filters
     TextFilter FILTER_ANY = new AnyFilter();
     TextFilter FILTER_INT = new IntFilter();
+    TextFilter FILTER_DOUBLE = new DoubleFilter();
 
     // Frame
     void beginFrame(int width, int height);
@@ -54,12 +56,15 @@ public interface GuiContext {
 
     // Text edit
     // TODO: Maybe use String[] instead?
-    default void editString(StringBuffer buf) { editString(buf, buf, FILTER_ANY); }
-    default void editString(StringBuffer buf, Object id) { editString(buf, id, FILTER_ANY); }
-    void editString(StringBuffer buf, Object id, TextFilter filter);
-    default void editInt(int[] value) { editInt(value, value); }
-    default void editInt(int[] value, Object id) { editInt(value, id, FILTER_INT); }
-    void editInt(int[] value, Object id, TextFilter filter);
+    default boolean editString(StringBuffer buf) { return editString(buf, buf, FILTER_ANY); }
+    default boolean editString(StringBuffer buf, Object id) { return editString(buf, id, FILTER_ANY); }
+    boolean editString(StringBuffer buf, Object id, TextFilter filter);
+    default boolean editInt(int[] value) { return editInt(value, value); }
+    default boolean editInt(int[] value, Object id) { return editInt(value, id, FILTER_INT); }
+    boolean editInt(int[] value, Object id, TextFilter filter);
+    default boolean editDouble(double[] value) { return editDouble(value, value); }
+    default boolean editDouble(double[] value, Object id) { return editDouble(value, id, FILTER_DOUBLE); }
+    boolean editDouble(double[] value, Object id, TextFilter filter);
 
     // Trees
     boolean treePushState(String label, boolean[] open);

@@ -2,6 +2,7 @@ package frc.robot.control;
 
 import frc.robot.drive.SwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.util.ShuffleWood;
 import frc.robot.util.Utils;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,6 +38,7 @@ public class SwerveDriveController {
         double rot = input.getRot();
         Rotation2d currentAngle = drive.getGyroscopeRotation();
 
+        ShuffleWood.show("currentAngle", currentAngle);
         
         if (Math.abs(driveX) < Constants.JOYSTICK_DEAD_ZONE) {
             driveX = 0;

@@ -27,11 +27,11 @@ public class Cameras extends SubsystemBase {
         double xAngle = in.readDouble();
         double distance = in.readDouble();
 
-        ShuffleWood.set("Hub XAngle", xAngle);
-        ShuffleWood.set("Hub Distance", distance);
+        ShuffleWood.show("Hub XAngle", xAngle);
+        ShuffleWood.show("Hub Distance", distance);
       } else {
-        ShuffleWood.set("Hub XAngle", "bad");
-        ShuffleWood.set("Hub Distance", "bad");
+        ShuffleWood.show("Hub XAngle", "bad");
+        ShuffleWood.show("Hub Distance", "bad");
       }
     } else if (type.equals("Vision:Ball_Position")) {
       boolean good = in.readBoolean();
@@ -39,11 +39,11 @@ public class Cameras extends SubsystemBase {
         double x = in.readDouble();
         double z = in.readDouble();
 
-        ShuffleWood.set("Ball X", x);
-        ShuffleWood.set("Ball Z", z);
+        ShuffleWood.show("Ball X", x);
+        ShuffleWood.show("Ball Z", z);
       } else {
-        ShuffleWood.set("Ball X", "bad");
-        ShuffleWood.set("Ball Z", "bad");
+        ShuffleWood.show("Ball X", "bad");
+        ShuffleWood.show("Ball Z", "bad");
       }
     }
   }

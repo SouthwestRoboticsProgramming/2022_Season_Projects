@@ -501,7 +501,7 @@ public final class GuiContextImpl implements GuiContext {
     }
 
     @Override
-    public void editString(StringBuffer buf, Object id, TextFilter filter) {
+    public boolean editString(StringBuffer buf, Object id, TextFilter filter) {
         beginWidget();
 
         TextEditState state = activeWindow.storage.getOrSet(id, TextEditState::new);
@@ -518,6 +518,7 @@ public final class GuiContextImpl implements GuiContext {
             state.editBuffer.append(input.getTextInput());
         }
         boolean allowed = filter.isAllowed(state.editBuffer.toString());
+        boolean edited = false;
 
         if (clicked) {
             state.editing = true;
@@ -527,6 +528,7 @@ public final class GuiContextImpl implements GuiContext {
             state.editing = false;
             if (allowed && state.editBuffer.length() != 0) {
                 buf.replace(0, buf.length(), state.editBuffer.toString());
+                edited = true;
             }
         }
 
@@ -556,13 +558,24 @@ public final class GuiContextImpl implements GuiContext {
         draw.drawText(str, new Vec2(activePane.position.x + style.textEditContentPadding, activePane.position.y + activePane.widgetSize.y / 2), style.textColor, new Vec2(0, 0.5f));
 
         endWidget();
+
+        return edited;
     }
 
     @Override
-    public void editInt(int[] value, Object id, TextFilter filter) {
+    public boolean editInt(int[] value, Object id, TextFilter filter) {
         StringBuffer buf = new StringBuffer(String.valueOf(value[0]));
-        editString(buf, id, filter);
+        boolean edited = editString(buf, id, filter);
         value[0] = Integer.parseInt(buf.toString());
+        return edited;
+    }
+
+    @Override
+    public boolean editDouble(double[] value, Object id, TextFilter filter) {
+        StringBuffer buf = new StringBuffer(String.valueOf(value[0]));
+        boolean edited = editString(buf, id, filter);
+        value[0] = Double.parseDouble(buf.toString());
+        return edited;
     }
 
     @Override
