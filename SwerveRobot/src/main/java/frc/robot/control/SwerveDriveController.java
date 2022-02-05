@@ -52,29 +52,30 @@ public class SwerveDriveController {
 
         if (driveX > 0) {
                 driveX = Utils.map(driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        } else {
+        } else if (driveX < 0){
                 driveX = -Utils.map(-driveX, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-            }
+        }
         if (driveY > 0) {
                 driveY = Utils.map(driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        } else {
+        } else if (driveY <0){
                 driveY = -Utils.map(-driveY, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
         }
         if (rot > 0) {
                 rot = Utils.map(rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
-        } else {
+        } else if (rot < 0) {
                 rot = -Utils.map(-rot, Constants.JOYSTICK_DEAD_ZONE, 1, 0, 1);
         }
 
         if (autoControl) {
             rot = autoRot;
+            System.out.println("Automatically Rotating");
         }
 
         double fieldRelativeX = driveX * Constants.MAX_VELOCITY;
         double fieldRelativeY = driveY * Constants.MAX_VELOCITY;
         double targetRot = rot * Constants.MAX_ROTATION_SPEED;
                             
-        System.out.println(driveX + " " + driveY + " " + targetRot);
+        System.out.println(driveX + " " + driveY + " " + rot);
         
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);

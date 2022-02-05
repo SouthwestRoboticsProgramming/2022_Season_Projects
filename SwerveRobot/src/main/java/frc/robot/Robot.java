@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
     //msg.read();
     CommandScheduler.getInstance().run();
 
-    System.out.println(gyro.getYaw());
+    //System.out.println(gyro.getYaw());
   }
 
   @Override

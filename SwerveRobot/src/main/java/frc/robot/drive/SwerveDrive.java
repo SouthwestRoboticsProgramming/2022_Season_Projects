@@ -49,6 +49,7 @@ public class SwerveDrive {
     }
 
     public void zeroGyro() {
+        navx.calibrate();
         navx.zeroYaw();
     }
 

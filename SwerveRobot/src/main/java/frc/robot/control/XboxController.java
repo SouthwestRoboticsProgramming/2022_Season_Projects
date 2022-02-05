@@ -39,7 +39,7 @@ public final class XboxController {
     }
 
     public double getRightStickX() {
-        return joystick.getRawAxis(4);
+        return joystick.getRawAxis(4  );
     }
 
     public double getRightStickY() {
