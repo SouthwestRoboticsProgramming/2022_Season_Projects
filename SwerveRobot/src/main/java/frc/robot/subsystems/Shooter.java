@@ -12,13 +12,13 @@ import frc.robot.control.SwerveDriveController;
 public class Shooter extends SubsystemBase {
   private final Input input;
   private final SwerveDriveController driveController;
-  private final CameraTurret cameraTurret;
+ // private final CameraTurret cameraTurret;
 
 
-  public Shooter(SwerveDriveController swerveDriveController, CameraTurret camera, Input input) {
+  public Shooter(SwerveDriveController swerveDriveController/*, CameraTurret camera*/, Input input) {
     this.input = input;
     driveController = swerveDriveController;
-    cameraTurret = camera;
+    //cameraTurret = camera;
   }
 
   @Override
@@ -33,14 +33,15 @@ public class Shooter extends SubsystemBase {
 
     */
 
-    double targetAngle = cameraTurret.getAngle();
+    //double targetAngle = cameraTurret.getAngle();
 
     if (input.getAim()) {
-      driveController.turnToTarget(targetAngle);
+      driveController.turnToTarget(30);
     }
 
     if (input.getShoot()) {
       // Do the shooty shooty
+      driveController.turnToTarget(-50);
     }
   }
 }

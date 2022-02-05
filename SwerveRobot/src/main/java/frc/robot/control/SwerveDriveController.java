@@ -79,6 +79,7 @@ public class SwerveDriveController {
         
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);
+        //speeds = new ChassisSpeeds(fieldRelativeX,fieldRelativeY,targetRot);
         drive.update(speeds);
 
         autoControl = false;

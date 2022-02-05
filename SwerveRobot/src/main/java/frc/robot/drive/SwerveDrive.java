@@ -58,7 +58,7 @@ public class SwerveDrive {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        return Rotation2d.fromDegrees(navx.getYaw());
+        return Rotation2d.fromDegrees(-navx.getAngle());
     }
 
     public void update(ChassisSpeeds chassisSpeeds) {
