@@ -18,7 +18,7 @@ public class Input {
     }
 
     public double getRot() {
-        return controller.getRightStickX();
+        return -controller.getRightStickX();
     }
 
     public boolean getSwingLeft() {
