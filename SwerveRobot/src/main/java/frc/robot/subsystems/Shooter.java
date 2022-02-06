@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 
-public class Shooter extends SubsystemBase {
+public class Shooter extends Subsystem {
   private final Input input;
   private final SwerveDriveController driveController;
  // private final CameraTurret cameraTurret;
@@ -21,7 +21,7 @@ public class Shooter extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void robotPeriodic() {
     // This method will be called once per scheduler run
 
     // Always be calculating where the target is

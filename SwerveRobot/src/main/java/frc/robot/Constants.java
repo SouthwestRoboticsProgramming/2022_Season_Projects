@@ -66,4 +66,6 @@ public final class Constants {
     public static final double INTAKE_KS = 0;
     public static final double INTAKE_KA = 0;
     public static final double INTAKE_KV = 0;
+
+    public static final int SHUFFLEWOOD_SAVE_INTERVAL = 50;
 }

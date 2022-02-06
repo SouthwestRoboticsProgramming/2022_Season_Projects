@@ -3,10 +3,9 @@ package frc.robot.subsystems.climber;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Subsystem;
 
-public class TelescopingArm extends SubsystemBase {
-
+public class TelescopingArm extends Subsystem {
   public static CANSparkMax motorOne;
   public static CANSparkMax motorTwo;
   public static RelativeEncoder motorOneEncoder;
@@ -36,7 +35,7 @@ public class TelescopingArm extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void robotPeriodic() {
     // This method will be called once per scheduler run
   }
 }

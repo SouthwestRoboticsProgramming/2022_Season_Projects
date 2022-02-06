@@ -8,7 +8,7 @@ import frc.messenger.client.MessageDispatcher;
 import frc.messenger.client.MessageHandler;
 import frc.robot.util.ShuffleWood;
 
-public class Cameras extends SubsystemBase {
+public class Cameras extends Subsystem {
   public Cameras(MessageDispatcher dispatch) {
     super();
 
@@ -65,7 +65,7 @@ public class Cameras extends SubsystemBase {
   // TODO: Do the climber camera, not really sure what I'm trying to get out of it yet
 
   @Override
-  public void periodic() {
+  public void robotPeriodic() {
 
   }
 }

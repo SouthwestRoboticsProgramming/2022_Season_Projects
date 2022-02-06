@@ -1,12 +1,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.messenger.client.MessageDispatcher;
 import frc.messenger.client.MessengerClient;
+import frc.robot.command.SaveShuffleWoodCommand;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
@@ -17,7 +17,6 @@ import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
   private static final Robot INSTANCE = new Robot();
-  private static final int SHUFFLEWOOD_SAVE_INTERVAL = 50;
 
   public static Robot get() {
     return INSTANCE;
@@ -30,7 +29,6 @@ public class Robot extends TimedRobot {
   private SwerveDriveController driveController;
   private MessengerClient msg;
   private MessageDispatcher dispatch;
-  private int shufflewoodSaveTimer = SHUFFLEWOOD_SAVE_INTERVAL;
 
   // Subsystems
   // private Localization localization;
@@ -69,18 +67,14 @@ public class Robot extends TimedRobot {
     localization = new Localization(gyro, cameraTurret);*/
 
     //ShuffleWood.setInt("TEST", 736219837);
+
+    Scheduler.get().scheduleCommand(new SaveShuffleWoodCommand());
   }
 
   @Override
   public void robotPeriodic() {
     msg.read();
-    CommandScheduler.getInstance().run();
-
-    if (shufflewoodSaveTimer-- == 0) {
-      shufflewoodSaveTimer = SHUFFLEWOOD_SAVE_INTERVAL;
-
-      ShuffleWood.save();
-    }
+    Scheduler.get().update();
   }
 
   @Override

@@ -7,7 +7,7 @@ import frc.robot.util.Utils;
 // https://www.desmos.com/calculator/w5x76wa3yd
 
 /* ALL ANGLES IN DEGREES {-180,180} UNLESS NOTED  */
-public class Localization extends SubsystemBase {
+public class Localization extends Subsystem {
   private final AHRS gyro;
   private final CameraTurret cameraTurret;
 
@@ -27,7 +27,7 @@ public class Localization extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void robotPeriodic() {
     // ShuffleWood.set("Gyro Yaw", angle);
     // ShuffleWood.set("Random number", Math.random() * 1000);
     

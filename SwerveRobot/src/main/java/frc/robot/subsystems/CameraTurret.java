@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
-public class CameraTurret extends SubsystemBase {
+public class CameraTurret extends Subsystem {
   private final TalonSRX motor;
   private final PIDController pid;
   private double target = 0;
@@ -50,7 +50,7 @@ public class CameraTurret extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void robotPeriodic() {
     double encoder = getEncoderDegrees();
     ShuffleWood.show("Encoder", encoder);
 
