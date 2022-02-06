@@ -1,16 +1,15 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.ShuffleWood;
-import frc.robot.util.Utils;
-
-import static frc.robot.Constants.*;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+
+import edu.wpi.first.math.controller.PIDController;
+import frc.robot.util.ShuffleWood;
+import frc.robot.util.Utils;
+
+import static frc.robot.Constants.*;
 
 public class CameraTurret extends Subsystem {
   private final TalonSRX motor;

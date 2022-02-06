@@ -1,11 +1,12 @@
 package frc.robot.control;
 
-import static frc.robot.Constants.*;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Subsystem;
 import frc.robot.subsystems.climber.SwingingArm;
 import frc.robot.subsystems.climber.TelescopingArm;
 
-public class ClimberController extends SubsystemBase {
+import static frc.robot.Constants.*;
+
+public class ClimberController extends Subsystem {
 
   private static TelescopingArm teleLeft;
   private static TelescopingArm teleRight;
@@ -26,7 +27,7 @@ public class ClimberController extends SubsystemBase {
   public void ThirdToFourth() {}
 
   @Override
-  public void periodic() {
+  public void robotPeriodic() {
     // TODO: Use PID to keep arms where the should be if needed
   }
 }

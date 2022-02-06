@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.messenger.client.MessageDispatcher;
@@ -12,6 +10,7 @@ import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
 import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.TimedRobot;
 
 import static frc.robot.Constants.*;
 

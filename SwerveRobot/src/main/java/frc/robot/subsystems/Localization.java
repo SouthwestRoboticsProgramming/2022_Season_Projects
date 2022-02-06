@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Utils;
 
 // https://www.desmos.com/calculator/w5x76wa3yd

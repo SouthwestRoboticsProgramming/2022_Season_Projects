@@ -1,4 +1,5 @@
 package frc.robot;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class Constants {

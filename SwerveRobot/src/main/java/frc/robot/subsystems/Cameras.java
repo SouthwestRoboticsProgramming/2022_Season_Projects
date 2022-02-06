@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.messenger.client.MessageDispatcher;
 import frc.messenger.client.MessageHandler;
 import frc.robot.util.ShuffleWood;
