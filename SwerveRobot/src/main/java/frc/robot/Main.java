@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 
 public final class Main {
   public static void main(final String[] args) {
-    RobotBase.startRobot(Robot::new);
+    RobotBase.startRobot(Robot::get);
   }
 
   private Main() {

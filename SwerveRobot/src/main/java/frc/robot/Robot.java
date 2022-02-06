@@ -16,8 +16,14 @@ import edu.wpi.first.wpilibj.SPI;
 import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
+  private static final Robot INSTANCE = new Robot();
   private static final int SHUFFLEWOOD_SAVE_INTERVAL = 50;
 
+  public static Robot get() {
+    return INSTANCE;
+  }
+
+  private RobotState state;
   private AHRS gyro;
   private Input input;
   private SwerveDrive drive;
@@ -33,6 +39,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    state = RobotState.DISABLED;
+
     gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     input = new Input();
@@ -76,13 +84,17 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    state = RobotState.AUTONOMOUS;
+  }
 
   @Override
   public void autonomousPeriodic() {}
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    state = RobotState.TELEOP;
+  }
 
   @Override
   public void teleopPeriodic() {
@@ -91,6 +103,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    state = RobotState.DISABLED;
     drive.disable();
     ShuffleWood.save();
   }
@@ -99,8 +112,14 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+    state = RobotState.TEST;
+  }
 
   @Override
   public void testPeriodic() {}
+
+  public RobotState getState() {
+    return state;
+  }
 }
