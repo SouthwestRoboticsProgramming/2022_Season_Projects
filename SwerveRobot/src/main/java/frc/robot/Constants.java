@@ -1,20 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.drive.SwerveModuleInfo;
 
 public final class Constants {
-    public static final int DRIVE_PORT_1 = 1;
-    public static final int DRIVE_PORT_2 = 4;
-    public static final int DRIVE_PORT_3 = 7;
-    public static final int DRIVE_PORT_4 = 10;
     public static final int TURN_PORT_1 = 2;
     public static final int TURN_PORT_2 = 5;
     public static final int TURN_PORT_3 = 8;
     public static final int TURN_PORT_4 = 11;
-    public static final int CAN_PORT_1 = 3;
-    public static final int CAN_PORT_2 = 6;
-    public static final int CAN_PORT_3 = 9;
-    public static final int CAN_PORT_4 = 12;
     public static final int NAVX_PORT = 0;
     public static final double OFFSET_1 = -133.945 + 180;
     public static final double OFFSET_2 = -220.781 + 180;
@@ -22,6 +15,12 @@ public final class Constants {
     public static final double OFFSET_4 = -3.955;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
 
+    public static final SwerveModuleInfo[] SWERVE_MODULES = {
+        new SwerveModuleInfo(1, 3, 0),
+        new SwerveModuleInfo(4, 6, 0),
+        new SwerveModuleInfo(7, 9, 0),
+        new SwerveModuleInfo(10, 12, 0)
+    };
     
     public static final String MESSENGER_HOST = "10.21.29.3";
     public static final int MESSENGER_PORT = 5805;

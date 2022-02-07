@@ -144,6 +144,7 @@ public final class ShuffleWood {
     }
 
     public static void setInt(String key, int value) {
+        values.put(key, value);
         try {
             sendLoadValue(key, value);
         } catch (IOException e) {
@@ -152,6 +153,7 @@ public final class ShuffleWood {
     }
 
     public static void setDouble(String key, double value) {
+        values.put(key, value);
         try {
             sendLoadValue(key, value);
         } catch (IOException e) {
@@ -159,11 +161,19 @@ public final class ShuffleWood {
         }
     }
 
-    public int getInt(String key, int default_) {
-        return values.getOrDefault(key, default_).intValue();
+    public static int getInt(String key, int default_) {
+        if (!values.containsKey(key)) {
+            setInt(key, default_);
+        }
+
+        return values.get(key).intValue();
     }
 
-    public double getDouble(String key, double default_) {
-        return values.getOrDefault(key, default_).doubleValue();
+    public static double getDouble(String key, double default_) {
+        if (!values.containsKey(key)) {
+            setDouble(key, default_);
+        }
+
+        return values.get(key).doubleValue();
     }
 }

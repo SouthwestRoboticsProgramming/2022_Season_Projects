@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.util.ShuffleWood;
 
 import static frc.robot.Constants.*;
 
@@ -39,10 +40,15 @@ public class SwerveDrive {
     );
 
     public SwerveDrive(AHRS navx) {
-        w1 = new SwerveModule(DRIVE_PORT_1, TURN_PORT_1, CAN_PORT_1, OFFSET_1);
-        w2 = new SwerveModule(DRIVE_PORT_2, TURN_PORT_2, CAN_PORT_2, OFFSET_2);
-        w3 = new SwerveModule(DRIVE_PORT_3, TURN_PORT_3, CAN_PORT_3, OFFSET_3);
-        w4 = new SwerveModule(DRIVE_PORT_4, TURN_PORT_4, CAN_PORT_4, OFFSET_4);
+        SwerveModuleInfo info1 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 1", 1)];
+        SwerveModuleInfo info2 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 2", 2)];
+        SwerveModuleInfo info3 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 3", 3)];
+        SwerveModuleInfo info4 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 4", 4)];
+
+        w1 = new SwerveModule(info1.getDriveId(), TURN_PORT_1, info1.getCanCoderId(), OFFSET_1 + info1.getCanCoderOffset());
+        w2 = new SwerveModule(info2.getDriveId(), TURN_PORT_2, info2.getCanCoderId(), OFFSET_2 + info2.getCanCoderOffset());
+        w3 = new SwerveModule(info3.getDriveId(), TURN_PORT_3, info3.getCanCoderId(), OFFSET_3 + info3.getCanCoderOffset());
+        w4 = new SwerveModule(info4.getDriveId(), TURN_PORT_4, info4.getCanCoderId(), OFFSET_4 + info4.getCanCoderOffset());
         this.navx = navx;
         odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d());
 
