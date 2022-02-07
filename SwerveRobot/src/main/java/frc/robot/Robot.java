@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.messenger.client.MessageDispatcher;
 import frc.messenger.client.MessengerClient;
 import frc.robot.command.SaveShuffleWoodCommand;
+import frc.robot.command.auto.AutonomousCommand;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
@@ -79,6 +80,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     state = RobotState.AUTONOMOUS;
+    Scheduler.get().scheduleCommand(new AutonomousCommand());
   }
 
   @Override
