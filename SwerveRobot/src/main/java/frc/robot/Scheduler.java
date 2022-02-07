@@ -15,7 +15,7 @@ public final class Scheduler {
     }
 
     private final List<Subsystem> subsystems;
-    private final List<ScheduledCommand> activeCommands;
+    private final List<CommandTimer> activeCommands;
 
     private Scheduler() {
         subsystems = new ArrayList<>();
@@ -27,7 +27,7 @@ public final class Scheduler {
     }
 
     public void scheduleCommand(Command cmd) {
-        activeCommands.add(new ScheduledCommand(cmd));
+        activeCommands.add(new CommandTimer(cmd));
     }
 
     public void update() {
@@ -35,18 +35,18 @@ public final class Scheduler {
             subsystem.doPeriodic();
         }
 
-        Set<ScheduledCommand> toRemove = new HashSet<>();
-        for (ScheduledCommand cmd : activeCommands) {
+        Set<CommandTimer> toRemove = new HashSet<>();
+        for (CommandTimer cmd : activeCommands) {
             if (cmd.update()) toRemove.add(cmd);
         }
         activeCommands.removeAll(toRemove);
     }
 
-    private static class ScheduledCommand {
+    private static class CommandTimer {
         private final Command cmd;
         private int timer;
 
-        public ScheduledCommand(Command cmd) {
+        public CommandTimer(Command cmd) {
             this.cmd = cmd;
             timer = 0;
         }
