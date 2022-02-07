@@ -25,7 +25,11 @@ public class TelescopingArm extends Subsystem {
     motorTwo.set(percent);
   }
 
-  public void setPosition(double position) {
+  public void setPosition(double height) {
+
+  /** 
+   * @param height Distance from bottom of telescoping arm to top of the highest section
+   */
 
   }
 
