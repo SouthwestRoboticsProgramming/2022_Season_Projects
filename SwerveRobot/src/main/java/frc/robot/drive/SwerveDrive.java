@@ -26,7 +26,6 @@ public class SwerveDrive {
     private final SwerveModule w1, w2, w3, w4;
     private final AHRS navx;
     private final SwerveDriveOdometry odometry;
-    private Pose2d currentPose;
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
         // Front Left
@@ -59,8 +58,8 @@ public class SwerveDrive {
         navx.zeroYaw();
     }
 
-    public void setPosition(Pose2d position){
-        odometry.resetPosition(position, navx.getRotation2d());
+    public Pose2d getOdometry() {
+        return odometry.getPoseMeters();
     }
 
     public Rotation2d getGyroscopeRotation() {
@@ -72,13 +71,13 @@ public class SwerveDrive {
         
         // Calculate the movements of each indevidual module
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
-        
-        currentPose = odometry.update(navx.getRotation2d(), moduleStates);
 
         w1.update(moduleStates[2]);
         w2.update(moduleStates[0]);
         w3.update(moduleStates[1]);
         w4.update(moduleStates[3]);
+
+        odometry.update(getGyroscopeRotation(), moduleStates);
 
         // System.out.printf(
         //     "ANGLES: w1: %3.3f  w2: %3.3f  w3: %3.3f  w4: %3.3f %n",

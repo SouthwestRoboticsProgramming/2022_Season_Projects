@@ -2,21 +2,32 @@ package frc.robot.subsystems.climber;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static frc.robot.Constants.*;
+
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.subsystems.Subsystem;
 
 public class TelescopingArm extends Subsystem {
-  public static CANSparkMax motorOne;
-  public static CANSparkMax motorTwo;
-  public static RelativeEncoder motorOneEncoder;
-  public static RelativeEncoder motorTwoEncoder;
+  private final CANSparkMax motorOne;
+  private final CANSparkMax motorTwo;
+  private final RelativeEncoder encoder;
+  private final PIDController pid;
 
-  public TelescopingArm(int motorOneID, int motorTwoID) {
+  private final double base, pulleyDiameter;
+
+  public TelescopingArm(int motorOneID, int motorTwoID, double baseHeight, double pulleyDiameter) {
     motorOne = new CANSparkMax(motorOneID, MotorType.kBrushless);
     motorTwo = new CANSparkMax(motorOneID, MotorType.kBrushless);
+    motorOne.setIdleMode(IdleMode.kBrake);
+    motorTwo.setIdleMode(IdleMode.kBrake);
+    pid = new PIDController(CLIMBER_TELE_MOTOR_KP, CLIMBER_TELE_MOTOR_KI, CLIMBER_TELE_MOTOR_KD);
 
-    motorOneEncoder = motorOne.getEncoder();
-    motorTwoEncoder = motorTwo.getEncoder();
+    encoder = motorOne.getEncoder();
+
+    base = baseHeight;
+    this.pulleyDiameter = pulleyDiameter;
   }
 
 
@@ -31,11 +42,11 @@ public class TelescopingArm extends Subsystem {
    * @param height Distance from bottom of telescoping arm to top of the highest section
    */
 
-  }
+   double currentPose = base + encoder.getPosition() * pulleyDiameter * Math.PI;
+   double percentOut = pid.calculate(currentPose, height);
+   motorOne.set(percentOut);
+   motorTwo.set(percentOut);
 
-  public void resetToBottom() {
-     double motorOnespeed = motorOneEncoder.getVelocity();
-     double motorTwoSpeed = motorTwoEncoder.getVelocity();
   }
 
   @Override
