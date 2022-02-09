@@ -10,8 +10,8 @@ public abstract class Subsystem {
 
     protected void disabledInit() {}
     protected void autonomousInit() {}
-    protected void teleopPeriodic() {}
-    protected void testPeriodic() {}
+    protected void teleopInit() {}
+    protected void testInit() {}
 
     protected void robotPeriodic() {}
     protected void disabledPeriodic() {}
