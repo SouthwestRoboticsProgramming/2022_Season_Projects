@@ -77,7 +77,7 @@ public class SwerveDriveController {
         double fieldRelativeY = driveY * Constants.MAX_VELOCITY;
         double targetRot = rot * Constants.MAX_ROTATION_SPEED;
                             
-        System.out.println(driveX + " " + driveY + " " + rot);
+        //System.out.println(driveX + " " + driveY + " " + rot);
         
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);

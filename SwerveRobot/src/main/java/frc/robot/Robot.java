@@ -9,6 +9,7 @@ import frc.robot.command.auto.AutonomousCommand;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
+import frc.robot.subsystems.Shooter;
 import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -34,18 +35,12 @@ public class Robot extends TimedRobot {
   // private Localization localization;
   // private Cameras cameras;
   // private CameraTurret cameraTurret;
+  private Shooter shooter;
 
   @Override
   public void robotInit() {
     state = RobotState.DISABLED;
-
-    gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
-
-    input = new Input();
-    drive = new SwerveDrive(gyro);
-    driveController = new SwerveDriveController(drive, input);
-
-    driveController.swerveInit();
+    Scheduler.get().initState();
 
     while (msg == null) {
       try {
@@ -62,9 +57,18 @@ public class Robot extends TimedRobot {
 
     ShuffleWood.setMessenger(dispatch);
 
+    gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
+
+    input = new Input();
+    drive = new SwerveDrive(gyro);
+    driveController = new SwerveDriveController(drive, input);
+
+    driveController.swerveInit();
+
     /*cameras = new Cameras(dispatch);
     cameraTurret = new CameraTurret();
     localization = new Localization(gyro, cameraTurret);*/
+    shooter = new Shooter(driveController, input);
 
     //ShuffleWood.setInt("TEST", 736219837);
 
@@ -80,6 +84,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     state = RobotState.AUTONOMOUS;
+    Scheduler.get().initState();
     Scheduler.get().scheduleCommand(new AutonomousCommand());
   }
 
@@ -89,6 +94,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     state = RobotState.TELEOP;
+    Scheduler.get().initState();
   }
 
   @Override
@@ -99,6 +105,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     state = RobotState.DISABLED;
+    Scheduler.get().initState();
     drive.disable();
     ShuffleWood.save();
   }
@@ -109,6 +116,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     state = RobotState.TEST;
+    Scheduler.get().initState();
   }
 
   @Override

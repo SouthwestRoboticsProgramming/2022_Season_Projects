@@ -66,9 +66,9 @@ public final class Constants {
     public static final double WHEEL_TURN_KI = 0; // Leave this at 0: There is no steady-state error in the system
     public static final double WHEEL_TURN_KD = 0.002;
     
-    public static final double STABILIZATION_KP = 0.1;
+    public static final double STABILIZATION_KP = 0.027;
     public static final double STABILIZATION_KI = 0;
-    public static final double STABILIZATION_KD = 0.002;
+    public static final double STABILIZATION_KD = 0.0022;
     
     public static final int CAMERA_TURRET_MOTOR_ID = 30;
     public static final double CAMERA_TURRET_ENCODER_TICKS_PER_ROTATION = 177.6;

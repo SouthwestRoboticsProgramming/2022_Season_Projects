@@ -8,6 +8,11 @@ public abstract class Subsystem {
         Scheduler.get().addSubsystem(this);
     }
 
+    protected void disabledInit() {}
+    protected void autonomousInit() {}
+    protected void teleopPeriodic() {}
+    protected void testPeriodic() {}
+
     protected void robotPeriodic() {}
     protected void disabledPeriodic() {}
     protected void autonomousPeriodic() {}
@@ -29,6 +34,23 @@ public abstract class Subsystem {
                 break;
             case TEST:
                 testPeriodic();
+                break;
+        }
+    }
+
+    public void doInit() {
+        switch (Robot.get().getState()) {
+            case DISABLED:
+                disabledInit();
+                break;
+            case AUTONOMOUS:
+                autonomousInit();
+                break;
+            case TELEOP:
+                teleopInit();
+                break;
+            case TEST:
+                testInit();
                 break;
         }
     }
