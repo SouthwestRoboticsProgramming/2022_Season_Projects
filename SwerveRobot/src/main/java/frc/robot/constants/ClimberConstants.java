@@ -21,4 +21,8 @@ public class ClimberConstants {
     public static final double CLIMBER_TELE_MOTOR_KP = 0;
     public static final double CLIMBER_TELE_MOTOR_KI = 0;
     public static final double CLIMBER_TELE_MOTOR_KD = 0;
+
+    private ClimberConstants() {
+        throw new AssertionError();
+    }
 }
