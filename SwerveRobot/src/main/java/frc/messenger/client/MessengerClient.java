@@ -1,13 +1,7 @@
 package frc.messenger.client;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiConsumer;
 
 /**
@@ -26,17 +20,11 @@ public class MessengerClient {
     private static final String LISTEN = "_Listen";
     private static final String UNLISTEN = "_Unlisten";
     private static final String HEARTBEAT = "_Heartbeat";
-    private static final long HEARTBEAT_INTERVAL = 20_000_000L;
 
     private final Socket socket;
     private final DataInputStream in;
     private final DataOutputStream out;
-    private final Queue<Message> incomingMessages;
-    private final Queue<Message> outgoingMessages;
-
     private BiConsumer<String, byte[]> callback = (a, b) -> {};
-    private long heartbeatTimer;
-    private boolean connected;
 
     /**
      * Creates a new {@code MessengerClient} and attempts to connect to the
@@ -58,12 +46,6 @@ public class MessengerClient {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        connected = true;
-        incomingMessages = new ConcurrentLinkedQueue<>();
-        outgoingMessages = new ConcurrentLinkedQueue<>();
-
-        new Thread(this::runThread).start();
     }
 
     /**
@@ -74,7 +56,20 @@ public class MessengerClient {
      * @param data message data
      */
     public void sendMessage(String type, byte[] data) {
-        outgoingMessages.add(new Message(type, data));
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream d = new DataOutputStream(b);
+
+        try {
+            d.writeUTF(type);
+            d.writeInt(data.length);
+            d.write(data);
+
+            byte[] message = b.toByteArray();
+            out.writeInt(message.length);
+            out.write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -112,9 +107,14 @@ public class MessengerClient {
      * assume that the connection is dropped and disconnect.
      */
     public void read() {
-        Message msg;
-        while ((msg = incomingMessages.poll()) != null) {
-            callback.accept(msg.getType(), msg.getData());
+        try {
+            sendMessage(HEARTBEAT, new byte[0]);
+
+            while (in.available() > 0) {
+                readMessage();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -124,7 +124,11 @@ public class MessengerClient {
      * this method to end the connection safely.
      */
     public void disconnect() {
-        connected = false;
+        try {
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Encodes a string into length-prefixed UTF-8 encoding
@@ -141,71 +145,19 @@ public class MessengerClient {
         return b.toByteArray();
     }
 
-    private void runThread() {
-        heartbeatTimer = System.nanoTime();
+    // Reads in a message from the server
+    private void readMessage() throws IOException {
+        int length = in.readInt();
+        byte[] data = new byte[length];
+        in.readFully(data);
 
-        while (connected) {
-            // Send messages
-            Message msg;
-            while ((msg = outgoingMessages.poll()) != null) {
-                ByteArrayOutputStream b = new ByteArrayOutputStream();
-                DataOutputStream d = new DataOutputStream(b);
+        DataInputStream d = new DataInputStream(new ByteArrayInputStream(data));
+        String type = d.readUTF();
+        int dataLength = d.readInt();
+        byte[] messageData = new byte[dataLength];
+        d.readFully(messageData);
+        d.close();
 
-                try {
-                    d.writeUTF(msg.getType());
-                    byte[] data = msg.getData();
-                    d.writeInt(data.length);
-                    d.write(data);
-
-                    byte[] message = b.toByteArray();
-                    out.writeInt(message.length);
-                    out.write(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Receive messages
-            try {
-                while (in.available() > 0) {
-                    int length = in.readInt();
-                    byte[] data = new byte[length];
-                    in.readFully(data);
-
-                    DataInputStream d = new DataInputStream(new ByteArrayInputStream(data));
-                    String type = d.readUTF();
-                    int dataLength = d.readInt();
-                    byte[] messageData = new byte[dataLength];
-                    d.readFully(messageData);
-                    d.close();
-
-                    incomingMessages.add(new Message(type, messageData));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // Heartbeat
-            long time = System.nanoTime();
-            if (time - heartbeatTimer > HEARTBEAT_INTERVAL) {
-                heartbeatTimer = time;
-
-                sendMessage(HEARTBEAT, new byte[0]);
-            }
-
-            // Sleep
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Disconnect
-        try {
-            socket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        callback.accept(type, messageData);
     }
 }

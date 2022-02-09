@@ -9,6 +9,7 @@ import frc.robot.command.auto.AutonomousCommand;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
+import frc.robot.subsystems.Shooter;
 import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -34,18 +35,11 @@ public class Robot extends TimedRobot {
   // private Localization localization;
   // private Cameras cameras;
   // private CameraTurret cameraTurret;
+  private Shooter shooter;
 
   @Override
   public void robotInit() {
     state = RobotState.DISABLED;
-
-    gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
-
-    input = new Input();
-    drive = new SwerveDrive(gyro);
-    driveController = new SwerveDriveController(drive, input);
-
-    driveController.swerveInit();
 
     while (msg == null) {
       try {
@@ -62,9 +56,18 @@ public class Robot extends TimedRobot {
 
     ShuffleWood.setMessenger(dispatch);
 
+    gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
+
+    input = new Input();
+    drive = new SwerveDrive(gyro);
+    driveController = new SwerveDriveController(drive, input);
+
+    driveController.swerveInit();
+
     /*cameras = new Cameras(dispatch);
     cameraTurret = new CameraTurret();
     localization = new Localization(gyro, cameraTurret);*/
+    shooter = new Shooter(driveController, input);
 
     //ShuffleWood.setInt("TEST", 736219837);
 

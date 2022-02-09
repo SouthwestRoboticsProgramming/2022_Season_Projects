@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants;
+import frc.robot.util.ShuffleWood;
 import frc.robot.util.Utils;
 
 import static frc.robot.Constants.*;
@@ -85,6 +86,13 @@ public class SwerveModule {
     }
 
     public void update(SwerveModuleState swerveModuleState) {
+        turnPID.setP(ShuffleWood.getDouble("Wheel turn KP", WHEEL_TURN_KP));
+        turnPID.setI(ShuffleWood.getDouble("Wheel turn KI", WHEEL_TURN_KI));
+        turnPID.setD(ShuffleWood.getDouble("Wheel turn KD", WHEEL_TURN_KD));
+        ShuffleWood.show("P", turnPID.getP());
+        ShuffleWood.show("I", turnPID.getI());
+        ShuffleWood.show("D", turnPID.getD());
+        //System.out.println("PID: " + turnPID.getP() + " " + turnPID.getI() + " " + turnPID.getD());
 
         Rotation2d canRotation = new Rotation2d(Math.toRadians(canCoder.getAbsolutePosition()));
         Rotation2d currentAngle = new Rotation2d(Math.toRadians(Utils.fixCurrentAngle(canCoder.getAbsolutePosition())));
@@ -101,7 +109,10 @@ public class SwerveModule {
         driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
 
         // Spin the motors
-        turnMotor.set(ControlMode.PercentOutput, turnAmount); 
+        if (!turnPID.atSetpoint())
+            turnMotor.set(ControlMode.PercentOutput, turnAmount); 
+        else
+            turnMotor.set(ControlMode.PercentOutput, 0);
         driveMotor.set(ControlMode.PercentOutput, driveAmount);
 
         if(printDebugging) {

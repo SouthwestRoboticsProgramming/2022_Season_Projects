@@ -122,6 +122,8 @@ public class ValueEditTool implements Tool {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println(type);
     }
 
     @Override
