@@ -14,7 +14,7 @@ import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import static frc.robot.Constants.*;
+import static frc.robot.constants.MessengerConstants.*;
 
 public class Robot extends TimedRobot {
   private static final Robot INSTANCE = new Robot();

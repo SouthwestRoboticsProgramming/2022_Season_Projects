@@ -14,11 +14,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.MathUtil;
-import frc.robot.Constants;
 import frc.robot.util.ShuffleWood;
 import frc.robot.util.Utils;
 
-import static frc.robot.Constants.*;
+import static frc.robot.constants.DriveConstants.*;
 
 
 public class SwerveModule {
@@ -55,7 +54,7 @@ public class SwerveModule {
         CANCoderConfiguration canConfig = new CANCoderConfiguration();
         canConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         canConfig.magnetOffsetDegrees = canOffset;
-        canConfig.sensorDirection = Constants.CANCODER_DIRECTION;
+        canConfig.sensorDirection = CANCODER_DIRECTION;
 
         canCoder.configAllSettings(canConfig);
 

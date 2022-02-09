@@ -9,7 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.robot.util.ShuffleWood;
 import frc.robot.util.Utils;
 
-import static frc.robot.Constants.*;
+import static frc.robot.constants.CameraTurretConstants.*;
 
 public class CameraTurret extends Subsystem {
   private final TalonSRX motor;

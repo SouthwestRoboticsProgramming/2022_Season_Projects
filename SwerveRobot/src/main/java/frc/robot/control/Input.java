@@ -1,12 +1,12 @@
 package frc.robot.control;
 
-import frc.robot.Constants;
+import static frc.robot.constants.ControlConstants.*;
 
 public class Input {
     private final XboxController controller;
 
     public Input() {
-        controller = new XboxController(Constants.DRIVE_CONTROLLER);
+        controller = new XboxController(DRIVE_CONTROLLER);
     }
 
     public double getDriveX() {

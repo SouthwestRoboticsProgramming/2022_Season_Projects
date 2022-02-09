@@ -6,8 +6,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import static frc.robot.Constants.*;
 import frc.robot.subsystems.Subsystem;
+
+import static frc.robot.constants.ClimberConstants.*;
 
 public class SwingingArm extends Subsystem {
 

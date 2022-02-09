@@ -4,7 +4,7 @@ import frc.robot.subsystems.Subsystem;
 import frc.robot.subsystems.climber.SwingingArm;
 import frc.robot.subsystems.climber.TelescopingArm;
 
-import static frc.robot.Constants.*;
+import static frc.robot.constants.ClimberConstants.*;
 
 public class ClimberController extends Subsystem {
 

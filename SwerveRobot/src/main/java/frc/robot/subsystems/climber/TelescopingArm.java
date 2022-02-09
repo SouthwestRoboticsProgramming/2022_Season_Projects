@@ -4,10 +4,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import static frc.robot.Constants.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.subsystems.Subsystem;
+
+import static frc.robot.constants.ClimberConstants.*;
 
 public class TelescopingArm extends Subsystem {
   private final CANSparkMax motorOne;
