@@ -1,23 +1,25 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.ShuffleWood;
+import frc.robot.util.Utils;
+
+import static frc.robot.Constants.*;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
-import edu.wpi.first.math.controller.PIDController;
-import frc.robot.util.ShuffleWood;
-import frc.robot.util.Utils;
-
-import static frc.robot.constants.CameraTurretConstants.*;
-
-public class CameraTurret extends Subsystem {
+public class CameraTurret extends SubsystemBase {
   private final TalonSRX motor;
   private final PIDController pid;
   private double target = 0;
   private boolean isSweepback;
+  private double encoder;
   
-  public CameraTurret(Cameras cameras) {
+  public CameraTurret() {
     motor = new TalonSRX(CAMERA_TURRET_MOTOR_ID);
 
     TalonSRXConfiguration config = new TalonSRXConfiguration();
@@ -37,13 +39,11 @@ public class CameraTurret extends Subsystem {
   }
 
   public double getAngle() {
-    return getEncoderDegrees() /* + cameraAngle */;
+    return 0;
   }
 
   public double getDistance() {
-    return 22.3 /* cameraDistance */;
-    /* If the camera is not centered on the robot, 
-    do a bit of math to take the angle and calculate the distance to the center */
+    return 22.3;
   }
 
   private double getEncoderDegrees() {
@@ -51,12 +51,12 @@ public class CameraTurret extends Subsystem {
   }
 
   @Override
-  public void robotPeriodic() {
-    double encoder = getEncoderDegrees();
-    ShuffleWood.show("Encoder", encoder);
+  public void periodic() {
+    encoder = getEncoderDegrees();
+    ShuffleWood.set("Encoder", encoder);
 
     double calc = pid.calculate(encoder, target);
-    ShuffleWood.show("pid", calc);
+    ShuffleWood.set("pid", calc);
     if (pid.atSetpoint()) {
       isSweepback = !isSweepback;
       if (isSweepback) {
@@ -65,7 +65,7 @@ public class CameraTurret extends Subsystem {
         target = 90;
       }
     }
-    ShuffleWood.show("target", target);
+    ShuffleWood.set("target", target);
     
     motor.set(ControlMode.PercentOutput, Utils.clamp(calc, -0.15, 0.15));
   }
