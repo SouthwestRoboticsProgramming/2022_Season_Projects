@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     state = RobotState.DISABLED;
+    Scheduler.get().initState();
 
     while (msg == null) {
       try {
@@ -83,6 +84,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     state = RobotState.AUTONOMOUS;
+    Scheduler.get().initState();
     Scheduler.get().scheduleCommand(new AutonomousCommand());
   }
 
@@ -92,6 +94,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     state = RobotState.TELEOP;
+    Scheduler.get().initState();
   }
 
   @Override
@@ -102,6 +105,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     state = RobotState.DISABLED;
+    Scheduler.get().initState();
     drive.disable();
     ShuffleWood.save();
   }
@@ -112,6 +116,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     state = RobotState.TEST;
+    Scheduler.get().initState();
   }
 
   @Override

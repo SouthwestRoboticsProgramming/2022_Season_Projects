@@ -30,6 +30,12 @@ public final class Scheduler {
         activeCommands.add(new CommandTimer(cmd));
     }
 
+    public void initState() {
+        for (Subsystem subsystem : subsystems) {
+            subsystem.doInit();
+        }
+    }
+
     public void update() {
         for (Subsystem subsystem : subsystems) {
             subsystem.doPeriodic();
