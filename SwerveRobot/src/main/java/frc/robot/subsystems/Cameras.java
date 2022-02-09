@@ -8,6 +8,18 @@ import frc.messenger.client.MessageHandler;
 import frc.robot.util.ShuffleWood;
 
 public class Cameras extends Subsystem {
+
+  private boolean hub_good;
+  private double hub_xAngle;
+  private double hub_distance;
+  
+  private boolean ball_good;
+  private double ball_x;
+  private double ball_z;
+
+  private boolean climber_good;
+  private double climber_angle;
+
   public Cameras(MessageDispatcher dispatch) {
     super();
 
@@ -47,17 +59,37 @@ public class Cameras extends Subsystem {
     }
   }
 
-  public double getHubTargetAngle() {
+  public double getHubAngle() {
     // Ryan do your stuff
-    return 0.0;
+    if (hub_good) {
+      return hub_xAngle;
+    }
+    return 360.0;
   }
 
-  public double getBallPosition() {
-    // Ryan do stuff
-    return 4.1;
+  public double getHubDistance() {
+    if (hub_good) {
+      return hub_distance;
+    }
+    return -1.0;
+  }
+
+  public double getBallX() {
+    if (ball_good) {
+      return ball_x;
+    }
+    return 50.0;
+  }
+
+  public double getBallZ() {
+    if (ball_good) {
+      return ball_z;
+    }
+    return 50.0;
   }
 
   public double getClimberAngle() {
+    // TODO: Ryan, add climber reader to this class
     return 24.0;
   }
 

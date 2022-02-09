@@ -1,8 +1,8 @@
 package frc.robot.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -22,17 +22,11 @@ import static frc.robot.Constants.*;
 
 public class SwerveModule {
 
-    // TEMPORARY
-
     private final WPI_TalonFX driveMotor;
     private final WPI_TalonSRX turnMotor;
     private final CANCoder canCoder;
     private final double canOffset;
     private final PIDController turnPID;
-    //private final ArmFeedforward turnFeed;
-
-    // TEMPORARY, TODO: REMOVE
-    private boolean printDebugging;
 
     
 
@@ -43,26 +37,12 @@ public class SwerveModule {
         canCoder = new CANCoder(canPort);
         canOffset = cancoderOffset;
 
-        // TEMPORARY
-        printDebugging = turnPort == TURN_PORT_1;
+        TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+        driveMotor.configAllSettings(driveConfig);
 
-        // if(drivePort == DRIVE_PORT_2 || drivePort == DRIVE_PORT_4) {
-        //     driveMotor.setInverted(true);
-        // }
-
-        TalonSRXConfiguration config = new TalonSRXConfiguration();
-        config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
-        config.neutralDeadband = 0.001;
-        config.slot0.kF = 0;
-        config.slot0.kP = 0;
-        config.slot0.kI = 0;
-        config.slot0.kD = 0;
-        config.slot0.closedLoopPeakOutput = 1;
-        config.openloopRamp = 0.5;
-        config.closedloopRamp = 0.5;
-        // driveMotor.configAllSettings(config);
-        turnMotor.configAllSettings(config);
-
+        TalonSRXConfiguration turnConfig = new TalonSRXConfiguration();
+        turnMotor.configAllSettings(turnConfig);
+        
         driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.setSelectedSensorPosition(0, 0, 30);
         driveMotor.stopMotor();
@@ -81,7 +61,6 @@ public class SwerveModule {
         turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
         turnPID.enableContinuousInput(-90, 90);
         turnPID.setTolerance(WHEEL_TOLERANCE.getDegrees());
-        //turnPID.setTolerance(WHEEL_TOLERANCE,WHEEL_DERVIVATIVE_TOLERANCE);
     }
 
     public void update(SwerveModuleState swerveModuleState) {
@@ -104,8 +83,6 @@ public class SwerveModule {
         turnMotor.set(ControlMode.PercentOutput, turnAmount); 
         driveMotor.set(ControlMode.PercentOutput, driveAmount);
 
-        if(printDebugging) {
-        }
     }
 
     public double getCanRotation() {

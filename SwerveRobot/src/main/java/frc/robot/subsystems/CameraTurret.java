@@ -17,7 +17,7 @@ public class CameraTurret extends Subsystem {
   private double target = 0;
   private boolean isSweepback;
   
-  public CameraTurret() {
+  public CameraTurret(Cameras cameras) {
     motor = new TalonSRX(CAMERA_TURRET_MOTOR_ID);
 
     TalonSRXConfiguration config = new TalonSRXConfiguration();
@@ -37,11 +37,13 @@ public class CameraTurret extends Subsystem {
   }
 
   public double getAngle() {
-    return 0;
+    return getEncoderDegrees() /* + cameraAngle */;
   }
 
   public double getDistance() {
-    return 22.3;
+    return 22.3 /* cameraDistance */;
+    /* If the camera is not centered on the robot, 
+    do a bit of math to take the angle and calculate the distance to the center */
   }
 
   private double getEncoderDegrees() {
