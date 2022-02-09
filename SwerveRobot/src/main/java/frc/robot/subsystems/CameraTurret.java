@@ -15,11 +15,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 public class CameraTurret extends SubsystemBase {
   private final TalonSRX motor;
   private final PIDController pid;
-  private double target = 0;
+  private final Cameras cameras;
+  private double target;
   private boolean isSweepback;
   private double encoder;
   
-  public CameraTurret() {
+  public CameraTurret(Cameras cameras) {
     motor = new TalonSRX(CAMERA_TURRET_MOTOR_ID);
 
     TalonSRXConfiguration config = new TalonSRXConfiguration();
@@ -51,9 +52,11 @@ public class CameraTurret extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void teleopPeriodic() {
     encoder = getEncoderDegrees();
     ShuffleWood.set("Encoder", encoder);
+    rawTarget = encoder + cameras.getHubAngle();
+    target = Utils.noralizeCameraTurret(rawTarget);
 
     double calc = pid.calculate(encoder, target);
     ShuffleWood.set("pid", calc);

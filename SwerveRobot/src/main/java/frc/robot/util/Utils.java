@@ -19,7 +19,7 @@ public final class Utils {
         return -Math.PI + ((Math.PI * 2 + ((angle + Math.PI) % (Math.PI * 2))) % (Math.PI * 2));
     }
 
-
+    // Makes the angle be in the interval [-180, 180)
     public static double normalizeAngleDegrees(double angle) {
         return -180 + ((360 + ((angle + 180) % 360)) % 360);
     }
@@ -41,6 +41,13 @@ public final class Utils {
         if(degreesAngle<90){return degreesAngle;}
         if(degreesAngle>270){return degreesAngle-360;}
         if(degreesAngle<270){return degreesAngle-180;} else {return 0;}
+    }
+
+    public static double normalizeCameraTurret(double degrees) {
+        if (degrees > 360) {
+            return degrees - 360;
+        }
+        return degrees
     }
 
 
