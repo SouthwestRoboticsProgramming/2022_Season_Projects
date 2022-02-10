@@ -9,6 +9,9 @@ import frc.robot.command.auto.AutonomousCommand;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
+import frc.robot.subsystems.CameraTurret;
+import frc.robot.subsystems.Cameras;
+import frc.robot.subsystems.Localization;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
@@ -32,9 +35,9 @@ public class Robot extends TimedRobot {
   private MessageDispatcher dispatch;
 
   // Subsystems
-  // private Localization localization;
-  // private Cameras cameras;
-  // private CameraTurret cameraTurret;
+  private Localization localization;
+  private Cameras cameras;
+  private CameraTurret cameraTurret;
   private Shooter shooter;
 
   @Override
@@ -65,10 +68,10 @@ public class Robot extends TimedRobot {
 
     driveController.swerveInit();
 
-    /*cameras = new Cameras(dispatch);
-    cameraTurret = new CameraTurret();
-    localization = new Localization(gyro, cameraTurret);*/
-    shooter = new Shooter(driveController, input);
+    cameras = new Cameras(dispatch);
+    cameraTurret = new CameraTurret(cameras);
+    localization = new Localization(gyro, cameraTurret);
+    shooter = new Shooter(driveController, cameraTurret, input);
 
     //ShuffleWood.setInt("TEST", 736219837);
 

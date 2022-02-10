@@ -47,7 +47,7 @@ public final class Utils {
         if (degrees > 360) {
             return degrees - 360;
         }
-        return degrees
+        return degrees;
     }
 
 
