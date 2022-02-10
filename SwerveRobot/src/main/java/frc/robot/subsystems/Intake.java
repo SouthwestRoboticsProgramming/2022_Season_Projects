@@ -27,7 +27,9 @@ public class Intake extends Subsystem {
   @Override
   public void teleopPeriodic() {
     double currentVelocity = motor.getSelectedSensorVelocity();
-    feedForward.calculate(currentVelocity, speed, 0); //TODO: Check if this doesn't work
+    double velocityDiff = speed - currentVelocity;
+    double seconds = velocityDiff / INTAKE_MAX_SPEED;
+    feedForward.calculate(currentVelocity, speed, seconds);
 
   }
 }
