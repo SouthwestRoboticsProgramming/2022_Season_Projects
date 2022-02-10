@@ -26,6 +26,7 @@ public class Cameras extends Subsystem {
     MessageHandler handler = new MessageHandler()
         .setHandler(this::onMessage)
         .listen("Vision:Ball_Position")
+        .listen("Vision:Climber_Angle")
         .listen("Vision:Hub_Measurements");
     
     dispatch.addMessageHandler(handler);
@@ -46,15 +47,31 @@ public class Cameras extends Subsystem {
       }
     } else if (type.equals("Vision:Ball_Position")) {
       boolean good = in.readBoolean();
+      ball_good = good;
       if (good) {
         double x = in.readDouble();
         double z = in.readDouble();
+
+        ball_x = x;
+        ball_z = z;
 
         ShuffleWood.show("Ball X", x);
         ShuffleWood.show("Ball Z", z);
       } else {
         ShuffleWood.show("Ball X", "bad");
         ShuffleWood.show("Ball Z", "bad");
+      }
+    } else if (type.equals("Vision:Climber_Angle")) {
+      boolean good = in.readBoolean();
+      climber_good = good;
+      if (good) {
+        double yAngle = in.readDouble();
+
+        climber_angle = yAngle;
+
+        ShuffleWood.show("Climber Angle", yAngle);
+      } else {
+        ShuffleWood.show("Climber Angle", "bad");
       }
     }
   }
@@ -89,8 +106,10 @@ public class Cameras extends Subsystem {
   }
 
   public double getClimberAngle() {
-    // TODO: Ryan, add climber reader to this class
-    return 24.0;
+    if (climber_good) {
+      return climber_angle;
+    }
+    return 2147483647;
   }
 
   // TODO: Do the climber camera, not really sure what I'm trying to get out of it yet
