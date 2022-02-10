@@ -29,7 +29,8 @@ public class Intake extends Subsystem {
     double currentVelocity = motor.getSelectedSensorVelocity();
     double velocityDiff = speed - currentVelocity;
     double seconds = velocityDiff / INTAKE_MAX_SPEED;
-    feedForward.calculate(currentVelocity, speed, seconds);
+    double percentOut = feedForward.calculate(currentVelocity, speed, seconds);
+    // motor.set()
 
   }
 }
