@@ -29,9 +29,9 @@ public class DriveConstants {
     public static final double STABILIZATION_KI = 0;
     public static final double STABILIZATION_KD = 0.0022;
 
-    public static final double WHEEL_TURN_KP = 0.02;
+    public static final double WHEEL_TURN_KP = 0.009;
     public static final double WHEEL_TURN_KI = 0; // Leave this at 0: There is no steady-state error in the system
-    public static final double WHEEL_TURN_KD = 0.002;
+    public static final double WHEEL_TURN_KD = 0.0001;
     
     public static final double ROBOT_MAX_VELOCITY = 4.11/*4.11*/;
     public static final double ROBOT_MAX_ROTATION_SPEED = 26.5; // Radians per second

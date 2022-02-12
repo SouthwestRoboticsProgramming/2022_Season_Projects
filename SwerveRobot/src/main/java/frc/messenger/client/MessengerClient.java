@@ -38,14 +38,19 @@ public class MessengerClient {
      */
     public MessengerClient(String host, int port, String name) {
         try {
+            System.out.println("Making socket");
             socket = new Socket(host, port);
+            System.out.println("Making streams");
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
+            System.out.println("Identifying");
             out.writeUTF(name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        System.out.println("ok");
     }
 
     /**

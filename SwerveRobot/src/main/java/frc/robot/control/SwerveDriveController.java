@@ -40,7 +40,7 @@ public class SwerveDriveController {
         double rot = input.getRot();
         Rotation2d currentAngle = drive.getGyroscopeRotation();
 
-        ShuffleWood.show("currentAngle", currentAngle);
+        // ShuffleWood.show("currentAngle", currentAngle);
         
         if (Math.abs(driveX) < JOYSTICK_DEAD_ZONE) {
             driveX = 0;
@@ -79,7 +79,7 @@ public class SwerveDriveController {
         double fieldRelativeY = driveY * MAX_VELOCITY;
         double targetRot = rot * MAX_ROTATION_SPEED;
                             
-        //System.out.println(driveX + " " + driveY + " " + rot);
+        System.out.println(driveX + " " + driveY + " " + rot);
         
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);

@@ -39,15 +39,19 @@ public class SwerveDrive {
     );
 
     public SwerveDrive(AHRS navx) {
-        ShuffleWood.setInt("Swerve module 1", 0);
-        ShuffleWood.setInt("Swerve module 2", 1);
-        ShuffleWood.setInt("Swerve module 3", 2);
-        ShuffleWood.setInt("Swerve module 4", 3);
+        // ShuffleWood.setInt("Swerve module 1", 0);
+        // ShuffleWood.setInt("Swerve module 2", 1);
+        // ShuffleWood.setInt("Swerve module 3", 2);
+        // ShuffleWood.setInt("Swerve module 4", 3);
 
-        SwerveModuleInfo info1 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 1", 0)];
-        SwerveModuleInfo info2 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 2", 1)];
-        SwerveModuleInfo info3 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 3", 2)];
-        SwerveModuleInfo info4 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 4", 3)];
+        // SwerveModuleInfo info1 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 1", 0)];
+        // SwerveModuleInfo info2 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 2", 1)];
+        // SwerveModuleInfo info3 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 3", 2)];
+        // SwerveModuleInfo info4 = SWERVE_MODULES[ShuffleWood.getInt("Swerve module 4", 3)];
+        SwerveModuleInfo info1 = SWERVE_MODULES[0];
+        SwerveModuleInfo info2 = SWERVE_MODULES[1];
+        SwerveModuleInfo info3 = SWERVE_MODULES[2];
+        SwerveModuleInfo info4 = SWERVE_MODULES[3];
 
         w1 = new SwerveModule(info1.getDriveId(), TURN_PORT_1, info1.getCanCoderId(), OFFSET_1 + info1.getCanCoderOffset());
         w2 = new SwerveModule(info2.getDriveId(), TURN_PORT_2, info2.getCanCoderId(), OFFSET_2 + info2.getCanCoderOffset());

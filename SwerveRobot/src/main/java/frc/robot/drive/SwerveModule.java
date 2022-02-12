@@ -64,12 +64,12 @@ public class SwerveModule {
     }
 
     public void update(SwerveModuleState swerveModuleState) {
-        turnPID.setP(ShuffleWood.getDouble("Wheel turn KP", WHEEL_TURN_KP));
-        turnPID.setI(ShuffleWood.getDouble("Wheel turn KI", WHEEL_TURN_KI));
-        turnPID.setD(ShuffleWood.getDouble("Wheel turn KD", WHEEL_TURN_KD));
-        ShuffleWood.show("P", turnPID.getP());
-        ShuffleWood.show("I", turnPID.getI());
-        ShuffleWood.show("D", turnPID.getD());
+        // turnPID.setP(ShuffleWood.getDouble("Wheel turn KP", WHEEL_TURN_KP));
+        // turnPID.setI(ShuffleWood.getDouble("Wheel turn KI", WHEEL_TURN_KI));
+        // turnPID.setD(ShuffleWood.getDouble("Wheel turn KD", WHEEL_TURN_KD));
+        // ShuffleWood.show("P", turnPID.getP());
+        // ShuffleWood.show("I", turnPID.getI());
+        // ShuffleWood.show("D", turnPID.getD());
         //System.out.println("PID: " + turnPID.getP() + " " + turnPID.getI() + " " + turnPID.getD());
 
         Rotation2d canRotation = new Rotation2d(Math.toRadians(canCoder.getAbsolutePosition()));

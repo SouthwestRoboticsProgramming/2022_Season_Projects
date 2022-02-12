@@ -6,4 +6,8 @@ public class CameraTurretConstants {
     public static final double CAMERA_TURRET_KP = 0.1;
     public static final double CAMERA_TURRET_KI = 0;
     public static final double CAMERA_TURRET_KD = 0;
+
+    private CameraTurretConstants() {
+        throw new AssertionError();
+    }
 }

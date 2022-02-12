@@ -42,23 +42,31 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    System.out.println("Hello from robot");
+
     state = RobotState.DISABLED;
     Scheduler.get().initState();
 
-    while (msg == null) {
-      try {
-        MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO");
-        msg = attempt;
-      } catch (Throwable t) {
-        System.err.print("Connect failed, retrying");
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {}
-      }
-    }
-    dispatch = new MessageDispatcher(msg);
+    System.out.println("Inited");
 
-    ShuffleWood.setMessenger(dispatch);
+    // while (msg == null) {
+    //   try {
+    //     MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO");
+    //     msg = attempt;
+    //   } catch (Throwable t) {
+    //     System.err.print("Connect failed, retrying");
+    //     try {
+    //       Thread.sleep(1000);
+    //     } catch (InterruptedException e) {}
+    //   }
+    // }
+    // dispatch = new MessageDispatcher(msg);
+
+    System.out.println("Connected");
+
+    // ShuffleWood.setMessenger(dispatch);
+
+    System.out.println("Shufflewood on");
 
     gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
@@ -68,19 +76,24 @@ public class Robot extends TimedRobot {
 
     driveController.swerveInit();
 
-    cameras = new Cameras(dispatch);
-    cameraTurret = new CameraTurret(cameras);
-    localization = new Localization(gyro, cameraTurret);
-    shooter = new Shooter(driveController, cameraTurret, input);
+    System.out.println("drive on");
+
+    // cameras = new Cameras(dispatch);
+    // cameraTurret = new CameraTurret(cameras);
+    // localization = new Localization(gyro, cameraTurret);
+    // shooter = new Shooter(driveController, cameraTurret, input);
 
     //ShuffleWood.setInt("TEST", 736219837);
 
-    Scheduler.get().scheduleCommand(new SaveShuffleWoodCommand());
+    // Scheduler.get().scheduleCommand(new SaveShuffleWoodCommand());
+    System.out.println("Scheduled");
   }
 
   @Override
   public void robotPeriodic() {
-    msg.read();
+    //System.out.println("periodic");
+
+    //msg.read();
     Scheduler.get().update();
   }
 
@@ -110,7 +123,7 @@ public class Robot extends TimedRobot {
     state = RobotState.DISABLED;
     Scheduler.get().initState();
     drive.disable();
-    ShuffleWood.save();
+    // ShuffleWood.save();
   }
 
   @Override
