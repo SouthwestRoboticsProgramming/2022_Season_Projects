@@ -53,6 +53,7 @@ public interface GuiContext {
     default void image(PImage image) { image(image, image.width, image.height); }
     void image(PImage image, float width, float height);
     boolean checkbox(boolean[] checked);
+    void pie(float width, float height, float[] values, int[] colors);
 
     // Text edit
     // TODO: Maybe use String[] instead?

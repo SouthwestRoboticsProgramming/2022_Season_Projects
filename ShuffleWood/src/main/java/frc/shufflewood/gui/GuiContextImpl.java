@@ -488,6 +488,31 @@ public final class GuiContextImpl implements GuiContext {
         return clicked;
     }
 
+    @Override
+    public void pie(float width, float height, float[] values, int[] colors) {
+        beginWidget();
+        GuiPane p = activePane;
+
+        float valueTotal = 0;
+        for (float value : values) {
+            valueTotal += value;
+        }
+
+        Rect rect = new Rect(new Vec2(p.position), new Vec2(width + p.position.x, width + p.position.y));
+
+        float angleAcc = 0;
+        for (int i = 0; i < values.length; i++) {
+            float value = values[i];
+            float angle = (float) (value / valueTotal * Math.PI * 2);
+            float minAngle = angleAcc;
+            float maxAngle = angleAcc += angle;
+
+            draw.fillSector(rect, minAngle, maxAngle, colors[i]);
+        }
+
+        endWidget();
+    }
+
     private static final class TextEditState {
         boolean editing;
         StringBuffer editBuffer;

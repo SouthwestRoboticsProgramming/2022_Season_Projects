@@ -227,6 +227,26 @@ public class GuiDrawBuilder {
         polygonTextureVertex(new Vec2(r.min.x, r.max.y), new Vec2(uv.min.x, uv.max.y), texture);
     }
 
+    public void fillSector(Rect circleBounds, float minAngle, float maxAngle, int color) {
+        beginPolygon(color);
+
+        float centerX = circleBounds.min.x + circleBounds.getWidth() / 2;
+        float centerY = circleBounds.min.y + circleBounds.getHeight() / 2;
+        polygonVertex(new Vec2(centerX, centerY));
+
+        float minX = (float) Math.cos(minAngle) * circleBounds.getWidth() / 2 + centerX;
+        float minY = (float) Math.sin(minAngle) * circleBounds.getHeight() / 2 + centerY;
+        polygonVertex(new Vec2(minX, minY));
+
+        // TODO: walk around the arc
+
+        float maxX = (float) Math.cos(maxAngle) * circleBounds.getWidth() / 2 + centerX;
+        float maxY = (float) Math.sin(maxAngle) * circleBounds.getHeight() / 2 + centerY;
+        polygonVertex(new Vec2(maxX, maxY));
+
+        return;
+    }
+
     private float map(float val, float min, float max, float newMin, float newMax) {
         float l = (val - min) / (max - min);
         return l * (newMax - newMin) + newMin;
