@@ -16,6 +16,7 @@ public class SwerveDriveController {
     private final PIDController rotPID;
 
     private double autoRot;
+    private double autoDriveX, autoDriveY;
     private boolean autoControl;
 
     // Sets initial state of robot (In this case, staying still)
@@ -55,24 +56,25 @@ public class SwerveDriveController {
         // Eliminate deadzone jump
 
         if (driveX > 0) {
-                driveX = Utils.map(driveX, JOYSTICK_DEAD_ZONE, 1, 0, 1);
+            driveX = Utils.map(driveX, JOYSTICK_DEAD_ZONE, 1, 0, 1);
         } else if (driveX < 0){
-                driveX = -Utils.map(-driveX, JOYSTICK_DEAD_ZONE, 1, 0, 1);
+            driveX = -Utils.map(-driveX, JOYSTICK_DEAD_ZONE, 1, 0, 1);
         }
         if (driveY > 0) {
-                driveY = Utils.map(driveY, JOYSTICK_DEAD_ZONE, 1, 0, 1);
+            driveY = Utils.map(driveY, JOYSTICK_DEAD_ZONE, 1, 0, 1);
         } else if (driveY <0){
-                driveY = -Utils.map(-driveY, JOYSTICK_DEAD_ZONE, 1, 0, 1);
+            driveY = -Utils.map(-driveY, JOYSTICK_DEAD_ZONE, 1, 0, 1);
         }
         if (rot > 0) {
-                rot = Utils.map(rot, JOYSTICK_DEAD_ZONE, 1, 0, 1);
+            rot = Utils.map(rot, JOYSTICK_DEAD_ZONE, 1, 0, 1);
         } else if (rot < 0) {
-                rot = -Utils.map(-rot, JOYSTICK_DEAD_ZONE, 1, 0, 1);
+            rot = -Utils.map(-rot, JOYSTICK_DEAD_ZONE, 1, 0, 1);
         }
 
         if (autoControl) {
             rot = autoRot;
-            System.out.println("Automatically Rotating");
+            driveX = autoDriveX;
+            driveY = autoDriveY;
         }
 
         double fieldRelativeX = driveX * MAX_VELOCITY;
@@ -93,5 +95,11 @@ public class SwerveDriveController {
         double targetRotPercent = rotPID.calculate(drive.getGyroscopeRotation().getDegrees(),angleTargetDegrees);
         autoControl = true;
         this.autoRot = targetRotPercent;
+    }
+
+    public void drive(double x, double y) {
+        autoControl = true;
+        autoDriveX = x;
+        autoDriveY = y;
     }
 }
