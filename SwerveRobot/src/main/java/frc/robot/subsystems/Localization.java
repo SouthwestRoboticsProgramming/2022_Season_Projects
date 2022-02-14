@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.drive.SwerveDrive;
 import frc.robot.util.Utils;
 
 // https://www.desmos.com/calculator/w5x76wa3yd
@@ -9,12 +12,14 @@ import frc.robot.util.Utils;
 public class Localization extends Subsystem {
   private final AHRS gyro;
   private final CameraTurret cameraTurret;
+  private final SwerveDrive drive;
 
   private double x, y;
 
-  public Localization(AHRS gyro, CameraTurret cameraTurret) {
+  public Localization(AHRS gyro, CameraTurret cameraTurret, SwerveDrive drive) {
     this.gyro = gyro;
     this.cameraTurret = cameraTurret;
+    this.drive = drive;
   }
 
   public double getX() {
@@ -23,6 +28,10 @@ public class Localization extends Subsystem {
 
   public double getY() {
     return y;
+  }
+
+  public Pose2d getOdometry() {
+    return drive.getOdometry();
   }
 
   @Override
