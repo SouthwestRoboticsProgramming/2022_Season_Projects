@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     state = RobotState.AUTONOMOUS;
     Scheduler.get().initState();
-    Scheduler.get().scheduleCommand(new AutonomousCommand());
+    Scheduler.get().scheduleCommand(new AutonomousCommand(localization, driveController));
   }
 
   @Override
