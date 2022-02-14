@@ -11,8 +11,7 @@ import frc.robot.subsystems.Subsystem;
 import static frc.robot.constants.ClimberConstants.*;
 
 public class TelescopingArm extends Subsystem {
-  private final CANSparkMax motorOne;
-  private final CANSparkMax motorTwo;
+  private final CANSparkMax motorOne, motorTwo;
   private final RelativeEncoder encoder;
   private final PIDController pid;
 
@@ -27,7 +26,7 @@ public class TelescopingArm extends Subsystem {
 
     encoder = motorOne.getEncoder();
 
-    base = baseHeight;
+    this.base = baseHeight;
     this.pulleyDiameter = pulleyDiameter;
   }
 

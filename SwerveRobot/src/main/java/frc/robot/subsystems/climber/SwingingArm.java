@@ -20,18 +20,17 @@ public class SwingingArm extends Subsystem {
 
   public SwingingArm(int motorID, double armLength, double pivotToMotor, double distancePerRotation) {
     motor = new CANSparkMax(motorID, MotorType.kBrushless);
-    motor.setIdleMode(IdleMode.kBrake);
     encoder = motor.getEncoder();
     pid = new PIDController(CLIMBER_SWING_MOTOR_KP, CLIMBER_SWING_MOTOR_KI, CLIMBER_SWING_MOTOR_KD);
+
+    motor.setIdleMode(IdleMode.kBrake);
+    
     arm = armLength;
     base = pivotToMotor;
     distPerRot = distancePerRotation;
   }
 
   public void swingToAngle(double angle) {
-
-    // TODO: Do the math required here to find the actual angle
-
     double currentPose = encoder.getPosition() * distPerRot;
     double currentAngle = (base*base + arm*arm - currentPose);
 
@@ -41,7 +40,7 @@ public class SwingingArm extends Subsystem {
 
   @Override
   public void robotPeriodic() {
-    // This method will be called once per scheduler run
+    
   }
 
   @Override

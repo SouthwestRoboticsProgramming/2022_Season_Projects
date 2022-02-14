@@ -25,7 +25,7 @@ public class SwerveDriveController {
     public SwerveDriveController(SwerveDrive drive, Input input) {
         this.drive = drive;
         this.input = input;
-        rotPID = new PIDController(STABILIZATION_KP, STABILIZATION_KI, STABILIZATION_KD);
+        rotPID = new PIDController(GLOBAL_TURN_KP, GLOBAL_TURN_KI, GLOBAL_TURN_KD);
         rotPID.enableContinuousInput(-180, 180);
         autoControl = false;
     }

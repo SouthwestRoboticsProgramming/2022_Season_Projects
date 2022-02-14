@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.ShuffleWood;
 import frc.robot.util.Utils;
+
+import edu.wpi.first.math.controller.PIDController;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -16,9 +16,9 @@ public class CameraTurret extends Subsystem {
   private final TalonSRX motor;
   private final PIDController pid;
   private final Cameras cameras;
+
   private double target;
   private boolean isSweepback;
-  private double encoder;
   
   public CameraTurret(Cameras cameras) {
     motor = new TalonSRX(CAMERA_TURRET_MOTOR_ID);
@@ -55,18 +55,18 @@ public class CameraTurret extends Subsystem {
 
   @Override
   public void teleopPeriodic() {
-    encoder = getEncoderDegrees();
-    double camera = cameras.getHubAngle();
-    ShuffleWood.show("Encoder", encoder);
+    double encoderAngle = getEncoderDegrees();
+    double cameraAngle = cameras.getHubAngle();
+    ShuffleWood.show("Encoder Angle", encoderAngle);
     double rawTarget;
-    if (camera != 360.0) {
-      rawTarget = encoder + camera;
+    if (cameraAngle != 360.0) {
+      rawTarget = encoderAngle + cameraAngle;
     } else {
-      rawTarget = encoder;
+      rawTarget = encoderAngle;
     }
     target = Utils.normalizeCameraTurret(rawTarget);
 
-    double calc = pid.calculate(encoder, target);
+    double calc = pid.calculate(encoderAngle, target);
     ShuffleWood.show("pid", calc);
     if (pid.atSetpoint()) {
       isSweepback = !isSweepback;
@@ -78,6 +78,6 @@ public class CameraTurret extends Subsystem {
     }
     ShuffleWood.show("target", target);
     
-    motor.set(ControlMode.PercentOutput, Utils.clamp(calc, -0.15, 0.15));
+    motor.set(ControlMode.PercentOutput, Utils.clamp(calc, -CAMERA_TURRET_MAX_TURN_PERCENT, CAMERA_TURRET_MAX_TURN_PERCENT));
   }
 }

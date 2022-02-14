@@ -9,7 +9,7 @@ public final class Utils {
         return value;
     }
 
-    // Maps a value from one range to another
+    // Maps a value from one range to another -> Used for removing controller deadzone jump
     public static double map(double value, double min, double max, double newMin, double newMax) {
         return (value - min) / (max - min) * (newMax - newMin) + newMin;
     }

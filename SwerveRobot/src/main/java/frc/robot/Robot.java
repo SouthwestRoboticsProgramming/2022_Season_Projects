@@ -26,28 +26,27 @@ public class Robot extends TimedRobot {
     return INSTANCE;
   }
 
-  private RobotState state;
-  private AHRS gyro;
+  // Subsystems
   private Input input;
+
+  private AHRS gyro;
   private SwerveDrive drive;
   private SwerveDriveController driveController;
+
   private MessengerClient msg;
   private MessageDispatcher dispatch;
 
-  // Subsystems
-  private Localization localization;
   private Cameras cameras;
   private CameraTurret cameraTurret;
   private Shooter shooter;
 
+  private RobotState state;
+  private Localization localization;
+  
   @Override
   public void robotInit() {
-    System.out.println("Hello from robot");
-
     state = RobotState.DISABLED;
     Scheduler.get().initState();
-
-    System.out.println("Inited");
 
     // while (msg == null) {
     //   try {
@@ -62,36 +61,27 @@ public class Robot extends TimedRobot {
     // }
     // dispatch = new MessageDispatcher(msg);
 
-    System.out.println("Connected");
-
     // ShuffleWood.setMessenger(dispatch);
 
-    System.out.println("Shufflewood on");
-
+    input = new Input();
     gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
-    input = new Input();
     drive = new SwerveDrive(gyro);
     driveController = new SwerveDriveController(drive, input);
 
-    driveController.swerveInit();
-
-    System.out.println("drive on");
-
+    
     // cameras = new Cameras(dispatch);
     // cameraTurret = new CameraTurret(cameras);
     // localization = new Localization(gyro, cameraTurret);
     // shooter = new Shooter(driveController, cameraTurret, input);
-
-    //ShuffleWood.setInt("TEST", 736219837);
+    
+    driveController.swerveInit();
 
     // Scheduler.get().scheduleCommand(new SaveShuffleWoodCommand());
-    System.out.println("Scheduled");
   }
 
   @Override
   public void robotPeriodic() {
-    //System.out.println("periodic");
 
     //msg.read();
     Scheduler.get().update();

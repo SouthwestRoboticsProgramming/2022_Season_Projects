@@ -33,7 +33,7 @@ public class Shooter extends Subsystem {
 
     double currentVelocity = motor.getSelectedSensorVelocity();
     double velocityDiff = speed - currentVelocity;
-    double seconds = velocityDiff / SHOOTER_MAX_SPEED;
+    double seconds = velocityDiff / SHOOTER_MAX_ACCEL;
     double percentOut = feedForward.calculate(currentVelocity, speed, seconds);
     
     motor.set(ControlMode.PercentOutput, percentOut);
