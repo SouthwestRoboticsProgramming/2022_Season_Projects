@@ -23,11 +23,11 @@ public class Localization extends Subsystem {
   }
 
   public double getX() {
-    return x;
+    return drive.getOdometry().getX();
   }
 
   public double getY() {
-    return y;
+    return drive.getOdometry().getY();
   }
 
   public Pose2d getOdometry() {
