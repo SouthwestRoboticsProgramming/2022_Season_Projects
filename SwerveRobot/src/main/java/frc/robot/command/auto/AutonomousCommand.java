@@ -6,11 +6,12 @@ import frc.robot.subsystems.Localization;
 
 public final class AutonomousCommand extends CommandSequence {
     public AutonomousCommand(Localization loc, SwerveDriveController drive) {
+        double radius = 1;
+
         Path path = new Path();
-        path.addPoint(1, 0);
-        path.addPoint(1, 1);
-        path.addPoint(0, 1);
-        path.addPoint(0, 0);
+        for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 256) {
+            path.addPoint(Math.cos(angle) * radius - radius, Math.sin(angle) * radius);
+        }
 
         append(new FollowPathCommand(loc, drive, path));
     }

@@ -30,6 +30,20 @@ public final class Scheduler {
         activeCommands.add(new CommandTimer(cmd));
     }
 
+    public void cancelCommand(Command cmd) {
+        CommandTimer toRemove = null;
+        for (CommandTimer timer : activeCommands) {
+            if (timer.cmd.equals(cmd)) {
+                toRemove = timer;
+                break;
+            }
+        }
+
+        if (toRemove != null) {
+            activeCommands.remove(toRemove);
+        }
+    }
+
     public void initState() {
         for (Subsystem subsystem : subsystems) {
             subsystem.doInit();
@@ -58,7 +72,7 @@ public final class Scheduler {
         }
 
         public boolean update() {
-            if (timer-- <= 0) {
+            if (--timer <= 0) {
                 timer = cmd.getInterval();
                 return cmd.run();
             }

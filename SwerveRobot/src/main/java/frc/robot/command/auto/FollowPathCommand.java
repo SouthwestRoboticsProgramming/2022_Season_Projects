@@ -38,6 +38,8 @@ public class FollowPathCommand implements Command {
 
     @Override
     public boolean run() {
+        System.out.printf("Localization: %3.3f %3.3f %n", loc.getX(), loc.getY());
+
         if (isAtTarget()) {
             targetIndex++;
             if (targetIndex >= path.size()) {
@@ -58,7 +60,7 @@ public class FollowPathCommand implements Command {
         deltaX *= AUTO_DRIVE_SCALE;
         deltaY *= AUTO_DRIVE_SCALE;
 
-        drive.drive(deltaX, deltaY);
+        drive.drive(deltaX, deltaY, 0);
 
         return false;
     }

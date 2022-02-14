@@ -16,9 +16,9 @@ public class Localization extends Subsystem {
 
   private double x, y;
 
-  public Localization(AHRS gyro, CameraTurret cameraTurret, SwerveDrive drive) {
+  public Localization(AHRS gyro, /*CameraTurret cameraTurret,*/ SwerveDrive drive) {
     this.gyro = gyro;
-    this.cameraTurret = cameraTurret;
+    this.cameraTurret = null;
     this.drive = drive;
   }
 
@@ -36,12 +36,12 @@ public class Localization extends Subsystem {
 
   @Override
   public void robotPeriodic() {
-    double gyroAngle = Math.toDegrees(Utils.normalizeAngle(Math.toRadians(gyro.getYaw())));
-    double cameraAngle = cameraTurret.getAngle();
-    double cameraDistance = cameraTurret.getDistance();
+    // double gyroAngle = Math.toDegrees(Utils.normalizeAngle(Math.toRadians(gyro.getYaw())));
+    // double cameraAngle = cameraTurret.getAngle();
+    // double cameraDistance = cameraTurret.getDistance();
 
-    double angleDiff = Math.toRadians(cameraAngle - gyroAngle);
-    y = cameraDistance * Math.sin(angleDiff);
-    x = cameraDistance * Math.cos(angleDiff);
+    // double angleDiff = Math.toRadians(cameraAngle - gyroAngle);
+    // y = cameraDistance * Math.sin(angleDiff);
+    // x = cameraDistance * Math.cos(angleDiff);
   }
 }
