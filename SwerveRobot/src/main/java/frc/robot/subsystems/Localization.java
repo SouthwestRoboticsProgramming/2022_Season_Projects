@@ -36,18 +36,6 @@ public class Localization extends Subsystem {
 
   @Override
   public void robotPeriodic() {
-    // ShuffleWood.set("Gyro Yaw", angle);
-    // ShuffleWood.set("Random number", Math.random() * 1000);
-    
-    /* Steps *
-    
-    1. Get gyro angle
-    2. Get camera turret angle and distance
-    3. Find the points that work
-    4. Narrow down points using odomery and rough location
-    5. Check that result is possible
-    
-    */
     double gyroAngle = Math.toDegrees(Utils.normalizeAngle(Math.toRadians(gyro.getYaw())));
     double cameraAngle = cameraTurret.getAngle();
     double cameraDistance = cameraTurret.getDistance();

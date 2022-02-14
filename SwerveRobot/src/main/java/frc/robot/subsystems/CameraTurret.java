@@ -57,7 +57,7 @@ public class CameraTurret extends Subsystem {
   public void teleopPeriodic() {
     double encoderAngle = getEncoderDegrees();
     double cameraAngle = cameras.getHubAngle();
-    ShuffleWood.show("Encoder Angle", encoderAngle);
+    //ShuffleWood.show("Encoder Angle", encoderAngle);
     double rawTarget;
     if (cameraAngle != 360.0) {
       rawTarget = encoderAngle + cameraAngle;
@@ -67,7 +67,7 @@ public class CameraTurret extends Subsystem {
     target = Utils.normalizeCameraTurret(rawTarget);
 
     double calc = pid.calculate(encoderAngle, target);
-    ShuffleWood.show("pid", calc);
+    //ShuffleWood.show("pid", calc);
     if (pid.atSetpoint()) {
       isSweepback = !isSweepback;
       if (isSweepback) {
