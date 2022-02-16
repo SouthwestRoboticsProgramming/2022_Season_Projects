@@ -42,6 +42,8 @@ public class Robot extends TimedRobot {
 
   private RobotState state;
   private Localization localization;
+
+  private AutonomousCommand autoCommand;
   
   @Override
   public void robotInit() {
@@ -72,7 +74,7 @@ public class Robot extends TimedRobot {
     
     // cameras = new Cameras(dispatch);
     // cameraTurret = new CameraTurret(cameras);
-    // localization = new Localization(gyro, cameraTurret);
+    localization = new Localization(gyro, drive);
     // shooter = new Shooter(driveController, cameraTurret, input);
     
     driveController.swerveInit();
@@ -91,16 +93,22 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     state = RobotState.AUTONOMOUS;
     Scheduler.get().initState();
-    Scheduler.get().scheduleCommand(new AutonomousCommand(localization, driveController));
+    Scheduler.get().scheduleCommand(autoCommand = new AutonomousCommand(localization, driveController));
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    driveController.update();
+  }
 
   @Override
   public void teleopInit() {
     state = RobotState.TELEOP;
     Scheduler.get().initState();
+    if (autoCommand != null) {
+      Scheduler.get().cancelCommand(autoCommand);
+      autoCommand = null;
+    }
   }
 
   @Override
@@ -113,6 +121,11 @@ public class Robot extends TimedRobot {
     state = RobotState.DISABLED;
     Scheduler.get().initState();
     drive.disable();
+
+    if (autoCommand != null) {
+      Scheduler.get().cancelCommand(autoCommand);
+      autoCommand = null;
+    }
     // ShuffleWood.save();
   }
 
@@ -123,6 +136,10 @@ public class Robot extends TimedRobot {
   public void testInit() {
     state = RobotState.TEST;
     Scheduler.get().initState();
+    if (autoCommand != null) {
+      Scheduler.get().cancelCommand(autoCommand);
+      autoCommand = null;
+    }
   }
 
   @Override

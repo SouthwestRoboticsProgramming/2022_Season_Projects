@@ -75,13 +75,16 @@ public class SwerveDriveController {
             rot = autoRot;
             driveX = autoDriveX;
             driveY = autoDriveY;
+            // System.out.println("Auto");
+        } else {
+            // System.out.println("no auto");
         }
 
         double fieldRelativeX = driveX * MAX_VELOCITY;
         double fieldRelativeY = driveY * MAX_VELOCITY;
         double targetRot = rot * MAX_ROTATION_SPEED;
                             
-        System.out.println(driveX + " " + driveY + " " + rot);
+        // System.out.println(driveX + " " + driveY + " " + rot);
         
         // Convert motion goals to ChassisSpeeds object
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeX, fieldRelativeY, targetRot, currentAngle);
@@ -97,9 +100,10 @@ public class SwerveDriveController {
         this.autoRot = targetRotPercent;
     }
 
-    public void drive(double x, double y) {
+    public void drive(double x, double y, double rot) {
         autoControl = true;
         autoDriveX = x;
         autoDriveY = y;
+        autoRot = rot;
     }
 }
