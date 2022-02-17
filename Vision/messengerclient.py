@@ -16,7 +16,7 @@ class MessengerClient:
     Author: rmheuer
     """
 
-    def __init__(self, host, port, name):
+    def __init__(self, host, port, name, require):
         """
         Creates a new MessengerClient and attempts to connect to the Messenger
         server at the given address. A name is given to help identify the
@@ -25,6 +25,7 @@ class MessengerClient:
         :param host: host of messenger server
         :param port: port of messenger server
         :param name: name of this client
+        :param require: whether to crash if connection fails
         """
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,6 +34,10 @@ class MessengerClient:
         try:
             self.sock.connect((host, port))
         except socket.timeout:
+            if require:
+                print("Messenger connection required but failed!")
+                quit()
+            print("Messenger connection failed, switching to no-op mode")
             self.connected = False
         self.callback = lambda type, data: None
 
@@ -46,6 +51,9 @@ class MessengerClient:
         :param type: type of message
         :param data: message data
         """
+
+        if not self.connected:
+            return
 
         encoded_type = self._encode_string(type)
         encoded_data_len = struct.pack(">i", len(data))
@@ -64,6 +72,9 @@ class MessengerClient:
         :param type: message type to listen to
         """
 
+        if not self.connected:
+            return
+
         self.send_message("_Listen", self._encode_string(type))
 
     def unlisten(self, type):
@@ -73,6 +84,9 @@ class MessengerClient:
 
         :param type: message type to stop listening to
         """
+
+        if not self.connected:
+            return
 
         self.send_message("_Unlisten", self._encode_string(type))
 
@@ -92,6 +106,9 @@ class MessengerClient:
         assume that the connection is dropped and disconnect.
         """
 
+        if not self.connected:
+            return
+
         self.send_message("_Heartbeat", b"")
 
         while self._available():
@@ -103,6 +120,9 @@ class MessengerClient:
         will still detect that the connection is lost, but it is good practice to call
         this method to end the connection safely.
         """
+
+        if not self.connected:
+            return
 
         self.sock.shutdown()
         self.sock.close()

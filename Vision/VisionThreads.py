@@ -35,7 +35,7 @@ class VisionThreads:
     def __init__(self,threadName):
 
         self.connection = True
-        self.client = MessengerClient("10.21.29.3", 5805, "Vision-"+str(threadName))
+        self.client = MessengerClient("10.21.29.3", 5805, "Vision-"+str(threadName), not Constants.EXPERIMENTAL)
         self.client.set_callback(lambda type, data: self._messageCallback(type))
         self.client.listen(Constants.MESSAGE_HUB_START)
         self.client.listen(Constants.MESSAGE_HUB_STOP)
