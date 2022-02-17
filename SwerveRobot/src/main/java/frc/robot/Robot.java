@@ -50,20 +50,27 @@ public class Robot extends TimedRobot {
     state = RobotState.DISABLED;
     Scheduler.get().initState();
 
-    // while (msg == null) {
-    //   try {
-    //     MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO");
-    //     msg = attempt;
-    //   } catch (Throwable t) {
-    //     System.err.print("Connect failed, retrying");
-    //     try {
-    //       Thread.sleep(1000);
-    //     } catch (InterruptedException e) {}
-    //   }
-    // }
-    // dispatch = new MessageDispatcher(msg);
+    int attempts = 0;
+    while (attempts < MESSENGER_MAX_CONNECT_ATTEMPTS && msg == null) {
+      try {
+        MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO", attempts != MESSENGER_MAX_CONNECT_ATTEMPTS);
+        msg = attempt;
+      } catch (Throwable t) {
+        System.err.print("Connect failed, retrying");
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {}
+      }
 
-    // ShuffleWood.setMessenger(dispatch);
+      attempts++;
+    }
+    if (msg == null) {
+      throw new IllegalStateException("Messenger is null, this should never happen!");
+    }
+
+    dispatch = new MessageDispatcher(msg);
+
+    ShuffleWood.setMessenger(dispatch);
 
     input = new Input();
     gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -79,13 +86,13 @@ public class Robot extends TimedRobot {
     
     driveController.swerveInit();
 
-    // Scheduler.get().scheduleCommand(new SaveShuffleWoodCommand());
+    Scheduler.get().scheduleCommand(new SaveShuffleWoodCommand());
   }
 
   @Override
   public void robotPeriodic() {
 
-    //msg.read();
+    msg.read();
     Scheduler.get().update();
   }
 
@@ -126,7 +133,7 @@ public class Robot extends TimedRobot {
       Scheduler.get().cancelCommand(autoCommand);
       autoCommand = null;
     }
-    // ShuffleWood.save();
+    ShuffleWood.save();
   }
 
   @Override
