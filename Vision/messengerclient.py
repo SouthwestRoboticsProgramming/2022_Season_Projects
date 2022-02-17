@@ -41,7 +41,8 @@ class MessengerClient:
             self.connected = False
         self.callback = lambda type, data: None
 
-        self._send(self._encode_string(name))
+        if self.connected:
+            self._send(self._encode_string(name))
 
     def send_message(self, type, data):
         """
