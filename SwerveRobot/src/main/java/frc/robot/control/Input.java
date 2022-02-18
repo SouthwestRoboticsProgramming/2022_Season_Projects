@@ -3,37 +3,51 @@ package frc.robot.control;
 import static frc.robot.constants.ControlConstants.*;
 
 public class Input {
-    private final XboxController controller;
+    private final XboxController drive;
+    private final XboxController manipulator;
 
     public Input() {
-        controller = new XboxController(DRIVE_CONTROLLER);
+        drive = new XboxController(DRIVE_CONTROLLER);
+        manipulator = new XboxController(MANIPULATOR_CONTROLLER);
     }
 
     public double getDriveX() {
-        return controller.getLeftStickX();
+        return drive.getLeftStickX();
     }
 
     public double getDriveY() {
-        return controller.getLeftStickY();
+        return drive.getLeftStickY();
     }
 
     public double getRot() {
-        return -controller.getRightStickX();
+        return -drive.getRightStickX();
     }
 
     public boolean getSwingLeft() {
-        return controller.getLeftShoulderButton();
+        return drive.getLeftShoulderButton();
     }
 
     public boolean getSwingRight() {
-        return controller.getRightShoulderButton();
+        return drive.getRightShoulderButton();
     }
 
     public boolean getShoot() {
-        return controller.getAButton();
+        return drive.getAButton();
     }
 
     public boolean getAim() {
-        return controller.getRightShoulderButton();
+        return drive.getRightShoulderButton();
+    }
+
+    public double testHoodAngle() {
+        double angle = -1;
+        
+        // FIXME: @mvog2501 choose angles
+        if (manipulator.getDpadDown()) angle = 0;
+        if (manipulator.getDpadUp()) angle = 0;
+        if (manipulator.getDpadLeft()) angle = 0;
+        if (manipulator.getDpadRight()) angle = 0;
+
+        return angle;
     }
 }
