@@ -24,7 +24,7 @@ class VisionThreads:
 
     connection = None
 
-    enableHub = False
+    enableHub = True
     enableBallDetect = False
     enableClimber = False
 
@@ -76,27 +76,25 @@ class VisionThreads:
         while self.enableHub:
             time.sleep(1/50.0)
 
-            print("hub")
 
             if Constants.EXPERIMENTAL:
                 settings = self._getTrackbars("Hub Camera ID: " + str(camID))
 
             Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
 
-            if self.connection:
-                data = None
-                if not Xangle is False:
+            data = None
+            if not Xangle is False:
 
-                    diffAngle = Xangle2 - Xangle
-                    distance = (.5 * hubDiameter) / math.tan(diffAngle)
+                diffAngle = abs(Xangle2 - Xangle)
+                distance = (.5 * hubDiameter) / math.tan(math.radians(diffAngle))
 
-                    data = struct.pack(">?dd", True, Xangle, distance)
-                else:
-                    data = struct.pack(">?", False)
-                self.client.send_message("Vision:Hub_Measurements", data)
-                self.client.read()
+                print(distance)
 
-                # TODO: Listen for stop message
+                data = struct.pack(">?dd", True, Xangle, distance)
+            else:
+                data = struct.pack(">?", False)
+            self.client.send_message("Vision:Hub_Measurements", data)
+            self.client.read()
 
             if Constants.EXPERIMENTAL:
                 cv2.imshow(str("Hub Camera ID: " + str(camID)),frame)
