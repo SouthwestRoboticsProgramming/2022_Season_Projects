@@ -20,10 +20,12 @@ public class MessengerClient {
     private static final String LISTEN = "_Listen";
     private static final String UNLISTEN = "_Unlisten";
     private static final String HEARTBEAT = "_Heartbeat";
+    private static final int TIMEOUT = 1000;
 
     private final Socket socket;
     private final DataInputStream in;
     private final DataOutputStream out;
+    private final boolean noOp;
     private BiConsumer<String, byte[]> callback = (a, b) -> {};
 
     /**
@@ -34,20 +36,29 @@ public class MessengerClient {
      * @param host host of messenger server
      * @param port port of messenger server
      * @param name name of this client
-     * @throws RuntimeException if connection failed
+     * @param require whether to throw an exception if connection fails
+     * @throws RuntimeException if connection required and failed
      */
-    public MessengerClient(String host, int port, String name) {
+    public MessengerClient(String host, int port, String name, boolean require) {
         try {
-            System.out.println("Making socket");
-            socket = new Socket(host, port);
-            System.out.println("Making streams");
+            socket = new Socket();
+
+            InetSocketAddress address = new InetSocketAddress(host, port);
+            socket.connect(address, TIMEOUT);
+
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
-            System.out.println("Identifying");
             out.writeUTF(name);
+
+            noOp = false;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (require) {
+                throw new RuntimeException(e);
+            } else {
+                System.out.println("Messenger connection failed, switching to no-op mode");
+                noOp = true;
+            }
         }
 
         System.out.println("ok");
@@ -61,6 +72,8 @@ public class MessengerClient {
      * @param data message data
      */
     public void sendMessage(String type, byte[] data) {
+        if (noOp) return;
+
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream d = new DataOutputStream(b);
 
@@ -84,6 +97,8 @@ public class MessengerClient {
      * @param type message type to listen to
      */
     public void listen(String type) {
+        if (noOp) return;
+
         sendMessage(LISTEN, encodeString(type));
     }
 
@@ -94,6 +109,8 @@ public class MessengerClient {
      * @param type message type to stop listening to
      */
     public void unlisten(String type) {
+`       if (noOp) return;
+
         sendMessage(UNLISTEN, encodeString(type));
     }
 
@@ -112,6 +129,8 @@ public class MessengerClient {
      * assume that the connection is dropped and disconnect.
      */
     public void read() {
+        if (noOp) return;
+
         try {
             sendMessage(HEARTBEAT, new byte[0]);
 
@@ -129,6 +148,8 @@ public class MessengerClient {
      * this method to end the connection safely.
      */
     public void disconnect() {
+        if (noOp) return;
+
         try {
             socket.close();
         } catch (IOException e) {
