@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-
-import frc.robot.command.intake.IntakeInOut;
+import frc.robot.command.intake.IntakeDown;
+import frc.robot.command.intake.IntakeUp;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import static frc.robot.constants.IntakeConstants.*;
 
-// TODO: Feedforward control of flywheel speed
 public class Intake extends Subsystem {
 
   private double speed;
@@ -19,7 +18,8 @@ public class Intake extends Subsystem {
   private final SimpleMotorFeedforward feedForward;
   private final TalonFX motor;
   private final TalonSRX lift;
-  private final IntakeInOut liftControl;
+  private final IntakeUp liftControlUp;
+  private final IntakeDown liftControlDown;
 
   public Intake(int motorID, int liftMotorID) {
     feedForward = new SimpleMotorFeedforward(INTAKE_KS, INTAKE_KV, INTAKE_KA);
@@ -28,7 +28,8 @@ public class Intake extends Subsystem {
     lift = new TalonSRX(liftMotorID);
     lift.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    liftControl = new IntakeInOut(lift);
+    liftControlUp = new IntakeUp(lift);
+    liftControlDown = new IntakeDown(lift);
 
     isDown = false;
   }
@@ -40,16 +41,14 @@ public class Intake extends Subsystem {
   public void intakeDown() {
     if (isDown) { return; }
     isDown = true;
-    liftControl.setOut(true);
-    liftControl.execute();
+    liftControlDown.run();
 
   }
 
   public void intakeUp() {
     if (!isDown){ return; }
     isDown = false;
-    liftControl.setOut(false);
-    liftControl.execute();
+    liftControlUp.run();
 
   }
 
@@ -62,7 +61,7 @@ public class Intake extends Subsystem {
       double seconds = velocityDiff / INTAKE_MAX_SPEED;
       double motorOut = feedForward.calculate(currentVelocity, speed, seconds);
       motor.set(ControlMode.Velocity,motorOut);
-      System.out.println(motorOut);
+      System.out.println("Intake Lift Motor Out: " + motorOut);
     }
 
   }

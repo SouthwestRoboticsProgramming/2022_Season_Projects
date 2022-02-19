@@ -7,26 +7,19 @@ import frc.robot.command.Command;
 
 import static frc.robot.constants.IntakeConstants.*;
 
-public class IntakeInOut extends Command {
+public class IntakeDown implements Command {
   private final TalonSRX motor;
 
   private int timer = 0;
-  private boolean out;
-  private boolean done = false;
 
-  public IntakeInOut(TalonSRX motor, boolean out) {
+  public IntakeDown(TalonSRX motor) {
     this.motor = motor;
-    this.out = out;
   }
 
   @Override
   public boolean run() {
-    if (out) {
-      motor.set(ControlMode.PercentOutput, -0.15);
-    } else {
-      motor.set(ControlMode.PercentOutput, 0.15);
-    }
-
+    motor.set(ControlMode.PercentOutput, -INTAKE_RETRACTION_SPEED);
+    
     return ++timer >= INTAKE_TIME;
   }
 }
