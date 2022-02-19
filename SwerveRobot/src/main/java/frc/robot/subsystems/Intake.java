@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.command.intake.IntakeDown;
 import frc.robot.command.intake.IntakeUp;
+import frc.robot.control.Input;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -13,15 +14,18 @@ import static frc.robot.constants.IntakeConstants.*;
 
 public class Intake extends Subsystem {
 
-  private double speed;
-  private boolean isDown;
+  private final Input input;
   private final SimpleMotorFeedforward feedForward;
   private final TalonFX motor;
   private final TalonSRX lift;
   private final IntakeUp liftControlUp;
   private final IntakeDown liftControlDown;
+  
+  private double speed;
+  private boolean isDown;
 
-  public Intake(int motorID, int liftMotorID) {
+  public Intake(int motorID, int liftMotorID, Input input) {
+    this.input = input;
     feedForward = new SimpleMotorFeedforward(INTAKE_KS, INTAKE_KV, INTAKE_KA);
     motor = new TalonFX(motorID);
 
@@ -32,6 +36,8 @@ public class Intake extends Subsystem {
     liftControlDown = new IntakeDown(lift);
 
     isDown = false;
+
+    speed = 0;
   }
 
   public void setSpeed(double percentOfMax) {
@@ -62,6 +68,14 @@ public class Intake extends Subsystem {
       double motorOut = feedForward.calculate(currentVelocity, speed, seconds);
       motor.set(ControlMode.Velocity,motorOut);
       System.out.println("Intake Lift Motor Out: " + motorOut);
+    }
+
+    if (input.testIntakeLiftUp()) {
+      intakeUp();
+    }
+
+    if (input.testIntakeLiftDown()) {
+      intakeDown();
     }
 
   }

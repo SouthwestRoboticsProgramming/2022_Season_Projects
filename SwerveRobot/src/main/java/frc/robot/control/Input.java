@@ -39,6 +39,12 @@ public class Input {
         return drive.getRightShoulderButton();
     }
 
+
+
+
+
+    /* Tests */
+
     public double testHoodAngle() {
         double angle = -1;
         
@@ -49,5 +55,21 @@ public class Input {
         if (manipulator.getDpadRight()) angle = 0;
 
         return angle;
+    }
+
+    public double testShooterSpeed() {
+        return manipulator.getRightTrigger() * 3;
+    }
+
+    public boolean testShoot() {
+        return manipulator.getRightShoulderButton();
+    }
+
+    public boolean testIntakeLiftUp() {
+        return manipulator.getXButton();
+    }
+
+    public boolean testIntakeLiftDown() {
+        return manipulator.getAButton();
     }
 }
