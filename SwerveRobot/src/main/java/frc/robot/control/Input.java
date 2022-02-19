@@ -76,4 +76,12 @@ public class Input {
     public double testIntakeSpeed() {
         return manipulator.getLeftTrigger();
     }
+
+    public boolean shoot() {
+        return manipulator.getWindowButton();
+    }
+
+    public boolean intake() {
+        return manipulator.getMenuButton();
+    }
 }

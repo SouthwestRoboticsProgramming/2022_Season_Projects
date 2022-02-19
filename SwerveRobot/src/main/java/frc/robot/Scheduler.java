@@ -27,10 +27,14 @@ public final class Scheduler {
     }
 
     public void scheduleCommand(Command cmd) {
+        // System.out.println("Scheduling " + cmd);
+
         activeCommands.add(new CommandTimer(cmd));
     }
 
     public void cancelCommand(Command cmd) {
+        // System.out.println("Cancelling " + cmd);
+
         CommandTimer toRemove = null;
         for (CommandTimer timer : activeCommands) {
             if (timer.cmd.equals(cmd)) {
@@ -57,7 +61,10 @@ public final class Scheduler {
 
         Set<CommandTimer> toRemove = new HashSet<>();
         for (CommandTimer cmd : activeCommands) {
-            if (cmd.update()) toRemove.add(cmd);
+            if (cmd.update()) {
+                toRemove.add(cmd);
+                // System.out.println("Terminating " + cmd.cmd);
+            }
         }
         activeCommands.removeAll(toRemove);
     }
@@ -74,6 +81,7 @@ public final class Scheduler {
         public boolean update() {
             if (--timer <= 0) {
                 timer = cmd.getInterval();
+                System.out.println("Updating " + cmd);
                 return cmd.run();
             }
 

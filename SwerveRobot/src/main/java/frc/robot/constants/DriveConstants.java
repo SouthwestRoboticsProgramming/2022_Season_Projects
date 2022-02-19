@@ -14,7 +14,7 @@ public class DriveConstants {
     public static final double GLOBAL_TURN_KI = 0;
     public static final double GLOBAL_TURN_KD = 0.0022;
 
-    public static final double MAX_VELOCITY = 3.0; // User Defined - Meters per second
+    public static final double MAX_VELOCITY = 1.0; // User Defined - Meters per second
     public static final double MAX_ROTATION_SPEED = 6.0; // User Defined - Radians per second
     
     public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // Degrees - How close a wheel can be to the target angle

@@ -22,8 +22,14 @@ public class IndexBall implements Command {
   public boolean run() {
     indexMotor.set(ControlMode.PercentOutput, INDEX_SPEED);
     
-    return ++timer >= INDEX_TIME;
+    boolean end = ++timer >= INDEX_TIME;
 
+    if (end) {
+      indexMotor.set(ControlMode.PercentOutput, 0);
+      System.out.println("Index end");
+    }
+
+    return end;
   }
 
   

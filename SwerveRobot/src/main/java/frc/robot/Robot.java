@@ -11,8 +11,10 @@ import frc.robot.control.SwerveDriveController;
 import frc.robot.drive.SwerveDrive;
 import frc.robot.subsystems.CameraTurret;
 import frc.robot.subsystems.Cameras;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Localization;
 import frc.robot.subsystems.Shooter;
+import frc.robot.util.ShuffleBoard;
 import frc.robot.util.ShuffleWood;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -39,6 +41,7 @@ public class Robot extends TimedRobot {
   private Cameras cameras;
   private CameraTurret cameraTurret;
   private Shooter shooter;
+  private Intake intake;
 
   private RobotState state;
   private Localization localization;
@@ -47,16 +50,18 @@ public class Robot extends TimedRobot {
   
   @Override
   public void robotInit() {
+    new ShuffleBoard(); // static init shuffleboard
+
     state = RobotState.DISABLED;
     Scheduler.get().initState();
 
     int attempts = 0;
     while (attempts < MESSENGER_MAX_CONNECT_ATTEMPTS && msg == null) {
       try {
-        MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO", attempts != MESSENGER_MAX_CONNECT_ATTEMPTS);
+        MessengerClient attempt = new MessengerClient(MESSENGER_HOST, MESSENGER_PORT, "RoboRIO", attempts != MESSENGER_MAX_CONNECT_ATTEMPTS - 1);
         msg = attempt;
       } catch (Throwable t) {
-        System.err.print("Connect failed, retrying");
+        System.err.println("Connect failed, retrying");
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e) {}
@@ -82,7 +87,8 @@ public class Robot extends TimedRobot {
     // cameras = new Cameras(dispatch);
     // cameraTurret = new CameraTurret(cameras);
     localization = new Localization(gyro, drive);
-    // shooter = new Shooter(driveController, cameraTurret, input);
+    shooter = new Shooter(driveController, null, input);
+    intake = new Intake(input);
     
     driveController.swerveInit();
 

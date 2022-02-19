@@ -1,6 +1,7 @@
 package frc.messenger.client;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.function.BiConsumer;
 
@@ -22,10 +23,10 @@ public class MessengerClient {
     private static final String HEARTBEAT = "_Heartbeat";
     private static final int TIMEOUT = 1000;
 
-    private final Socket socket;
-    private final DataInputStream in;
-    private final DataOutputStream out;
-    private final boolean noOp;
+    private Socket socket;
+    private DataInputStream in;
+    private DataOutputStream out;
+    private boolean noOp;
     private BiConsumer<String, byte[]> callback = (a, b) -> {};
 
     /**
@@ -54,6 +55,7 @@ public class MessengerClient {
             noOp = false;
         } catch (Exception e) {
             if (require) {
+                noOp = false;
                 throw new RuntimeException(e);
             } else {
                 System.out.println("Messenger connection failed, switching to no-op mode");
@@ -109,7 +111,7 @@ public class MessengerClient {
      * @param type message type to stop listening to
      */
     public void unlisten(String type) {
-`       if (noOp) return;
+        if (noOp) return;
 
         sendMessage(UNLISTEN, encodeString(type));
     }
