@@ -78,5 +78,7 @@ public class Intake extends Subsystem {
       intakeDown();
     }
 
+    setSpeed(input.testIntakeSpeed());
+
   }
 }

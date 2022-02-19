@@ -72,4 +72,8 @@ public class Input {
     public boolean testIntakeLiftDown() {
         return manipulator.getAButton();
     }
+
+    public double testIntakeSpeed() {
+        return manipulator.getLeftTrigger();
+    }
 }
