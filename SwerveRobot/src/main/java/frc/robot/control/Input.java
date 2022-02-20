@@ -6,9 +6,13 @@ public class Input {
     private final XboxController drive;
     private final XboxController manipulator;
 
+    private final XboxController finalManipulator;
+
     public Input() {
         drive = new XboxController(DRIVE_CONTROLLER);
         manipulator = new XboxController(MANIPULATOR_CONTROLLER);
+
+        finalManipulator = new XboxController(3);
     }
 
     public double getDriveX() {
@@ -83,5 +87,37 @@ public class Input {
 
     public boolean intake() {
         return manipulator.getMenuButton();
+    }
+
+
+
+
+
+
+    /* Final Controler Setups */
+    public boolean getIntake() {
+        return finalManipulator.getRightShoulderButton();
+    }
+
+    private boolean intakePreviousButton = false;
+    private boolean intakePrevious = false;
+
+    public boolean getIntakeLift() {
+        boolean finalIntake = false;
+
+        /* Get leading edge */
+        boolean pressed = finalManipulator.getYButton() && finalManipulator.getYButton() != intakePreviousButton;
+
+        /* If it's pressed, toggle the intake */
+        if (pressed) {
+            finalIntake = !intakePrevious;
+        } else {
+            finalIntake = intakePrevious;
+        }
+        
+        intakePrevious = finalIntake;
+        intakePreviousButton = finalManipulator.getYButton();
+
+        return finalIntake;
     }
 }

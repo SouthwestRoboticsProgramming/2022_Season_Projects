@@ -34,6 +34,11 @@ public class Localization extends Subsystem {
     return drive.getOdometry();
   }
 
+  public void setPosition(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+
   @Override
   public void robotPeriodic() {
     // double gyroAngle = Math.toDegrees(Utils.normalizeAngle(Math.toRadians(gyro.getYaw())));

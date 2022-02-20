@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.Scheduler;
 import frc.robot.command.intake.IntakeDown;
 import frc.robot.command.intake.IntakeUp;
@@ -17,25 +16,22 @@ import static frc.robot.constants.IntakeConstants.*;
 public class Intake extends Subsystem {
 
   private final Input input;
-  private final SimpleMotorFeedforward feedForward;
   private final TalonFX motor;
   private final TalonSRX lift;
   
-  private double speed;
   private boolean isDown;
 
   public Intake(Input input) {
     this.input = input;
-    feedForward = new SimpleMotorFeedforward(INTAKE_KS, INTAKE_KV, INTAKE_KA);
     motor = new TalonFX(INTAKE_MOTOR_ID);
     motor.setInverted(true);
 
     TalonFXConfiguration config = new TalonFXConfiguration();
     config.neutralDeadband = 0.001;
-    config.slot0.kF = 0;
-    config.slot0.kP = 0.1;
-    config.slot0.kI = 0;
-    config.slot0.kD = 0;
+    config.slot0.kF = INTAKE_KF;
+    config.slot0.kP = INTAKE_KP;
+    config.slot0.kI = INTAKE_KI;
+    config.slot0.kD = INTAKE_KD;
     config.slot0.closedLoopPeakOutput = 1;
     config.openloopRamp = 0.5;
     config.closedloopRamp = 0.5;
@@ -46,12 +42,6 @@ public class Intake extends Subsystem {
     lift.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     
     isDown = false;
-    
-    speed = 0;
-  }
-  
-  public void setSpeed(double percentOfMax) {
-    speed = percentOfMax * INTAKE_MAX_SPEED;
   }
   
   public void intakeDown() {
@@ -67,41 +57,21 @@ public class Intake extends Subsystem {
     
     Scheduler.get().scheduleCommand(new IntakeUp(lift));
   }
-  
-  private boolean lastUp = false, lastDown = false;
+
+
   @Override
   public void teleopPeriodic() {
     
-    if(isDown){
-      double currentVelocity = motor.getSelectedSensorPosition();
-      double velocityDiff = speed - currentVelocity;
-      double seconds = velocityDiff / INTAKE_MAX_SPEED;
-      double motorOut = feedForward.calculate(currentVelocity, speed, seconds);
-      // motor.set(ControlMode.Velocity,motorOut);
-      System.out.println("Intake Lift Motor Out: " + motorOut);
-    }
-    
-    if (input.intake()) {
-      motor.set(ControlMode.Position, 2000);
-    } else {
-      motor.set(ControlMode.Position, 0);
-    }
-    System.out.println(motor.getSelectedSensorPosition());
-    
-    boolean up = input.testIntakeLiftUp();
-    boolean down = input.testIntakeLiftDown();
-    
-    if (up && !lastUp) {
-      intakeUp();
-    }
-    
-    if (down && !lastDown) {
+    if (input.getIntake() & !input.getIntakeLift()) {
       intakeDown();
+      motor.set(ControlMode.Velocity, INTAKE_FULL_VELOCITY);
+    } else if (!input.getIntakeLift()){
+      intakeDown();
+      motor.set(ControlMode.Velocity, INTAKE_NEUTRAL_VELOCITY);
+    } else {
+      intakeUp();
+      motor.set(ControlMode.Velocity, 0);
     }
-    
-    lastUp = up;
-    lastDown = down;
-    
-    setSpeed(input.testIntakeSpeed());
+
   }
 }
