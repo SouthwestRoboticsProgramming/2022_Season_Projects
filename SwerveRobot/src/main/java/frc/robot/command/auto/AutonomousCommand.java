@@ -9,9 +9,7 @@ public final class AutonomousCommand extends CommandSequence {
         double radius = 1;
 
         Path path = new Path();
-        for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 256) {
-            path.addPoint(Math.cos(angle) * radius - radius, Math.sin(angle) * radius);
-        }
+        path.addPoint(0, 5);
 
         append(new FollowPathCommand(loc, drive, path));
     }

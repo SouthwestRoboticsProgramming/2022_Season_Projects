@@ -4,6 +4,7 @@ import frc.robot.Scheduler;
 import frc.robot.command.intake.IntakeDown;
 import frc.robot.command.intake.IntakeUp;
 import frc.robot.control.Input;
+import frc.robot.util.ShuffleBoard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -61,13 +62,19 @@ public class Intake extends Subsystem {
 
   @Override
   public void teleopPeriodic() {
+    // motor.config_kP(0, ShuffleBoard.intakeKP.getDouble(INTAKE_KP));
+    // motor.config_kI(0, ShuffleBoard.intakeKI.getDouble(INTAKE_KI));
+    // motor.config_kD(0, ShuffleBoard.intakeKD.getDouble(INTAKE_KD));
+
+    double fullVelocity = ShuffleBoard.intakeFullVelocity.getDouble(INTAKE_FULL_VELOCITY);
+    double neutralVelocity = ShuffleBoard.intakeNeutralVelocity.getDouble(INTAKE_NEUTRAL_VELOCITY);
     
     if (input.getIntake() & !input.getIntakeLift()) {
       intakeDown();
-      motor.set(ControlMode.Velocity, INTAKE_FULL_VELOCITY);
+      motor.set(ControlMode.Velocity, fullVelocity);
     } else if (!input.getIntakeLift()){
       intakeDown();
-      motor.set(ControlMode.Velocity, INTAKE_NEUTRAL_VELOCITY);
+      motor.set(ControlMode.Velocity, neutralVelocity);
     } else {
       intakeUp();
       motor.set(ControlMode.Velocity, 0);

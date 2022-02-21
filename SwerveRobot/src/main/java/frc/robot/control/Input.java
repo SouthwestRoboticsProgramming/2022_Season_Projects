@@ -4,16 +4,16 @@ import static frc.robot.constants.ControlConstants.*;
 
 public class Input {
     private final XboxController drive;
-    private final XboxController manipulator;
+    //private final XboxController manipulator;
 
-    private final XboxController finalManipulator;
+    //private final XboxController finalManipulator;
     private final XboxController finalDrive;
 
     public Input() {
         drive = new XboxController(DRIVE_CONTROLLER);
-        manipulator = new XboxController(11);
+        //manipulator = new XboxController(11);
 
-        finalManipulator = new XboxController(MANIPULATOR_CONTROLLER);
+        //finalManipulator = new XboxController(MANIPULATOR_CONTROLLER);
         finalDrive = new XboxController(DRIVE_CONTROLLER);
     }
 
@@ -36,7 +36,7 @@ public class Input {
 
     /* Final Controler Setups */
     public boolean getIntake() {
-        return finalManipulator.getLeftShoulderButton();
+        return drive.getLeftShoulderButton();
     }
 
     private boolean intakePreviousButton = false;
@@ -46,7 +46,7 @@ public class Input {
         boolean finalIntake = false;
 
         /* Get leading edge */
-        boolean pressed = finalManipulator.getYButton() && finalManipulator.getYButton() != intakePreviousButton;
+        boolean pressed = drive.getYButton() && drive.getYButton() != intakePreviousButton;
 
         /* If it's pressed, toggle the intake */
         if (pressed) {
@@ -56,24 +56,23 @@ public class Input {
         }
         
         intakePrevious = finalIntake;
-        intakePreviousButton = finalManipulator.getYButton();
+        intakePreviousButton = drive.getYButton();
 
         return finalIntake;
     }
 
     private boolean shootPrevious = false;
     public boolean getShoot() {
-        if (finalManipulator.getAButton() && finalManipulator.getAButton() != shootPrevious) {
-            shootPrevious = finalManipulator.getAButton();
+        if (drive.getAButton() && drive.getAButton() != shootPrevious) {
+            shootPrevious = drive.getAButton();
             return true;
         } else {
-            shootPrevious = finalManipulator.getAButton();
+            shootPrevious = drive.getAButton();
             return false; 
         }
-
     }
 
     public boolean getAim() {
-        return finalDrive.getRightShoulderButton() || finalManipulator.getRightShoulderButton();
+        return finalDrive.getRightShoulderButton() || drive.getRightShoulderButton();
     }
 }

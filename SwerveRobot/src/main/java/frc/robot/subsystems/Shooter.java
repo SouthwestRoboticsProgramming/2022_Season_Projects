@@ -28,6 +28,8 @@ public class Shooter extends Subsystem {
   private double distance = 0;
   private double angle = 0;
 
+  private boolean calibratingHood = true;
+
   public Shooter(SwerveDriveController swerveDriveController, CameraTurret camera, Input input) {
     this.input = input;
     driveController = swerveDriveController;
@@ -39,6 +41,7 @@ public class Shooter extends Subsystem {
 
     index.setInverted(true);
     flywheel.setInverted(true);
+    hood.setInverted(true);
 
     TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
     flywheelConfig.neutralDeadband = 0.001;
@@ -75,7 +78,7 @@ public class Shooter extends Subsystem {
     hoodConfig.closedloopRamp = 0.5;
     hood.configAllSettings(hoodConfig);
     hood.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-
+    hood.setSensorPhase(true);
   }
 
   public void shoot() {
@@ -99,7 +102,7 @@ public class Shooter extends Subsystem {
   }
 
   private int calculateHood(double distance) {
-    if (distance > 30) { return 3;}
+    if (distance > 36) { return 1;}
     if (distance > 20) { return 2;}
     if (distance > 10) { return 1;}
     return 0;
@@ -108,6 +111,32 @@ public class Shooter extends Subsystem {
   @Override
   public void teleopPeriodic() {
 
+    // Uncomment this once we have a limit switch
+    // if (calibratingHood) {
+    //   hood.set(ControlMode.PercentOutput, 0.2);
+
+    //   if (limit switch is down) {
+    //     calibratingHood = false;
+
+    //     ShuffleBoard.hoodPosition.setDouble(0);
+    //     hood.setSelectedSensorPosition(0);
+    //   }
+
+    //   return;
+    // }
+
+    // flywheel.config_kP(0, ShuffleBoard.flywheelKP.getDouble(FLYWHEEL_KP));
+    // flywheel.config_kI(0, ShuffleBoard.flywheelKI.getDouble(FLYWHEEL_KI));
+    // flywheel.config_kD(0, ShuffleBoard.flywheelKD.getDouble(FLYWHEEL_KD));
+
+    // index.config_kP(0, ShuffleBoard.indexKP.getDouble(INDEX_KP));
+    // index.config_kI(0, ShuffleBoard.indexKI.getDouble(INDEX_KI));
+    // index.config_kD(0, ShuffleBoard.indexKD.getDouble(INDEX_KD));
+
+    // hood.config_kP(0, ShuffleBoard.hoodKP.getDouble(HOOD_KP));
+    // hood.config_kI(0, ShuffleBoard.hoodKI.getDouble(HOOD_KI));
+    // hood.config_kD(0, ShuffleBoard.hoodKD.getDouble(HOOD_KD));
+
     distance = 15;
     // distance = cameraTurret.getDistance;
 
@@ -115,8 +144,12 @@ public class Shooter extends Subsystem {
     
     /* Hood control */
     // int hoodAngle = calculateHood(distance);
-    int hoodAngle = (int)Utils.clamp(ShuffleBoard.hoodPosition.getDouble(0), 0, 4);
-    hood.set(ControlMode.Position, (hoodAngle / 4 * ROTS_PER_MIN_MAX * TICKS_PER_ROT));
+    double hoodAngle = Utils.clamp(ShuffleBoard.hoodPosition.getDouble(0), 0, 4);
+    //System.out.println("Hood angle is " + hoodAngle);
+    double targetHood = (hoodAngle / 3.0 * ROTS_PER_MIN_MAX * TICKS_PER_ROT);
+    hood.set(ControlMode.Position, targetHood);
+
+    // System.out.printf("Current: %3.3f Target: %3.3f %n", hood.getSelectedSensorPosition(), targetHood);
 
     if (input.getAim()) {
       flywheel.set(ControlMode.Velocity, ShuffleBoard.shooterFlywheelVelocity.getDouble(SHOOTER_IDLE_VELOCITY)/*calculateSpeed(distance, hoodAngle)*/);

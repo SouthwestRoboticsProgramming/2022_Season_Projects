@@ -75,7 +75,7 @@ public class SwerveDriveController {
             rot = autoRot;
             driveX = autoDriveX;
             driveY = autoDriveY;
-            // System.out.println("Auto");
+            System.out.println("Auto");
         } else {
             // System.out.println("no auto");
         }
