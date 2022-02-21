@@ -7,12 +7,14 @@ public class Input {
     private final XboxController manipulator;
 
     private final XboxController finalManipulator;
+    private final XboxController finalDrive;
 
     public Input() {
         drive = new XboxController(DRIVE_CONTROLLER);
-        manipulator = new XboxController(MANIPULATOR_CONTROLLER);
+        manipulator = new XboxController(11);
 
-        finalManipulator = new XboxController(3);
+        finalManipulator = new XboxController(MANIPULATOR_CONTROLLER);
+        finalDrive = new XboxController(DRIVE_CONTROLLER);
     }
 
     public double getDriveX() {
@@ -27,68 +29,6 @@ public class Input {
         return -drive.getRightStickX();
     }
 
-    public boolean getSwingLeft() {
-        return drive.getLeftShoulderButton();
-    }
-
-    public boolean getSwingRight() {
-        return drive.getRightShoulderButton();
-    }
-
-    public boolean getShoot() {
-        return drive.getAButton();
-    }
-
-    public boolean getAim() {
-        return drive.getRightShoulderButton();
-    }
-
-
-
-
-
-    /* Tests */
-
-    public double testHoodAngle() {
-        double angle = -1;
-        
-        // FIXME: @mvog2501 choose angles
-        if (manipulator.getDpadDown()) angle = 0;
-        if (manipulator.getDpadUp()) angle = 0;
-        if (manipulator.getDpadLeft()) angle = 0;
-        if (manipulator.getDpadRight()) angle = 0;
-
-        return angle;
-    }
-
-    public double testShooterSpeed() {
-        return manipulator.getRightTrigger() * 3;
-    }
-
-    public boolean testShoot() {
-        return manipulator.getRightShoulderButton();
-    }
-
-    public boolean testIntakeLiftUp() {
-        return manipulator.getXButton();
-    }
-
-    public boolean testIntakeLiftDown() {
-        return manipulator.getAButton();
-    }
-
-    public double testIntakeSpeed() {
-        return manipulator.getLeftTrigger();
-    }
-
-    public boolean shoot() {
-        return manipulator.getWindowButton();
-    }
-
-    public boolean intake() {
-        return manipulator.getMenuButton();
-    }
-
 
 
 
@@ -96,7 +36,7 @@ public class Input {
 
     /* Final Controler Setups */
     public boolean getIntake() {
-        return finalManipulator.getRightShoulderButton();
+        return finalManipulator.getLeftShoulderButton();
     }
 
     private boolean intakePreviousButton = false;
@@ -119,5 +59,21 @@ public class Input {
         intakePreviousButton = finalManipulator.getYButton();
 
         return finalIntake;
+    }
+
+    private boolean shootPrevious = false;
+    public boolean getShoot() {
+        if (finalManipulator.getAButton() && finalManipulator.getAButton() != shootPrevious) {
+            shootPrevious = finalManipulator.getAButton();
+            return true;
+        } else {
+            shootPrevious = finalManipulator.getAButton();
+            return false; 
+        }
+
+    }
+
+    public boolean getAim() {
+        return finalDrive.getRightShoulderButton() || finalManipulator.getRightShoulderButton();
     }
 }

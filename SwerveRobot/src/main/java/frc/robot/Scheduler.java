@@ -81,7 +81,6 @@ public final class Scheduler {
         public boolean update() {
             if (--timer <= 0) {
                 timer = cmd.getInterval();
-                System.out.println("Updating " + cmd);
                 return cmd.run();
             }
 

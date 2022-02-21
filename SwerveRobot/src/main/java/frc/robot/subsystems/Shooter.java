@@ -8,11 +8,11 @@ import frc.robot.util.ShuffleBoard;
 import frc.robot.util.Utils;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
 import static frc.robot.constants.ShooterConstants.*;
 
@@ -20,33 +20,18 @@ import static frc.robot.constants.ShooterConstants.*;
 public class Shooter extends Subsystem {
   private final Input input;
   private final SwerveDriveController driveController;
-  private SimpleMotorFeedforward feedForward;
-  private final PIDController hoodPID;
   private final CameraTurret cameraTurret;
   private final TalonFX flywheel;
   private final TalonFX index;
   private final TalonSRX hood;
 
-  //private final IndexBall indexBall;
-
-  private double hoodTarget;
-  private double speed = 0;
-
-
-  private void recreateFeedForward() {
-    feedForward = new SimpleMotorFeedforward(
-      ShuffleBoard.flywheelKS.getDouble(SHOOTER_KS), 
-      ShuffleBoard.flywheelKV.getDouble(SHOOTER_KV), 
-      ShuffleBoard.flywheelKA.getDouble(SHOOTER_KA)
-    );
-  }
+  private double distance = 0;
+  private double angle = 0;
 
   public Shooter(SwerveDriveController swerveDriveController, CameraTurret camera, Input input) {
     this.input = input;
     driveController = swerveDriveController;
     
-    hoodPID = new PIDController(HOOD_KP, HOOD_KI, HOOD_KD);
-    recreateFeedForward();
     cameraTurret = camera;
     flywheel = new TalonFX(FLYWHEEL_MOTOR_ID);
     index = new TalonFX(INDEX_MOTOR_ID);
@@ -55,65 +40,95 @@ public class Shooter extends Subsystem {
     index.setInverted(true);
     flywheel.setInverted(true);
 
-    //indexBall = new IndexBall(index);
+    TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
+    flywheelConfig.neutralDeadband = 0.001;
+    flywheelConfig.slot0.kF = FLYWHEEL_KF;
+    flywheelConfig.slot0.kP = FLYWHEEL_KP;
+    flywheelConfig.slot0.kI = FLYWHEEL_KI;
+    flywheelConfig.slot0.kD = FLYWHEEL_KD;
+    flywheelConfig.slot0.closedLoopPeakOutput = 1;
+    flywheelConfig.openloopRamp = 0.5;
+    flywheelConfig.closedloopRamp = 0.5;
+    flywheel.configAllSettings(flywheelConfig);
+    flywheel.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
+    TalonFXConfiguration indexConfig = new TalonFXConfiguration();
+    indexConfig.neutralDeadband = 0.001;
+    indexConfig.slot0.kF = INDEX_KF;
+    indexConfig.slot0.kP = INDEX_KP;
+    indexConfig.slot0.kI = INDEX_KI;
+    indexConfig.slot0.kD = INDEX_KD;
+    indexConfig.slot0.closedLoopPeakOutput = 1;
+    indexConfig.openloopRamp = 0.5;
+    indexConfig.closedloopRamp = 0.5;
+    index.configAllSettings(indexConfig);
+    index.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
+    TalonSRXConfiguration hoodConfig = new TalonSRXConfiguration();
+    hoodConfig.neutralDeadband = 0.001;    
+    indexConfig.slot0.kF = HOOD_KF;
+    hoodConfig.slot0.kP = HOOD_KP;
+    hoodConfig.slot0.kI = HOOD_KI;
+    hoodConfig.slot0.kD = HOOD_KD;
+    hoodConfig.slot0.closedLoopPeakOutput = 1;
+    hoodConfig.openloopRamp = 0.5;
+    hoodConfig.closedloopRamp = 0.5;
+    hood.configAllSettings(hoodConfig);
+    hood.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
   }
 
   public void shoot() {
-    //indexBall.run();
     Scheduler.get().scheduleCommand(new IndexBall(index));
   }
 
-  public void setDistance(double distance){
-
+  public void shootManualDistance() {
+    Scheduler.get().scheduleCommand(new IndexBall(index));
+    // TODO: Add distance to shoot command
   }
-  
-  public void setHood(double angle) {
-    hoodTarget = Utils.clamp(angle, MIN_ANGLE, MAX_ANGLE);
-  }
-  
-  private boolean lastShoot = false;
-  @Override
-  public void robotPeriodic() {
 
-    // TODO: Replace with distance equation
-    speed = input.testShooterSpeed();
-    setHood(input.testHoodAngle());
+
+  private double calculateSpeed(double distance, int hoodAngle) {
+    if (hoodAngle == 0) { return 10;}
+    if (hoodAngle == 1) { return 20;}
+    if (hoodAngle == 2) { return 30;}
+    if (hoodAngle == 3) { return 40;}
+    return SHOOTER_IDLE_VELOCITY;
     
-    //double targetAngle = cameraTurret.getAngle();
+    // TODO: Equations
+  }
 
-    // TODO: Find speed and andle based on distance
+  private int calculateHood(double distance) {
+    if (distance > 30) { return 3;}
+    if (distance > 20) { return 2;}
+    if (distance > 10) { return 1;}
+    return 0;
+  }
+  
+  @Override
+  public void teleopPeriodic() {
+
+    distance = 15;
+    // distance = cameraTurret.getDistance;
+
+    // angle = cameraTurret.getAngle;
     
     /* Hood control */
-    double currentHoodAngle = hood.getSelectedSensorPosition() * ROTS_PER_DEGREE + MIN_ANGLE;
-    double hoodOut = hoodPID.calculate(currentHoodAngle, hoodTarget);
+    // int hoodAngle = calculateHood(distance);
+    int hoodAngle = (int)Utils.clamp(ShuffleBoard.hoodPosition.getDouble(0), 0, 4);
+    hood.set(ControlMode.Position, (hoodAngle / 4 * ROTS_PER_MIN_MAX * TICKS_PER_ROT));
 
-    // if (input.debug()) {
-    //   recreateFeedForward();
-    //   System.out.printf("Recreated feed forward: s %.3f v %.3f a %.3f %n", feedForward.ks, feedForward.kv, feedForward.ka);
-    // }
-
-    //feedForward = ShuffleBoard.flywheelKA.getDouble(SHOOTER_KA);
-    
-    double flywheelCurrentVelocity = flywheel.getSelectedSensorVelocity();
-    double flywheelVelocityDiff = speed - flywheelCurrentVelocity;
-    double flywheelSeconds = 1; //flywheelVelocityDiff / SHOOTER_MAX_ACCEL;
-    double flywheelOut = feedForward.calculate(flywheelCurrentVelocity, speed, Math.abs(flywheelSeconds));
-    //System.out.printf("cv: %3.3f diff: %3.3f sec: %3.3f out: %3.3f %n", flywheelCurrentVelocity, flywheelVelocityDiff, flywheelSeconds, flywheelOut);
-
-    hood.set(ControlMode.PercentOutput, hoodOut);
-    flywheel.set(ControlMode.PercentOutput, input.shoot() ? 0.75 : 0);
-    
     if (input.getAim()) {
+      flywheel.set(ControlMode.Velocity, ShuffleBoard.shooterFlywheelVelocity.getDouble(SHOOTER_IDLE_VELOCITY)/*calculateSpeed(distance, hoodAngle)*/);
+      driveController.turnToTarget(0 /* cameraTurret.getAngle */);
+      System.out.println("Preparing to fire with a velocity of: " + ShuffleBoard.shooterFlywheelVelocity.getDouble(SHOOTER_IDLE_VELOCITY));
+    } else {
+      flywheel.set(ControlMode.Velocity, SHOOTER_IDLE_VELOCITY);
     }
     
     if (input.getShoot()) {
-      // Do the shooty shooty
-    }
-
-    boolean shoot = input.testShoot();
-    if (shoot && !lastShoot) {
+      System.out.println("Shooting");
       shoot();
     }
-    lastShoot = shoot;
   }
 }

@@ -127,11 +127,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveController.update();
-
-    double hubAngle = input.testHoodAngle();
-    if (hubAngle > 0) {
-      shooter.setHood(hubAngle);
-    }
   }
 
   @Override

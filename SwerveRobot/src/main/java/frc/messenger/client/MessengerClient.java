@@ -62,8 +62,6 @@ public class MessengerClient {
                 noOp = true;
             }
         }
-
-        System.out.println("ok");
     }
 
     /**

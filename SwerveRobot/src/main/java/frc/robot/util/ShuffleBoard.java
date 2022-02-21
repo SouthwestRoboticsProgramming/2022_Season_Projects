@@ -15,9 +15,9 @@ public class ShuffleBoard {
         private static ShuffleboardLayout drive = driveTab.getLayout("drive", BuiltInLayouts.kList);
         public static NetworkTableEntry wheelTurnKP = drive.addPersistent("Wheel Turn KP",WHEEL_TURN_KP).getEntry();
     
-    public static ShuffleboardTab tuneTab = Shuffleboard.getTab("tune it");
-        private static ShuffleboardLayout tune = tuneTab.getLayout("tune", BuiltInLayouts.kList);
-        public static NetworkTableEntry flywheelKS = tune.addPersistent("KS", SHOOTER_KS).getEntry();
-        public static NetworkTableEntry flywheelKV = tune.addPersistent("KV", SHOOTER_KV).getEntry();
-        public static NetworkTableEntry flywheelKA = tune.addPersistent("KA", SHOOTER_KA).getEntry();
+    public static ShuffleboardTab tuneTab = Shuffleboard.getTab("Tune");
+        private static ShuffleboardLayout tune = tuneTab.getLayout("Tune", BuiltInLayouts.kList);
+        
+        public static NetworkTableEntry hoodPosition = tune.addPersistent("Hood Position (0-4)", 0).getEntry();
+        public static NetworkTableEntry shooterFlywheelVelocity = tune.addPersistent("Shooter Flywheel Velocity", SHOOTER_IDLE_VELOCITY).getEntry();
 }

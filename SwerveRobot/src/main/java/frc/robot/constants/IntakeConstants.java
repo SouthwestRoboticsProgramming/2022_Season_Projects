@@ -3,8 +3,8 @@ package frc.robot.constants;
 public class IntakeConstants {
 
     /* Settings */
-    public static final double INTAKE_FULL_VELOCITY = 3 * 2000;
-    public static final double INTAKE_NEUTRAL_VELOCITY = 1 * 2000;
+    public static final double INTAKE_FULL_VELOCITY = 3 * 2048;
+    public static final double INTAKE_NEUTRAL_VELOCITY = 1 * 2048;
 
     public static final double INTAKE_TIME = 50 * 1; // 50 * Seconds
     public static final double INTAKE_RETRACTION_SPEED = 0.15; // Percent between 0 and 1;
