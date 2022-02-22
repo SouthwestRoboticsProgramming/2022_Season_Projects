@@ -1,4 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e4ee592e-003e-4777-a1c4-a21f1b89b8f2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/NewDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Demo/src/main/java/frc/lidar/demo/NewDemo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/Lidar-Task/src/main/java/frc/messenger/client/MessengerClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lidar/Lidar-Task/src/main/java/frc/messenger/client/MessengerClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/task/Lidar-Task-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lidar/task/task.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ShuffleWood/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/lidar/LidarTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ShuffleWood/src/main/java/frc/shufflewood/tools/lidar/LidarTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/constants/ShooterConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/constants/ShooterConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/subsystems/Shooter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SwerveRobot/src/main/java/frc/robot/subsystems/Shooter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="25Te002iQYwbBGqyVELnATXSpsX" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+  </component>
   <component name="RunManager" selected="Application.ControllerMain" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e4ee592e-003e-4777-a1c4-a21f1b89b8f2" name="Default Changelist" comment="" />
+      <created>1645555276976</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1645555276976</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1645566636784">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1645566636784" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1645566636783">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1645566636783" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1645566636783">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1645566636783" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1645566636783">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1645566636783" />
+  </component>
 </project>

@@ -14,6 +14,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 import static frc.robot.constants.ShooterConstants.*;
 
 
@@ -24,6 +26,7 @@ public class Shooter extends Subsystem {
   private final TalonFX flywheel;
   private final TalonFX index;
   private final TalonSRX hood;
+  private final DigitalInput hoodLimit;
 
   private double distance = 0;
   private double angle = 0;
@@ -42,6 +45,8 @@ public class Shooter extends Subsystem {
     index.setInverted(true);
     flywheel.setInverted(true);
     hood.setInverted(true);
+
+    hoodLimit = new DigitalInput(HOOD_LIMIT_CHANNEL);
 
     TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
     flywheelConfig.neutralDeadband = 0.001;
@@ -115,7 +120,7 @@ public class Shooter extends Subsystem {
     // if (calibratingHood) {
     //   hood.set(ControlMode.PercentOutput, 0.2);
 
-    //   if (limit switch is down) {
+    //   if (hoodLimit.get()) {
     //     calibratingHood = false;
 
     //     ShuffleBoard.hoodPosition.setDouble(0);
@@ -124,6 +129,8 @@ public class Shooter extends Subsystem {
 
     //   return;
     // }
+
+    System.out.println("Limit switch: " + hoodLimit.get());
 
     // flywheel.config_kP(0, ShuffleBoard.flywheelKP.getDouble(FLYWHEEL_KP));
     // flywheel.config_kI(0, ShuffleBoard.flywheelKI.getDouble(FLYWHEEL_KI));
