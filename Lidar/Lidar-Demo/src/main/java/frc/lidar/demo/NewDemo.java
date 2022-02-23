@@ -21,9 +21,9 @@ public class NewDemo extends PApplet {
 
     // Constants
     private static final float ROBOT_DIAMETER = 0.34f;
-    private static final float LIDAR_OFFSET_X = -0.1016f; // These are estimates converted from inches to centimeters
-    private static final float LIDAR_OFFSET_Y = -0.0381f;
-    private static final int MAX_PAST_SAMPLES = 100;
+    private static final float LIDAR_OFFSET_X = 0;//-0.1016f; // These are estimates converted from inches to centimeters
+    private static final float LIDAR_OFFSET_Y = 0;//-0.0381f;
+    private static final int MAX_PAST_SAMPLES = 25;
 
     // Communication
     private MessengerClient msg;
@@ -50,7 +50,7 @@ public class NewDemo extends PApplet {
         lidarSamples.add(new Sample(1, 0));
         lidarSamples.add(new Sample(0, 1));
 
-        msg = new MessengerClient("10.21.29.17", 8341, "LidarDemo");
+        msg = new MessengerClient("10.21.29.3", 5805, "LidarDemo");
         msg.setCallback(this::messageCallback);
         msg.listen("Lidar:Scan");
         msg.listen("Lidar:ScanStart");
@@ -88,7 +88,7 @@ public class NewDemo extends PApplet {
         translate(robotX, robotY);
 
         // Draw the bounding circle of the robot
-        stroke(255);
+        /*stroke(255);
         strokeWeight(1);
         fill(128, 64);
         ellipse(0, 0, ROBOT_DIAMETER, ROBOT_DIAMETER);
@@ -109,7 +109,7 @@ public class NewDemo extends PApplet {
         // Indicate the position of the lidar on the robot
         stroke(0, 0, 255);
         strokeWeight(6);
-        point(lidarX, lidarY);
+        point(lidarX, lidarY);*/
     }
 
     private List<Sample> sortSamples(Set<Sample> samples) {
@@ -237,6 +237,11 @@ public class NewDemo extends PApplet {
     @Override
     public void strokeWeight(float weight) {
         super.strokeWeight(weight / zoom);
+    }
+
+    @Override
+    public void keyPressed() {
+        msg.sendMessage("Lidar:Start", new byte[0]);
     }
 
     @Override

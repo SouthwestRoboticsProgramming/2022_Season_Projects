@@ -32,6 +32,8 @@ public class ShooterConstants {
     public static final int INDEX_MOTOR_ID = 33;
     public static final int HOOD_MOTOR_ID = 31; //FIXME
 
+    public static final int HOOD_LIMIT_CHANNEL = 0;
+
     public static final double ROTS_PER_MIN_MAX = 40/22;
     public static final double TICKS_PER_ROT = 177.6;
     

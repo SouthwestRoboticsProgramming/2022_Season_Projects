@@ -27,6 +27,9 @@ public class MessengerClient {
     }
 
     public void sendMessage(String type, byte[] data) {
+//        long id = System.nanoTime();
+//
+//        System.out.println(id + " Sending " + type + " with " + data.length + " data");
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream d = new DataOutputStream(b);
 
@@ -41,6 +44,8 @@ public class MessengerClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+//        System.out.println(id + " Done sending " + type);
     }
 
     public void listen(String type) {
