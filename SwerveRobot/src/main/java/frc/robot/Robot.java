@@ -13,6 +13,7 @@ import frc.robot.subsystems.CameraTurret;
 import frc.robot.subsystems.Cameras;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Localization;
+import frc.robot.control.ClimberController;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.ShuffleBoard;
 import frc.robot.util.ShuffleWood;
@@ -42,6 +43,7 @@ public class Robot extends TimedRobot {
   private CameraTurret cameraTurret;
   private Shooter shooter;
   private Intake intake;
+  private ClimberController climber;
 
   private RobotState state;
   private Localization localization;
@@ -89,6 +91,7 @@ public class Robot extends TimedRobot {
     localization = new Localization(gyro, drive);
     shooter = new Shooter(driveController, null, input);
     intake = new Intake(input);
+    climber = new ClimberController(input);
     
     driveController.swerveInit();
 

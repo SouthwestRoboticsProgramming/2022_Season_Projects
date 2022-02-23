@@ -1,6 +1,7 @@
 package frc.robot.subsystems.climber;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -16,31 +17,32 @@ public class SwingingArm extends Subsystem {
   private final RelativeEncoder encoder;
   private final PIDController pid;
 
-  private final double arm, base, distPerRot;
+  private final double arm, base, rotsPerInch;
 
-  public SwingingArm(int motorID, double armLength, double pivotToMotor, double distancePerRotation) {
+  public SwingingArm(int motorID) {
     motor = new CANSparkMax(motorID, MotorType.kBrushless);
     encoder = motor.getEncoder();
     pid = new PIDController(CLIMBER_SWING_MOTOR_KP, CLIMBER_SWING_MOTOR_KI, CLIMBER_SWING_MOTOR_KD);
 
     motor.setIdleMode(IdleMode.kBrake);
+    motor.setInverted(false);
     
-    arm = armLength;
-    base = pivotToMotor;
-    distPerRot = distancePerRotation;
+    arm = CLIMBER_SWING_ARM;
+    base = CLIMBER_SWING_BASE;
+    rotsPerInch = CLIMBER_SWING_ROTS_PER_INCH;
   }
 
-  public void swingToAngle(double angle) {
-    double currentPose = encoder.getPosition() * distPerRot;
-    double currentAngle = (base*base + arm*arm - currentPose);
+  public void swingToAngle(double degrees) {
+    double currentPose = encoder.getPosition() * rotsPerInch + CLIMBER_STARTING_DIST;
+    double currentAngle = Math.acos((base*base + arm*arm - currentPose*currentPose)/(2*arm*base));
 
-    double percentOut = pid.calculate(currentAngle, angle);
-    motor.set(percentOut);
+    double percentOut = pid.calculate(Math.toDegrees(currentAngle), degrees);
+    //motor.set(percentOut);
   }
 
   @Override
   public void robotPeriodic() {
-    
+
   }
 
   @Override
