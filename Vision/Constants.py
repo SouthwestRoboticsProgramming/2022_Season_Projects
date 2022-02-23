@@ -3,7 +3,7 @@ class Constants:
     SHOW_VISUALIZERS = False
 
     HUB_CAMERA = 0 #FIXME
-    HUB_TARGET_DIAMETER = 60 #FIXME
+    HUB_TARGET_DIAMETER = 53.75 #FIXME
 
     BALL_DETECTION_CAMERA_LEFT = 0 #FIXME
     BALL_DETECTION_CAMERA_RIGHT = 2 #FIXME
@@ -13,8 +13,8 @@ class Constants:
 
     BOUNDING_COLOR = (0,255,0)
 
-    USBCAMERA_ALPHA = 50 # TODO: Find horizonatl FOV
-    USBCAMERA_BETA = 30 # TODO: Find vertical FOV
+    USBCAMERA_ALPHA = 55 # TODO: Find horizonatl FOV
+    USBCAMERA_BETA = 41.2 # TODO: Find vertical FOV
 
     # Module 1
     MODULE_1_CAMID = 0

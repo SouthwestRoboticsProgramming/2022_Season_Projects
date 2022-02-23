@@ -130,8 +130,6 @@ public class Shooter extends Subsystem {
     //   return;
     // }
 
-    System.out.println("Limit switch: " + hoodLimit.get());
-
     // flywheel.config_kP(0, ShuffleBoard.flywheelKP.getDouble(FLYWHEEL_KP));
     // flywheel.config_kI(0, ShuffleBoard.flywheelKI.getDouble(FLYWHEEL_KI));
     // flywheel.config_kD(0, ShuffleBoard.flywheelKD.getDouble(FLYWHEEL_KD));
@@ -161,13 +159,11 @@ public class Shooter extends Subsystem {
     if (input.getAim()) {
       flywheel.set(ControlMode.Velocity, ShuffleBoard.shooterFlywheelVelocity.getDouble(SHOOTER_IDLE_VELOCITY)/*calculateSpeed(distance, hoodAngle)*/);
       driveController.turnToTarget(0 /* cameraTurret.getAngle */);
-      System.out.println("Preparing to fire with a velocity of: " + ShuffleBoard.shooterFlywheelVelocity.getDouble(SHOOTER_IDLE_VELOCITY));
     } else {
       flywheel.set(ControlMode.Velocity, SHOOTER_IDLE_VELOCITY);
     }
     
     if (input.getShoot()) {
-      System.out.println("Shooting");
       shoot();
     }
   }

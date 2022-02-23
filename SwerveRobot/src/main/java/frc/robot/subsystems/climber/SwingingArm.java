@@ -1,7 +1,6 @@
 package frc.robot.subsystems.climber;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -23,6 +22,7 @@ public class SwingingArm extends Subsystem {
     motor = new CANSparkMax(motorID, MotorType.kBrushless);
     encoder = motor.getEncoder();
     pid = new PIDController(CLIMBER_SWING_MOTOR_KP, CLIMBER_SWING_MOTOR_KI, CLIMBER_SWING_MOTOR_KD);
+    pid.setTolerance(CLIMBER_SWING_TOLERANCE);
 
     motor.setIdleMode(IdleMode.kBrake);
     motor.setInverted(false);
@@ -37,7 +37,11 @@ public class SwingingArm extends Subsystem {
     double currentAngle = Math.acos((base*base + arm*arm - currentPose*currentPose)/(2*arm*base));
 
     double percentOut = pid.calculate(Math.toDegrees(currentAngle), degrees);
-    //motor.set(percentOut);
+    motor.set(percentOut);
+  }
+
+  public boolean isAtAngle() {
+    return pid.atSetpoint();
   }
 
   @Override

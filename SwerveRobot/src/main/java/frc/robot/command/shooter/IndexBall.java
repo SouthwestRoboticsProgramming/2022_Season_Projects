@@ -29,7 +29,6 @@ public class IndexBall implements Command {
 
     if (end) {
       indexMotor.set(ControlMode.PercentOutput, 0);
-      System.out.println("Index end");
     }
 
     return end;

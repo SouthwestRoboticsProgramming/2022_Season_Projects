@@ -23,6 +23,7 @@ public class TelescopingArm extends Subsystem {
     motorOne.setIdleMode(IdleMode.kBrake);
     motorTwo.setIdleMode(IdleMode.kBrake);
     pid = new PIDController(CLIMBER_TELE_MOTOR_KP, CLIMBER_TELE_MOTOR_KI, CLIMBER_TELE_MOTOR_KD);
+    pid.setTolerance(CLIMBER_TELE_TOLERANCE);
 
     encoder = motorOne.getEncoder();
 
@@ -47,6 +48,10 @@ public class TelescopingArm extends Subsystem {
    motorOne.set(percentOut);
    motorTwo.set(percentOut);
 
+  }
+
+  public boolean isAtPosition() {
+    return pid.atSetpoint();
   }
 
   @Override
