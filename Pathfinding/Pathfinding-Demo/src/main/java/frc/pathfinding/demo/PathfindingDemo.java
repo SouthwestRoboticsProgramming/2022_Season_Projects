@@ -40,12 +40,12 @@ public class PathfindingDemo extends PApplet {
         cellSize = width / (float) CELLS_X;
 
         //grid.addObstacle(new CircleCollider(.5*CELLS_X, .5*CELLS_Y, 7));
-        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313, 12.313, Math.toRadians(66)));
-        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313 + 4.417, 4, Math.toRadians(66)));
-        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313 + 4.417, 4, Math.toRadians(66+90)));
-        grid.addObstacle(new RectangleCollider(0, CELLS_Y, 15.42, 15.42, .25*Math.PI));
-        grid.addObstacle(new RectangleCollider(CELLS_X, 0, 15.42, 15.42, .25*Math.PI));
-        //grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 7.69, height, 0));
+        //grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313, 12.313, Math.toRadians(66)));
+//        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313 + 4.417, 4, Math.toRadians(66)));
+//        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 12.313 + 4.417, 4, Math.toRadians(66+90)));
+//        grid.addObstacle(new RectangleCollider(0, CELLS_Y, 15.42, 15.42, .25*Math.PI));
+//        grid.addObstacle(new RectangleCollider(CELLS_X, 0, 15.42, 15.42, .25*Math.PI));
+//        grid.addObstacle(new RectangleCollider(.5*CELLS_X, .5*CELLS_Y, 7.69, height, 0));
         grid.loadFromFile("scene.txt");
 
         pathfinder = new Pathfinder(grid);
