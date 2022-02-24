@@ -63,41 +63,37 @@ class VisionThreads:
             print("Unknown message", type)
 
     def _hubModule(self,camID,hubDiameter):
-
-        while not self.enableHub:
-            time.sleep(1/50.0)
-            self.client.read()
-
         settings = self.readValues("hubSettings")
 
-        if Constants.EXPERIMENTAL:
-            self._createTrackbars("Hub Camera ID: " + str(camID))
-        module = SingleModule(camID,settings)
-        while self.enableHub:
+
+        while not self.enableBallDetect:
             time.sleep(1/50.0)
-
-
-            if Constants.EXPERIMENTAL:
-                settings = self._getTrackbars("Hub Camera ID: " + str(camID))
-
-            Xangle, Xangle2, Yangle, frame = module.getMeasurements(settings)
-
-            data = None
-            if not Xangle is False:
-
-                diffAngle = abs(Xangle2 - Xangle)
-                distance = (.5 * hubDiameter) / math.tan(math.radians(diffAngle))
-
-                print(distance)
-
-                data = struct.pack(">?dd", True, Xangle, distance)
-            else:
-                data = struct.pack(">?", False)
-            self.client.send_message("Vision:Hub_Measurements", data)
             self.client.read()
 
+        if Constants.EXPERIMENTAL:
+            self._createTrackbars("Hub Module ID: " + str(camIDL) + ", " + str(camIDR))
+        module = StereoModule(camIDL,camIDR,baseline,settings)
+
+        while self.enableHub:
+
+            time.sleep(1/50.0)
+
             if Constants.EXPERIMENTAL:
-                cv2.imshow(str("Hub Camera ID: " + str(camID)),frame)
+                settings = self._getTrackbars("Hub Module ID: " + str(camIDL) + ", " + str(camIDR))
+
+            globalPose,localPose, outputFrame = module.getMeasurements(settings)
+
+            if self.connection:
+                data = None
+                if not isinstance(globalPose, str):
+                    data = struct.pack(">?dd",True,localPose[0],localPose[2])
+                else:
+                    data = struct.pack(">?",False)
+                self.client.send_message("Vision:Hub_Measurements", data)
+                self.client.read()
+
+            if Constants.EXPERIMENTAL:
+                cv2.imshow(str("Hub Module ID: " + str(camIDL) + ", " + str(camIDR)),outputFrame)
                 cv2.waitKey(1)
 
                 if cv2.waitKey(1) & 0xFF == ord('1'):
