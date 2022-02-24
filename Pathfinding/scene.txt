@@ -1,4 +1,21 @@
 # Test scene
 
-circle x=10 y=10 radius=2.5
-rectangle x=20 y=10 width=5 height=10 rotation=8732
+# width is 108
+# height is 52
+
+# walls
+rectangle x=54 y=-1 width=108 height=2
+rectangle x=54 y=53 width=180 height=2
+rectangle x=-1 y=26 width=2 height=52
+rectangle x=109 y=26 width=2 height=52
+
+# hub
+rectangle x=54 y=26 width=12.313 height=12.313 rotation=66
+rectangle x=54 y=26 width=16.73 height=4 rotation=66
+rectangle x=54 y=26 width=16.73 height=4 rotation=156
+
+# blue terminal
+rectangle x=0 y=52 width=15.42 height=15.42 rotation=45
+
+# red terminal
+rectangle x=108 y=0 width=15.42 height=15.42 rotation=45
