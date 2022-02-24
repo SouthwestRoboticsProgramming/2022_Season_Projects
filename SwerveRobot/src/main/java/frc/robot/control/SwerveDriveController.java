@@ -27,6 +27,7 @@ public class SwerveDriveController {
         this.input = input;
         rotPID = new PIDController(GLOBAL_TURN_KP, GLOBAL_TURN_KI, GLOBAL_TURN_KD);
         rotPID.enableContinuousInput(-180, 180);
+        rotPID.setTolerance(2);
         autoControl = false;
     }
 
@@ -98,6 +99,10 @@ public class SwerveDriveController {
         double targetRotPercent = rotPID.calculate(drive.getGyroscopeRotation().getDegrees(),angleTargetDegrees);
         autoControl = true;
         this.autoRot = targetRotPercent;
+    }
+    
+    public boolean isAtTarget() {
+        return rotPID.atSetpoint();
     }
 
     public void drive(double x, double y, double rot) {

@@ -6,14 +6,14 @@ public class Input {
     private final XboxController drive;
     //private final XboxController manipulator;
 
-    //private final XboxController finalManipulator;
+    private final XboxController finalManipulator;
     private final XboxController finalDrive;
 
     public Input() {
         drive = new XboxController(DRIVE_CONTROLLER);
         //manipulator = new XboxController(11);
 
-        //finalManipulator = new XboxController(MANIPULATOR_CONTROLLER);
+        finalManipulator = new XboxController(MANIPULATOR_CONTROLLER);
         finalDrive = new XboxController(DRIVE_CONTROLLER);
     }
 
@@ -74,5 +74,13 @@ public class Input {
 
     public boolean getAim() {
         return finalDrive.getRightShoulderButton() || drive.getRightShoulderButton();
+    }
+    /* Climber */
+    public double getClimbTele() {
+        return finalManipulator.getLeftStickY();
+    }
+
+    public boolean getClimbNextStep() {
+        return finalManipulator.getLeftShoulderButton() && finalManipulator.getRightShoulderButton();
     }
 }
