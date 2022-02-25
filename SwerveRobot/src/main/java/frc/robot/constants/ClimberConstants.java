@@ -14,6 +14,10 @@ public class ClimberConstants {
     public static final double CLIMBER_TELE_TOLERANCE = 20;
     public static final double CLIMBER_MAX_SPEED = 0.20; // Percent 0 to 1
 
+
+    /* Climb Steps */
+    public static final double CLIMBER_ARM_OUT_OF_THE_WAY = 100;
+
     /* Hardware */
     public static final int CLIMBER_LEFT_TELE_MOTOR_ONE_ID = 20; //FIXME
     public static final int CLIMBER_LEFT_TELE_MOTOR_TWO_ID = 21; //FIXME

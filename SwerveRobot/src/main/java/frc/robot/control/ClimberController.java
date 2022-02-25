@@ -5,6 +5,11 @@ import frc.robot.subsystems.climber.SwingingArm;
 import frc.robot.subsystems.climber.TelescopingArm;
 import frc.robot.util.Utils;
 import frc.robot.control.Input;
+import frc.robot.Scheduler;
+
+import frc.robot.command.Command;
+import frc.robot.command.CommandSequence;
+import frc.robot.command.climb.SetArmRotation;
 
 import static frc.robot.constants.ClimberConstants.*;
 
@@ -26,6 +31,10 @@ public class ClimberController extends Subsystem {
   }
 
   public void groundToSecond() {
+
+    Scheduler.get().scheduleCommand(new SetArmRotation(swingLeft, CLIMBER_ARM_OUT_OF_THE_WAY));
+    Scheduler.get().scheduleCommand(new SetArmRotation(swingRight, CLIMBER_ARM_OUT_OF_THE_WAY));
+
     teleLeft.liftArm(Utils.clamp(input.getClimbTele(),-CLIMBER_MAX_SPEED, CLIMBER_MAX_SPEED));
     teleRight.liftArm(Utils.clamp(input.getClimbTele(),-CLIMBER_MAX_SPEED, CLIMBER_MAX_SPEED));
 
@@ -35,7 +44,7 @@ public class ClimberController extends Subsystem {
   }
 
   private void groundToSecondII() {
-    
+    System.out.println("Onto the second half of ground to second");
   }
 
   public void secondToThird() {}
