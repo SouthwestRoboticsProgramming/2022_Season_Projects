@@ -112,36 +112,11 @@ public class Shooter extends Subsystem {
     if (distance > 10) { return 1;}
     return 0;
   }
+
+  double lastHoodAngle = 0;
   
   @Override
   public void teleopPeriodic() {
-
-    // Uncomment this once we have a limit switch
-    // if (calibratingHood) {
-    //   hood.set(ControlMode.PercentOutput, 0.2);
-
-    //   if (hoodLimit.get()) {
-    //     calibratingHood = false;
-
-    //     ShuffleBoard.hoodPosition.setDouble(0);
-    //     hood.setSelectedSensorPosition(0);
-    //   }
-
-    //   return;
-    // }
-
-    // flywheel.config_kP(0, ShuffleBoard.flywheelKP.getDouble(FLYWHEEL_KP));
-    // flywheel.config_kI(0, ShuffleBoard.flywheelKI.getDouble(FLYWHEEL_KI));
-    // flywheel.config_kD(0, ShuffleBoard.flywheelKD.getDouble(FLYWHEEL_KD));
-
-    // index.config_kP(0, ShuffleBoard.indexKP.getDouble(INDEX_KP));
-    // index.config_kI(0, ShuffleBoard.indexKI.getDouble(INDEX_KI));
-    // index.config_kD(0, ShuffleBoard.indexKD.getDouble(INDEX_KD));
-
-    // hood.config_kP(0, ShuffleBoard.hoodKP.getDouble(HOOD_KP));
-    // hood.config_kI(0, ShuffleBoard.hoodKI.getDouble(HOOD_KI));
-    // hood.config_kD(0, ShuffleBoard.hoodKD.getDouble(HOOD_KD));
-
     distance = 15;
     // distance = cameraTurret.getDistance;
 
@@ -150,9 +125,29 @@ public class Shooter extends Subsystem {
     /* Hood control */
     // int hoodAngle = calculateHood(distance);
     double hoodAngle = Utils.clamp(ShuffleBoard.hoodPosition.getDouble(0), 0, 4);
+    if (hoodAngle == 0 && lastHoodAngle != 0) {
+      calibratingHood = true;
+    }
+    lastHoodAngle = hoodAngle;
     //System.out.println("Hood angle is " + hoodAngle);
-    double targetHood = (hoodAngle / 3.0 * ROTS_PER_MIN_MAX * TICKS_PER_ROT);
-    hood.set(ControlMode.Position, targetHood);
+    double targetHood = (hoodAngle / 3.0 * ROTS_PER_MIN_MAX * TICKS_PER_ROT) + 20;
+    
+    if (calibratingHood) {
+      hood.set(ControlMode.PercentOutput, -0.2);
+      System.out.println("Calibrating");
+
+      if (hoodLimit.get()) {
+        System.out.println("Calibrated!");
+        calibratingHood = false;
+
+        ShuffleBoard.hoodPosition.setDouble(0);
+        hood.setSelectedSensorPosition(0);
+      }
+    } else {
+      hood.set(ControlMode.Position, targetHood);
+    }
+
+    System.out.println(hood.getSelectedSensorPosition());
 
     // System.out.printf("Current: %3.3f Target: %3.3f %n", hood.getSelectedSensorPosition(), targetHood);
 

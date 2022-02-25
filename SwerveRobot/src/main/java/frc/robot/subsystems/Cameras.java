@@ -10,8 +10,8 @@ import frc.robot.util.ShuffleWood;
 public class Cameras extends Subsystem {
 
   private boolean hub_good;
-  private double hub_xAngle;
-  private double hub_distance;
+  private double hub_x;
+  private double hub_y;
   
   private boolean ball_good;
   private double ball_x;
@@ -36,8 +36,8 @@ public class Cameras extends Subsystem {
     if (type.equals("Vision:Hub_Measurements")) {
       boolean good = in.readBoolean();
       if (good) {
-        double xAngle = in.readDouble();
-        double distance = in.readDouble();
+        hub_x = in.readDouble();
+        hub_y = in.readDouble();
 
         ShuffleWood.show("Hub XAngle", xAngle);
         ShuffleWood.show("Hub Distance", distance);
@@ -49,11 +49,8 @@ public class Cameras extends Subsystem {
       boolean good = in.readBoolean();
       ball_good = good;
       if (good) {
-        double x = in.readDouble();
-        double z = in.readDouble();
-
-        ball_x = x;
-        ball_z = z;
+        ball_x = in.readDouble();
+        ball_z = in.readDouble();
 
         ShuffleWood.show("Ball X", x);
         ShuffleWood.show("Ball Z", z);
