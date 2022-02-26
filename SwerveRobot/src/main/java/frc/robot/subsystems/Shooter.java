@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Scheduler;
 import frc.robot.command.shooter.IndexBall;
+import frc.robot.constants.DriveConstants;
 import frc.robot.control.Input;
 import frc.robot.control.SwerveDriveController;
 import frc.robot.util.ShuffleBoard;
@@ -15,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import static frc.robot.constants.ShooterConstants.*;
 
@@ -39,7 +41,7 @@ public class Shooter extends Subsystem {
     
     cameraTurret = camera;
     flywheel = new TalonFX(FLYWHEEL_MOTOR_ID);
-    index = new TalonFX(INDEX_MOTOR_ID);
+    index = new TalonFX(INDEX_MOTOR_ID, DriveConstants.GERALD);
     hood = new TalonSRX(HOOD_MOTOR_ID);
 
     index.setInverted(true);
@@ -134,10 +136,10 @@ public class Shooter extends Subsystem {
     
     if (calibratingHood) {
       hood.set(ControlMode.PercentOutput, -0.2);
-      System.out.println("Calibrating");
+      // System.out.println("Calibrating");
 
       if (hoodLimit.get()) {
-        System.out.println("Calibrated!");
+        // System.out.println("Calibrated!");
         calibratingHood = false;
 
         ShuffleBoard.hoodPosition.setDouble(0);
@@ -147,7 +149,7 @@ public class Shooter extends Subsystem {
       hood.set(ControlMode.Position, targetHood);
     }
 
-    System.out.println(hood.getSelectedSensorPosition());
+    // System.out.println(hood.getSelectedSensorPosition());
 
     // System.out.printf("Current: %3.3f Target: %3.3f %n", hood.getSelectedSensorPosition(), targetHood);
 

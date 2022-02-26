@@ -7,7 +7,7 @@ public class IntakeConstants {
     public static final double INTAKE_NEUTRAL_VELOCITY = 1 * 2048;
 
     public static final double INTAKE_TIME = 50 * 1; // 50 * Seconds
-    public static final double INTAKE_RETRACTION_SPEED = 0.15; // Percent between 0 and 1;
+    public static final double INTAKE_RETRACTION_SPEED = 0.3; // Percent between 0 and 1;
 
     public static final double INTAKE_KF = 0;
     public static final double INTAKE_KP = 0.1;

@@ -36,7 +36,7 @@ public class Input {
 
     /* Final Controler Setups */
     public boolean getIntake() {
-        return drive.getLeftShoulderButton();
+        return finalManipulator.getLeftShoulderButton();
     }
 
     private boolean intakePreviousButton = false;
@@ -46,7 +46,7 @@ public class Input {
         boolean finalIntake = false;
 
         /* Get leading edge */
-        boolean pressed = drive.getYButton() && drive.getYButton() != intakePreviousButton;
+        boolean pressed = finalManipulator.getYButton() && finalManipulator.getYButton() != intakePreviousButton;
 
         /* If it's pressed, toggle the intake */
         if (pressed) {
@@ -56,24 +56,24 @@ public class Input {
         }
         
         intakePrevious = finalIntake;
-        intakePreviousButton = drive.getYButton();
+        intakePreviousButton = finalManipulator.getYButton();
 
         return finalIntake;
     }
 
     private boolean shootPrevious = false;
     public boolean getShoot() {
-        if (drive.getAButton() && drive.getAButton() != shootPrevious) {
-            shootPrevious = drive.getAButton();
+        if (finalManipulator.getAButton() && finalManipulator.getAButton() != shootPrevious) {
+            shootPrevious = finalManipulator.getAButton();
             return true;
         } else {
-            shootPrevious = drive.getAButton();
+            shootPrevious = finalManipulator.getAButton();
             return false; 
         }
     }
 
     public boolean getAim() {
-        return finalDrive.getRightShoulderButton() || drive.getRightShoulderButton();
+        return finalDrive.getRightShoulderButton() || finalManipulator.getRightShoulderButton();
     }
     /* Climber */
     public double getClimbTele() {

@@ -20,6 +20,8 @@ public class DriveConstants {
     public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // Degrees - How close a wheel can be to the target angle
 
     /* Hardware */
+    public static final String GERALD = "Gerald";
+
     public static final double WHEEL_SPACING_FRONT_BACK = 0.4699; // Meters
     public static final double WHEEL_SPACING_LEFT_RIGHT = 0.4699; // Meters
 

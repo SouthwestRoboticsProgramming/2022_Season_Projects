@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import frc.robot.Scheduler;
 import frc.robot.command.intake.IntakeDown;
 import frc.robot.command.intake.IntakeUp;
+import frc.robot.constants.DriveConstants;
 import frc.robot.control.Input;
 import frc.robot.util.ShuffleBoard;
 
@@ -22,9 +23,12 @@ public class Intake extends Subsystem {
   
   private boolean isDown;
 
+  private IntakeUp upCommand;
+  private IntakeDown downCommand;
+
   public Intake(Input input) {
     this.input = input;
-    motor = new TalonFX(INTAKE_MOTOR_ID);
+    motor = new TalonFX(INTAKE_MOTOR_ID, DriveConstants.GERALD);
     motor.setInverted(true);
 
     TalonFXConfiguration config = new TalonFXConfiguration();
@@ -48,17 +52,36 @@ public class Intake extends Subsystem {
   public void intakeDown() {
     if (isDown) { return; }
     isDown = true;
+
+    if (upCommand != null) {
+      Scheduler.get().cancelCommand(upCommand);
+      upCommand = null;
+    }
+    if (downCommand != null) {
+      Scheduler.get().cancelCommand(downCommand);
+      downCommand = null;
+    }
     
-    Scheduler.get().scheduleCommand(new IntakeDown(lift));
+    Scheduler.get().scheduleCommand(downCommand = new IntakeDown(lift));
+    System.out.println("Downing");
   }
   
   public void intakeUp() {
     if (!isDown){ return; }
     isDown = false;
-    
-    Scheduler.get().scheduleCommand(new IntakeUp(lift));
-  }
 
+    if (upCommand != null) {
+      Scheduler.get().cancelCommand(upCommand);
+      upCommand = null;
+    }
+    if (downCommand != null) {
+      Scheduler.get().cancelCommand(downCommand);
+      downCommand = null;
+    }
+    
+    Scheduler.get().scheduleCommand(upCommand = new IntakeUp(lift));
+    System.out.println("Upping");
+  }
 
   @Override
   public void teleopPeriodic() {

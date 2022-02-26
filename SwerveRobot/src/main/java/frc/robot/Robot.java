@@ -130,6 +130,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveController.update();
+    climber.groundToSecond();
   }
 
   @Override

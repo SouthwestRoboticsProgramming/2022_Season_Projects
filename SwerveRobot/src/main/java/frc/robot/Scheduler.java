@@ -44,6 +44,7 @@ public final class Scheduler {
         }
 
         if (toRemove != null) {
+            toRemove.cmd.end();
             activeCommands.remove(toRemove);
         }
     }
@@ -62,6 +63,7 @@ public final class Scheduler {
         Set<CommandTimer> toRemove = new HashSet<>();
         for (CommandTimer cmd : activeCommands) {
             if (cmd.update()) {
+                cmd.cmd.end();
                 toRemove.add(cmd);
                 // System.out.println("Terminating " + cmd.cmd);
             }

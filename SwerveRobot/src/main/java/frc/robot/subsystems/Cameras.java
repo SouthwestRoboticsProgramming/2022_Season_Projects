@@ -39,8 +39,8 @@ public class Cameras extends Subsystem {
         hub_x = in.readDouble();
         hub_y = in.readDouble();
 
-        ShuffleWood.show("Hub XAngle", xAngle);
-        ShuffleWood.show("Hub Distance", distance);
+        ShuffleWood.show("Hub XAngle", hub_x);
+        ShuffleWood.show("Hub Distance", hub_y);
       } else {
         ShuffleWood.show("Hub XAngle", "bad");
         ShuffleWood.show("Hub Distance", "bad");
@@ -52,8 +52,8 @@ public class Cameras extends Subsystem {
         ball_x = in.readDouble();
         ball_z = in.readDouble();
 
-        ShuffleWood.show("Ball X", x);
-        ShuffleWood.show("Ball Z", z);
+        ShuffleWood.show("Ball X", ball_x);
+        ShuffleWood.show("Ball Z", ball_z);
       } else {
         ShuffleWood.show("Ball X", "bad");
         ShuffleWood.show("Ball Z", "bad");
@@ -73,17 +73,17 @@ public class Cameras extends Subsystem {
     }
   }
 
-  public double getHubAngle() {
+  public double getHubX() {
     // Ryan do your stuff
     if (hub_good) {
-      return hub_xAngle;
+      return hub_x;
     }
     return 360.0;
   }
 
-  public double getHubDistance() {
+  public double getHubY() {
     if (hub_good) {
-      return hub_distance;
+      return hub_y;
     }
     return -1.0;
   }

@@ -32,9 +32,9 @@ public class SwerveModule {
 
     public SwerveModule(int drivePort, int turnPort, int canPort ,double cancoderOffset) {
 
-        driveMotor = new WPI_TalonFX(drivePort);
+        driveMotor = new WPI_TalonFX(drivePort, GERALD);
         turnMotor = new WPI_TalonSRX(turnPort);
-        canCoder = new CANCoder(canPort);
+        canCoder = new CANCoder(canPort, GERALD);
         canOffset = cancoderOffset;
 
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();

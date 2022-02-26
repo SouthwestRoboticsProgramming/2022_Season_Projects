@@ -56,7 +56,7 @@ public class CameraTurret extends Subsystem {
   @Override
   public void teleopPeriodic() {
     double encoderAngle = getEncoderDegrees();
-    double cameraAngle = cameras.getHubAngle();
+    double cameraAngle = 2; //cameras.getHubAngle();
     //ShuffleWood.show("Encoder Angle", encoderAngle);
     double rawTarget;
     if (cameraAngle != 360.0) {

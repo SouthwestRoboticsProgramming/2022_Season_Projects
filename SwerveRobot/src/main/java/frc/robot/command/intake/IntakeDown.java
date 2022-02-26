@@ -22,4 +22,9 @@ public class IntakeDown implements Command {
     
     return ++timer >= INTAKE_TIME;
   }
+
+  @Override
+  public void end() {
+    motor.set(ControlMode.PercentOutput, 0);
+  }
 }
