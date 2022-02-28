@@ -9,12 +9,13 @@ public class DriveConstants {
     public static final double WHEEL_TURN_KP = 0.009;
     public static final double WHEEL_TURN_KI = 0; // Leave this at 0: There is no steady-state error in the system
     public static final double WHEEL_TURN_KD = 0.0001;
+    public static final double WHEEL_TURN_KF = 0;
 
     public static final double GLOBAL_TURN_KP = 0.027;
     public static final double GLOBAL_TURN_KI = 0;
     public static final double GLOBAL_TURN_KD = 0.0022;
 
-    public static final double MAX_VELOCITY = 1.0; // User Defined - Meters per second
+    public static final double MAX_VELOCITY = 3.0; // User Defined - Meters per second
     public static final double MAX_ROTATION_SPEED = 6.0; // User Defined - Radians per second
     
     public static final Rotation2d WHEEL_TOLERANCE = Rotation2d.fromDegrees(1); // Degrees - How close a wheel can be to the target angle
@@ -26,10 +27,10 @@ public class DriveConstants {
     public static final double WHEEL_SPACING_LEFT_RIGHT = 0.4699; // Meters
 
     // TODO: Have a global offset for each module then at 90 for each position that it is in
-    public static final double OFFSET_1 = -133.945 + 180;
-    public static final double OFFSET_2 = -220.781 + 180;
-    public static final double OFFSET_3 = -77.607;
-    public static final double OFFSET_4 = -3.955;
+    public static final double OFFSET_1 = -134.297 + 180;
+    public static final double OFFSET_2 = -40.078;
+    public static final double OFFSET_3 = -77.959;
+    public static final double OFFSET_4 = -2.109;
     public static final boolean CANCODER_DIRECTION = false; // False = Counterclockwise   True = Clockwise
     
     public static final SwerveModuleInfo[] SWERVE_MODULES = {

@@ -9,11 +9,15 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import static frc.robot.constants.DriveConstants.*;
 import static frc.robot.constants.ShooterConstants.*;
 import static frc.robot.constants.IntakeConstants.*;
+import static frc.robot.constants.ClimberConstants.*;
 
 public class ShuffleBoard {
     public static ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
         private static ShuffleboardLayout drive = driveTab.getLayout("drive", BuiltInLayouts.kList);
-        public static NetworkTableEntry wheelTurnKP = drive.addPersistent("Wheel Turn KP",WHEEL_TURN_KP).getEntry();
+            public static NetworkTableEntry wheelTurnKP = drive.addPersistent("Wheel Turn KP", WHEEL_TURN_KP).getEntry();
+            public static NetworkTableEntry wheelTurnKI = drive.addPersistent("Wheel Turn KI", WHEEL_TURN_KI).getEntry();
+            public static NetworkTableEntry wheelTurnKD = drive.addPersistent("Wheel Turn KD", WHEEL_TURN_KD).getEntry();
+            public static NetworkTableEntry wheelDriveScale = drive.addPersistent("Wheel Drive Scale", 1).getEntry();
     
     public static ShuffleboardTab tuneTab = Shuffleboard.getTab("Tune");
         private static ShuffleboardLayout tune = tuneTab.getLayout("Tune", BuiltInLayouts.kList);
@@ -42,4 +46,9 @@ public class ShuffleBoard {
             public static NetworkTableEntry intakeKD = intakeTune.addPersistent("KD", INTAKE_KD).getEntry();
             public static NetworkTableEntry intakeFullVelocity = intakeTune.addPersistent("Full Velocity", INTAKE_FULL_VELOCITY).getEntry();
             public static NetworkTableEntry intakeNeutralVelocity = intakeTune.addPersistent("Neutral Velocity", INTAKE_NEUTRAL_VELOCITY).getEntry();
+        
+        private static ShuffleboardLayout telescopeTune = tuneTab.getLayout("Telescope", BuiltInLayouts.kList);
+            public static NetworkTableEntry climberTelescopeKP = telescopeTune.addPersistent("KP", CLIMBER_TELE_MOTOR_KP).getEntry();
+            public static NetworkTableEntry climberTelescopeKI = telescopeTune.addPersistent("KI", CLIMBER_TELE_MOTOR_KI).getEntry();
+            public static NetworkTableEntry climberTelescopeKD = telescopeTune.addPersistent("KD", CLIMBER_TELE_MOTOR_KD).getEntry();
 }

@@ -33,11 +33,12 @@ public class SwingingArm extends Subsystem {
   }
 
   public void swingToAngle(double degrees) {
-    double currentPose = encoder.getPosition() / rotsPerInch + CLIMBER_STARTING_DIST;
+    double currentPose = -encoder.getPosition() / rotsPerInch + CLIMBER_STARTING_DIST;
     double currentAngle = Math.acos((base*base + arm*arm - currentPose*currentPose)/(2*arm*base));
+    // System.out.println(Math.toDegrees(currentAngle));
 
     double percentOut = pid.calculate(Math.toDegrees(currentAngle), degrees);
-    motor.set(percentOut);
+    motor.set(-percentOut);
   }
 
   public boolean isAtAngle() {
@@ -53,5 +54,6 @@ public class SwingingArm extends Subsystem {
   public void disabledPeriodic() {
     pid.reset();
     motor.stopMotor();
+    encoder.setPosition(0);
   }
 }

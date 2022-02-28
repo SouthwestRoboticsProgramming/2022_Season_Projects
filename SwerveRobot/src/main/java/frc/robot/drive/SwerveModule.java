@@ -1,98 +1,92 @@
 package frc.robot.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.MathUtil;
-import frc.robot.util.ShuffleWood;
+import frc.robot.util.ShuffleBoard;
 import frc.robot.util.Utils;
 
 import static frc.robot.constants.DriveConstants.*;
 
-
 public class SwerveModule {
-
-    private final WPI_TalonFX driveMotor;
-    private final WPI_TalonSRX turnMotor;
+    private final TalonFX driveMotor;
+    private final TalonSRX turnMotor;
     private final CANCoder canCoder;
-    private final double canOffset;
-    private final PIDController turnPID;
 
-    
+    private final boolean isDebug;
 
-    public SwerveModule(int drivePort, int turnPort, int canPort ,double cancoderOffset) {
+    public SwerveModule(int driveID, int turnID, int encoderID, double encoderOffset) {
+        driveMotor = new TalonFX(driveID, GERALD);
+        turnMotor = new TalonSRX(turnID);
+        canCoder = new CANCoder(encoderID, GERALD);
 
-        driveMotor = new WPI_TalonFX(drivePort, GERALD);
-        turnMotor = new WPI_TalonSRX(turnPort);
-        canCoder = new CANCoder(canPort, GERALD);
-        canOffset = cancoderOffset;
+        isDebug = encoderID == SWERVE_MODULES[0].getCanCoderId();
 
+        // Set up drive motor
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+        // Configure the config
         driveMotor.configAllSettings(driveConfig);
-
-        TalonSRXConfiguration turnConfig = new TalonSRXConfiguration();
-        turnMotor.configAllSettings(turnConfig);
-        
-        driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.setSelectedSensorPosition(0, 0, 30);
-        driveMotor.stopMotor();
+        driveMotor.setNeutralMode(NeutralMode.Brake);
 
+        // Set up turn motor
+        TalonSRXConfiguration turnConfig = new TalonSRXConfiguration();
+        {
+            // Use the CANCoder as the position sensor
+            // turnConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.SoftwareEmulatedSensor;
+
+            // Set the PID constants
+            turnConfig.neutralDeadband = 0.001;
+            turnConfig.slot0.kP = WHEEL_TURN_KP;
+            turnConfig.slot0.kI = WHEEL_TURN_KI;
+            turnConfig.slot0.kD = WHEEL_TURN_KD;
+            turnConfig.slot0.closedLoopPeakOutput = 1;
+            turnConfig.openloopRamp = 0.5;
+            turnConfig.closedloopRamp = 0.5;
+        }
+        turnMotor.configAllSettings(turnConfig);
+        turnMotor.configSelectedFeedbackSensor(FeedbackDevice.SoftwareEmulatedSensor);
         turnMotor.setNeutralMode(NeutralMode.Brake);
-        turnMotor.setSelectedSensorPosition(0, 0, 30);
-        turnMotor.stopMotor();
 
-        CANCoderConfiguration canConfig = new CANCoderConfiguration();
-        canConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        canConfig.magnetOffsetDegrees = canOffset;
-        canConfig.sensorDirection = CANCODER_DIRECTION;
-
-        canCoder.configAllSettings(canConfig);
-
-        turnPID = new PIDController(WHEEL_TURN_KP, WHEEL_TURN_KI, WHEEL_TURN_KD);
-        turnPID.enableContinuousInput(-90, 90);
-        turnPID.setTolerance(WHEEL_TOLERANCE.getDegrees());
+        // Set up CANCoder
+        CANCoderConfiguration encoderConfig = new CANCoderConfiguration();
+        {
+            encoderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
+            encoderConfig.magnetOffsetDegrees = encoderOffset;
+            encoderConfig.sensorDirection = CANCODER_DIRECTION;
+        }
+        canCoder.configAllSettings(encoderConfig);
     }
 
-    public void update(SwerveModuleState swerveModuleState) {
-        // turnPID.setP(ShuffleWood.getDouble("Wheel turn KP", WHEEL_TURN_KP));
-        // turnPID.setI(ShuffleWood.getDouble("Wheel turn KI", WHEEL_TURN_KI));
-        // turnPID.setD(ShuffleWood.getDouble("Wheel turn KD", WHEEL_TURN_KD));
-        // ShuffleWood.show("P", turnPID.getP());
-        // ShuffleWood.show("I", turnPID.getI());
-        // ShuffleWood.show("D", turnPID.getD());
-        //System.out.println("PID: " + turnPID.getP() + " " + turnPID.getI() + " " + turnPID.getD());
+    public void update(SwerveModuleState state) {
+        turnMotor.config_kP(0, ShuffleBoard.wheelTurnKP.getDouble(WHEEL_TURN_KP));
+        turnMotor.config_kI(1, ShuffleBoard.wheelTurnKI.getDouble(WHEEL_TURN_KI));
+        turnMotor.config_kD(2, ShuffleBoard.wheelTurnKD.getDouble(WHEEL_TURN_KD));
 
-        Rotation2d canRotation = new Rotation2d(Math.toRadians(canCoder.getAbsolutePosition()));
-        Rotation2d currentAngle = new Rotation2d(Math.toRadians(Utils.fixCurrentAngle(canCoder.getAbsolutePosition())));
-        SwerveModuleState moduleState = SwerveModuleState.optimize(swerveModuleState, canRotation);
-        Rotation2d targetAngle = moduleState.angle;
-        double targetSpeed = moduleState.speedMetersPerSecond;
+        Rotation2d normalizedEncoder = Rotation2d.fromDegrees(Utils.normalizeAngleDegrees(canCoder.getPosition()));
 
-        // Turn to target angle
-        double turnAmount = turnPID.calculate(currentAngle.getDegrees(),targetAngle.getDegrees());
-        turnAmount = MathUtil.clamp(turnAmount,-1.0,1.0);
+        // Optimize the state
+        state = SwerveModuleState.optimize(state, normalizedEncoder);
+    
+        // Do some angle weirdness to emulate a continuous PID controller and turn
+        double weird;
+        turnMotor.setSelectedSensorPosition(weird = 1000 * Utils.normalizeAngleDegrees(normalizedEncoder.getDegrees() - state.angle.getDegrees()));
+        turnMotor.set(ControlMode.Position, 0);
 
-        // Drive the target speed
-        double driveAmount = targetSpeed / ROBOT_MAX_VELOCITY;
-        driveAmount = MathUtil.clamp(driveAmount,-1.0,1.0);
-
-        // Spin the motors
-        if (!turnPID.atSetpoint())
-            turnMotor.set(ControlMode.PercentOutput, turnAmount); 
-        else
-            turnMotor.set(ControlMode.PercentOutput, 0);
-        driveMotor.set(ControlMode.PercentOutput, driveAmount);
-
+        // Drive
+        double drive = Utils.clamp(state.speedMetersPerSecond / ROBOT_MAX_VELOCITY, -1, 1);
+        driveMotor.set(ControlMode.PercentOutput, drive * ShuffleBoard.wheelDriveScale.getDouble(0));
     }
 
     public double getCanRotation() {
@@ -100,6 +94,6 @@ public class SwerveModule {
     }
 
     public void disable() {
-        turnPID.reset();
+        // Nothing to do
     }
 }

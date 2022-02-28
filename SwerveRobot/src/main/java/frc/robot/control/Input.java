@@ -26,11 +26,23 @@ public class Input {
     }
 
     public double getRot() {
-        return -drive.getRightStickX();
+        return drive.getRightStickX();
     }
 
 
 
+    // For testing things before they have final controls
+    public boolean testButton() {
+        return finalManipulator.getMenuButton();
+    }
+
+    public boolean testButton2() {
+        return finalManipulator.getWindowButton();
+    }
+
+    public double testSwingingArm() {
+        return finalManipulator.getRightStickY();
+    }
 
 
 
@@ -77,10 +89,15 @@ public class Input {
     }
     /* Climber */
     public double getClimbTele() {
-        return finalManipulator.getLeftStickY();
+        if (Math.abs(finalManipulator.getLeftStickY()) > JOYSTICK_DEAD_ZONE){
+            return finalManipulator.getLeftStickY();
+        } else {
+            return 0;
+        }
     }
 
     public boolean getClimbNextStep() {
-        return finalManipulator.getLeftShoulderButton() && finalManipulator.getRightShoulderButton();
+        //return finalManipulator.getLeftShoulderButton() && finalManipulator.getRightShoulderButton();
+        return finalManipulator.getDpadUp();
     }
 }

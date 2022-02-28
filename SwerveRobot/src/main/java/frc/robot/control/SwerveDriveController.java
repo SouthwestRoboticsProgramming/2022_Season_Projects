@@ -44,9 +44,7 @@ public class SwerveDriveController {
 
         // ShuffleWood.show("currentAngle", currentAngle);
         
-        if (Math.abs(driveX) < JOYSTICK_DEAD_ZONE) {
-            driveX = 0;
-        }
+        if (Math.abs(driveX) < JOYSTICK_DEAD_ZONE) driveX = 0;
         if (Math.abs(driveY) < JOYSTICK_DEAD_ZONE) {
             driveY = 0;
         }
